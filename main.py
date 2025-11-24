@@ -72,5 +72,52 @@ def main():
         print("Details:")
         for detail in stock['details']:
             print(f" - {detail}")
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email(subject, body):
+    sender_email = os.environ.get('EMAIL_USER')
+    sender_password = os.environ.get('EMAIL_PASSWORD')
+    receiver_email = os.environ.get('EMAIL_TO')
+
+    if not sender_email or not sender_password or not receiver_email:
+        print("Email credentials not found. Skipping email.")
+        return
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Connect to Gmail's SMTP server
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
 if __name__ == "__main__":
+    # Capture output for email
+    import io
+    import sys
+    
+    # Redirect stdout to capture the report
+    old_stdout = sys.stdout
+    new_stdout = io.StringIO()
+    sys.stdout = new_stdout
+    
     main()
+    
+    # Restore stdout
+    output = new_stdout.getvalue()
+    sys.stdout = old_stdout
+    print(output) # Print to console as well
+    
+    # Send email if credentials exist
+    if "TOP RECOMMENDATION" in output:
+        send_email("Daily Stock Pick Report", output)
