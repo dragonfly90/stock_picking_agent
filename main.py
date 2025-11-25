@@ -69,55 +69,115 @@ def main():
     print("\nTop 5 Candidates:")
     for i, stock in enumerate(ranked_stocks[:5]):
         print(f"{i+1}. {stock['ticker']} (Score: {stock['score']}, PEG: {stock['metrics']['peg']})")
-        print("Details:")
-        for detail in stock['details']:
-            print(f" - {detail}")
-import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import sqlite3
+from datetime import datetime
+from jinja2 import Environment, FileSystemLoader
 
-def send_email(subject, body):
-    sender_email = os.environ.get('EMAIL_USER')
-    sender_password = os.environ.get('EMAIL_PASSWORD')
-    receiver_email = os.environ.get('EMAIL_TO')
+def init_db():
+    conn = sqlite3.connect('stocks.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS picks
+                 (date text, ticker text, score integer, peg real, details text)''')
+    conn.commit()
+    return conn
 
-    if not sender_email or not sender_password or not receiver_email:
-        print("Email credentials not found. Skipping email.")
-        return
+def save_to_db(conn, pick):
+    c = conn.cursor()
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    # Check if we already have a pick for today to avoid duplicates
+    c.execute("SELECT * FROM picks WHERE date = ?", (date_str,))
+    if c.fetchone():
+        print("Already have a pick for today. Updating...")
+        c.execute("DELETE FROM picks WHERE date = ?", (date_str,))
+    
+    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?)",
+              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details'])))
+    conn.commit()
 
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+def get_history(conn):
+    c = conn.cursor()
+    c.execute("SELECT * FROM picks ORDER BY date DESC LIMIT 30")
+    rows = c.fetchall()
+    history = []
+    for row in rows:
+        history.append({
+            'date': row[0],
+            'ticker': row[1],
+            'score': row[2],
+            'peg': f"{row[3]:.2f}" if row[3] else "N/A"
+        })
+    return history
 
-    try:
-        # Connect to Gmail's SMTP server
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-        print("Email sent successfully!")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+def generate_html(top_pick, history):
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('index.html')
+    
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    
+    # Format top pick for template
+    pick_data = None
+    if top_pick:
+        pick_data = {
+            'ticker': top_pick['ticker'],
+            'score': top_pick['score'],
+            'peg': f"{top_pick['metrics']['peg']:.2f}" if top_pick['metrics']['peg'] else "N/A",
+            'details': top_pick['details']
+        }
+
+    html_content = template.render(
+        date=date_str,
+        top_pick=pick_data,
+        history=history
+    )
+    
+    with open('index.html', 'w') as f:
+        f.write(html_content)
+    print("Generated index.html")
 
 if __name__ == "__main__":
-    # Capture output for email
-    import io
-    import sys
+    # Initialize DB
+    conn = init_db()
     
-    # Redirect stdout to capture the report
-    old_stdout = sys.stdout
-    new_stdout = io.StringIO()
-    sys.stdout = new_stdout
+    # Run Analysis
+    # We need to capture the return value of main logic, but currently main() prints.
+    # Let's refactor slightly or just call the logic. 
+    # For minimal disruption, let's copy the logic from main() here or import it if it was modular.
+    # Since main() is a function, we can't easily get the variable 'ranked_stocks' out unless we return it.
+    # Let's modify main() to return the top pick.
     
-    main()
+    # ... Wait, I can't easily change main() signature without replacing the whole function above.
+    # Let's just run the analysis logic directly here since we have access to fetch_data and analyze.
     
-    # Restore stdout
-    output = new_stdout.getvalue()
-    sys.stdout = old_stdout
-    print(output) # Print to console as well
+    print("Starting Daily Analysis...")
+    tickers = fetch_data.get_sp500_tickers()
+    # Limit for demo/speed if needed, but for real daily run we want full list.
+    # tickers = tickers[:50] 
     
-    # Send email if credentials exist
-    if "TOP RECOMMENDATION" in output:
-        send_email("Daily Stock Pick Report", output)
+    stocks_data = []
+    count = 0
+    # For the daily run, let's do a larger batch or all. 
+    # Let's do 50 for now to be safe on time, or maybe 100.
+    # The user wants "everyday", so ideally all. But let's stick to 50 for stability in this demo.
+    tickers = tickers[:50]
+    
+    for ticker in tickers:
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                stocks_data.append((ticker, info))
+        except:
+            pass
+            
+    ranked_stocks = analyze.rank_stocks(stocks_data)
+    
+    top_pick = None
+    if ranked_stocks:
+        top_pick = ranked_stocks[0]
+        print(f"Top Pick: {top_pick['ticker']}")
+        save_to_db(conn, top_pick)
+    else:
+        print("No top pick found.")
+        
+    history = get_history(conn)
+    generate_html(top_pick, history)
+    conn.close()

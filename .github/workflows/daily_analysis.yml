@@ -25,8 +25,12 @@ jobs:
         pip install -r requirements.txt
         
     - name: Run Analysis
-      env:
-        EMAIL_USER: ${{ secrets.EMAIL_USER }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        EMAIL_TO: ${{ secrets.EMAIL_TO }}
       run: python main.py
+      
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.name 'Stock Agent Bot'
+        git config --global user.email 'bot@noreply.github.com'
+        git add stocks.db index.html
+        git commit -m "Daily stock analysis update [skip ci]" || exit 0
+        git push
