@@ -2,6 +2,11 @@
 
 A Python-based agent that analyzes S&P 500 stocks to recommend top candidates for a long-term (> 5 years) buy and hold strategy.
 
+## 🌐 Web Dashboard
+**View the Daily Report:** [https://dragonfly90.github.io/stock_picking_agent/](https://dragonfly90.github.io/stock_picking_agent/)
+
+*(Note: Ensure GitHub Pages is enabled in Settings -> Pages -> Source: Deploy from branch 'main')*
+
 ## Strategy: QGARP (Quality + Growth at a Reasonable Price)
 
 The agent scores stocks from **0 to 5** based on the following fundamental criteria. A stock gets **+1 point** for each criterion it meets:
