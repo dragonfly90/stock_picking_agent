@@ -94,7 +94,7 @@
         <div class="highlight">
             <h2>Top Pick: {{ top_pick.ticker }}</h2>
             <div class="score">Score: {{ top_pick.score }}/5</div>
-            <p><strong>PEG Ratio:</strong> {{ top_pick.peg }}</p>
+            <p><strong>PEG Ratio:</strong> {{ top_pick.peg }} | <strong>P/E Ratio:</strong> {{ top_pick.pe }}</p>
 
             <h3>Company Description</h3>
             <p>{{ top_pick.description }}</p>
@@ -126,6 +126,7 @@
                     <th>Ticker</th>
                     <th>Score</th>
                     <th>PEG</th>
+                    <th>P/E</th>
                 </tr>
             </thead>
             <tbody>
@@ -135,6 +136,7 @@
                     <td>{{ item.ticker }}</td>
                     <td>{{ item.score }}</td>
                     <td>{{ item.peg }}</td>
+                    <td>{{ item.pe }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

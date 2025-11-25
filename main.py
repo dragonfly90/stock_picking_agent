@@ -90,9 +90,15 @@ def init_db():
         c.execute("ALTER TABLE picks ADD COLUMN description text")
     except sqlite3.OperationalError:
         pass # Column likely exists
+
+    # Add pe column if not exists (migration hack for demo)
+    try:
+        c.execute("ALTER TABLE picks ADD COLUMN pe real")
+    except sqlite3.OperationalError:
+        pass # Column likely exists
         
     c.execute('''CREATE TABLE IF NOT EXISTS picks
-                 (date text, ticker text, score integer, peg real, details text, description text)''')
+                 (date text, ticker text, score integer, peg real, details text, description text, pe real)''')
     conn.commit()
     return conn
 
@@ -107,9 +113,10 @@ def save_to_db(conn, pick):
     
     # Handle missing description
     desc = pick.get('description', 'No description available.')
+    pe = pick['metrics'].get('pe')
     
-    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?)",
-              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc))
+    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?)",
+              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe))
     conn.commit()
 
 def get_history(conn):
@@ -118,14 +125,17 @@ def get_history(conn):
     rows = c.fetchall()
     history = []
     for row in rows:
-        # Handle potentially missing description in old rows if schema changed
-        # Row: date, ticker, score, peg, details, description
+        # Handle potentially missing description/pe in old rows if schema changed
+        # Row: date, ticker, score, peg, details, description, pe
         desc = row[5] if len(row) > 5 else "N/A"
+        pe = row[6] if len(row) > 6 else None
+        
         history.append({
             'date': row[0],
             'ticker': row[1],
             'score': row[2],
-            'peg': f"{row[3]:.2f}" if row[3] else "N/A"
+            'peg': f"{row[3]:.2f}" if row[3] else "N/A",
+            'pe': f"{pe:.2f}" if pe else "N/A"
         })
     return history
 
@@ -159,6 +169,7 @@ def generate_html(top_pick, history):
             'ticker': top_pick['ticker'],
             'score': top_pick['score'],
             'peg': f"{top_pick['metrics']['peg']:.2f}" if top_pick['metrics']['peg'] else "N/A",
+            'pe': f"{top_pick['metrics']['pe']:.2f}" if top_pick['metrics'].get('pe') else "N/A",
             'details': top_pick['details'],
             'description': top_pick.get('description', 'No description available.')
         }

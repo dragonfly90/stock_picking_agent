@@ -70,7 +70,8 @@ def score_stock(info):
             'margin': margin,
             'rev_growth': rev_growth,
             'de': de,
-            'peg': peg
+            'peg': peg,
+            'pe': info.get('trailingPE')
         }
     }
 
