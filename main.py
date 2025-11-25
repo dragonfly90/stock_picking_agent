@@ -71,6 +71,7 @@ def main():
         print(f"{i+1}. {stock['ticker']} (Score: {stock['score']}, PEG: {stock['metrics']['peg']})")
 import sqlite3
 import os
+import matplotlib.pyplot as plt
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
@@ -79,12 +80,19 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, 'stocks.db')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 OUTPUT_HTML_PATH = os.path.join(BASE_DIR, 'index.html')
+CHART_PATH = os.path.join(BASE_DIR, 'chart.png')
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
+    # Add description column if not exists (migration hack for demo)
+    try:
+        c.execute("ALTER TABLE picks ADD COLUMN description text")
+    except sqlite3.OperationalError:
+        pass # Column likely exists
+        
     c.execute('''CREATE TABLE IF NOT EXISTS picks
-                 (date text, ticker text, score integer, peg real, details text)''')
+                 (date text, ticker text, score integer, peg real, details text, description text)''')
     conn.commit()
     return conn
 
@@ -97,8 +105,11 @@ def save_to_db(conn, pick):
         print("Already have a pick for today. Updating...")
         c.execute("DELETE FROM picks WHERE date = ?", (date_str,))
     
-    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?)",
-              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details'])))
+    # Handle missing description
+    desc = pick.get('description', 'No description available.')
+    
+    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?)",
+              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc))
     conn.commit()
 
 def get_history(conn):
@@ -107,6 +118,9 @@ def get_history(conn):
     rows = c.fetchall()
     history = []
     for row in rows:
+        # Handle potentially missing description in old rows if schema changed
+        # Row: date, ticker, score, peg, details, description
+        desc = row[5] if len(row) > 5 else "N/A"
         history.append({
             'date': row[0],
             'ticker': row[1],
@@ -114,6 +128,23 @@ def get_history(conn):
             'peg': f"{row[3]:.2f}" if row[3] else "N/A"
         })
     return history
+
+def generate_chart(ticker, history_data):
+    if history_data is None or history_data.empty:
+        print("No history data for chart.")
+        return False
+    
+    plt.figure(figsize=(10, 5))
+    plt.plot(history_data.index, history_data['Close'], label='Close Price')
+    plt.title(f"{ticker} - 1 Year Price History")
+    plt.xlabel("Date")
+    plt.ylabel("Price (USD)")
+    plt.grid(True)
+    plt.legend()
+    plt.savefig(CHART_PATH)
+    plt.close()
+    print(f"Generated {CHART_PATH}")
+    return True
 
 def generate_html(top_pick, history):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
@@ -128,7 +159,8 @@ def generate_html(top_pick, history):
             'ticker': top_pick['ticker'],
             'score': top_pick['score'],
             'peg': f"{top_pick['metrics']['peg']:.2f}" if top_pick['metrics']['peg'] else "N/A",
-            'details': top_pick['details']
+            'details': top_pick['details'],
+            'description': top_pick.get('description', 'No description available.')
         }
 
     html_content = template.render(
@@ -145,27 +177,13 @@ if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
     
-    # Run Analysis
-    # We need to capture the return value of main logic, but currently main() prints.
-    # Let's refactor slightly or just call the logic. 
-    # For minimal disruption, let's copy the logic from main() here or import it if it was modular.
-    # Since main() is a function, we can't easily get the variable 'ranked_stocks' out unless we return it.
-    # Let's modify main() to return the top pick.
-    
-    # ... Wait, I can't easily change main() signature without replacing the whole function above.
-    # Let's just run the analysis logic directly here since we have access to fetch_data and analyze.
-    
     print("Starting Daily Analysis...")
     tickers = fetch_data.get_sp500_tickers()
-    # Limit for demo/speed if needed, but for real daily run we want full list.
-    # tickers = tickers[:50] 
+    # Limit for demo/speed if needed
+    tickers = tickers[:50] 
     
     stocks_data = []
     count = 0
-    # For the daily run, let's do a larger batch or all. 
-    # Let's do 50 for now to be safe on time, or maybe 100.
-    # The user wants "everyday", so ideally all. But let's stick to 50 for stability in this demo.
-    tickers = tickers[:50]
     
     for ticker in tickers:
         try:
@@ -181,6 +199,32 @@ if __name__ == "__main__":
     if ranked_stocks:
         top_pick = ranked_stocks[0]
         print(f"Top Pick: {top_pick['ticker']}")
+        
+        # Fetch additional info for top pick
+        print("Fetching history and description...")
+        hist = fetch_data.get_stock_history(top_pick['ticker'])
+        generate_chart(top_pick['ticker'], hist)
+        
+        # Get description from the info object we already have? 
+        # We need to check if 'longBusinessSummary' is in the info we stored.
+        # In fetch_data.get_stock_data we returned 'info'.
+        # Let's check if we need to re-fetch or if it's there.
+        # It should be in the info dict.
+        # Let's extract it.
+        # We need to find the info object for the top pick.
+        # ranked_stocks contains dicts constructed in analyze.py.
+        # analyze.py didn't pass through the whole info object, just metrics.
+        # Wait, analyze.py:
+        # scored_stocks.append({ 'ticker': ticker, 'score': ..., 'details': ..., 'metrics': ... })
+        # It does NOT pass the raw info. We need to fetch it again or modify analyze.py.
+        # Easier to fetch it again or just get it from the list if we kept it.
+        # We have stocks_data list of (ticker, info).
+        
+        # Find info in stocks_data
+        pick_info = next((info for t, info in stocks_data if t == top_pick['ticker']), None)
+        if pick_info:
+            top_pick['description'] = pick_info.get('longBusinessSummary', 'No description.')
+        
         save_to_db(conn, top_pick)
     else:
         print("No top pick found.")

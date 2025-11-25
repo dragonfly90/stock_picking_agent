@@ -32,6 +32,17 @@ def get_stock_data(ticker):
         print(f"Error fetching data for {ticker}: {e}")
         return None
 
+def get_stock_history(ticker):
+    """Fetches 1 year of historical data for a ticker."""
+    try:
+        stock = yf.Ticker(ticker)
+        # Fetch 1 year of history
+        hist = stock.history(period="1y")
+        return hist
+    except Exception as e:
+        print(f"Error fetching history for {ticker}: {e}")
+        return None
+
 if __name__ == "__main__":
     # Test the functions
     tickers = get_sp500_tickers()

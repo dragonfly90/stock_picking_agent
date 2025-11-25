@@ -1,25 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Stock Pick</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .date { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
-        .highlight { background-color: #e8f8f5; border-left: 5px solid #1abc9c; padding: 15px; margin-bottom: 20px; }
-        .highlight h2 { margin-top: 0; color: #16a085; }
-        .score { font-size: 1.2em; font-weight: bold; color: #27ae60; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
-        th { background-color: #f8f9fa; }
-        tr:hover { background-color: #f1f1f1; }
-        .details-list { list-style-type: none; padding: 0; }
-        .details-list li { margin-bottom: 5px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background-color: #e8f8f5;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .highlight h2 {
+            margin-top: 0;
+            color: #16a085;
+        }
+
+        .score {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .details-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .details-list li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Daily Stock Pick Agent</h1>
@@ -30,6 +95,14 @@
             <h2>Top Pick: ACGL</h2>
             <div class="score">Score: 5/5</div>
             <p><strong>PEG Ratio:</strong> 0.22</p>
+
+            <h3>Company Description</h3>
+            <p>Arch Capital Group Ltd., together with its subsidiaries, provides insurance, reinsurance, and mortgage insurance products in the United States, Canada, Bermuda, the United Kingdom, Europe, and Australia. The Insurance segment offers commercial automobile; commercial multiperil; financial and professional line liability; admitted, excess, and surplus casualty lines; property and short-tail specialty; workers compensation; casualty; marine and aviation; excess and surplus casualty; construction and national accounts; alternative market risks and employer's liability; travel, accident, and health; contract and commercial surety coverage; and other insurance products, as well as Lloyd's syndicates; programs; and warranty and lenders solutions. Its Reinsurance segment provides reinsurance products for casualty; marine and aviation; property catastrophe; property excluding property catastrophe; and other specialty products. The Mortgage segment offers U.S. primary mortgage insurance business written predominantly on loans sold to the Federal National Mortgage Association and Federal Home Loan Mortgage Corporation; reinsurance and underwriting services related to the U.S. credit-risk transfer business and other U.S. mortgage reinsurance transactions; and international mortgage insurance and reinsurance business covering loans. It markets its products through a group of licensed independent retail and wholesale brokers. The company was formerly known as Risk Capital Holdings, Inc. Arch Capital Group Ltd. was founded in 1995 and is headquartered in Pembroke, Bermuda.</p>
+
+            <h3>Price History (1 Year)</h3>
+            <img src="chart.png" alt="Price Chart"
+                style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+
             <h3>Why it was picked:</h3>
             <ul class="details-list">
                 
@@ -72,4 +145,5 @@
         
     </div>
 </body>
+
 </html>
