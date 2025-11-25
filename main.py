@@ -70,11 +70,18 @@ def main():
     for i, stock in enumerate(ranked_stocks[:5]):
         print(f"{i+1}. {stock['ticker']} (Score: {stock['score']}, PEG: {stock['metrics']['peg']})")
 import sqlite3
+import os
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
+# Get the absolute path of the directory where this script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'stocks.db')
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+OUTPUT_HTML_PATH = os.path.join(BASE_DIR, 'index.html')
+
 def init_db():
-    conn = sqlite3.connect('stocks.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS picks
                  (date text, ticker text, score integer, peg real, details text)''')
@@ -109,7 +116,7 @@ def get_history(conn):
     return history
 
 def generate_html(top_pick, history):
-    env = Environment(loader=FileSystemLoader('templates'))
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template('index.html')
     
     date_str = datetime.now().strftime("%Y-%m-%d")
@@ -130,9 +137,9 @@ def generate_html(top_pick, history):
         history=history
     )
     
-    with open('index.html', 'w') as f:
+    with open(OUTPUT_HTML_PATH, 'w') as f:
         f.write(html_content)
-    print("Generated index.html")
+    print(f"Generated {OUTPUT_HTML_PATH}")
 
 if __name__ == "__main__":
     # Initialize DB
