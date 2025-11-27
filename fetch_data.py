@@ -78,8 +78,8 @@ def get_stock_history(ticker):
     """Fetches 1 year of historical data for a ticker."""
     try:
         stock = yf.Ticker(ticker)
-        # Fetch 1 year of history
-        hist = stock.history(period="1y")
+        # Fetch 5 years of history
+        hist = stock.history(period="5y")
         return hist
     except Exception as e:
         print(f"Error fetching history for {ticker}: {e}")

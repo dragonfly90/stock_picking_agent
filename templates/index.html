@@ -123,28 +123,30 @@
             <a href="non_spy.html" class="{% if current_page == 'non_spy.html' %}active{% endif %}">Non-S&P 500</a>
         </div>
 
-        {% if top_pick %}
+        {% if top_stocks %}
+        {% for stock in top_stocks %}
         <div class="highlight">
-            <h2>Top Pick: {{ top_pick.ticker }}</h2>
-            <div class="score">Score: {{ top_pick.score }}/5</div>
-            <p><strong>PEG Ratio:</strong> {{ top_pick.peg }} | <strong>P/E Ratio:</strong> {{ top_pick.pe }}</p>
+            <h2>#{{ loop.index }} Pick: {{ stock.ticker }}</h2>
+            <div class="score">Score: {{ stock.score }}/5</div>
+            <p><strong>PEG Ratio:</strong> {{ stock.peg }} | <strong>P/E Ratio:</strong> {{ stock.pe }}</p>
 
             <h3>Company Description</h3>
-            <p>{{ top_pick.description }}</p>
+            <p>{{ stock.description }}</p>
 
-            <h3>Price History (1 Year)</h3>
-            <img src="{{ chart_filename }}" alt="Price Chart">
+            <h3>Price History (5 Years)</h3>
+            <img src="{{ stock.chart_filename }}" alt="Price Chart for {{ stock.ticker }}">
 
             <h3>Why it was picked:</h3>
             <ul class="details-list">
-                {% for detail in top_pick.details %}
+                {% for detail in stock.details %}
                 <li>✅ {{ detail }}</li>
                 {% endfor %}
             </ul>
         </div>
+        {% endfor %}
         {% else %}
         <div class="highlight">
-            <h2>No Top Pick Today</h2>
+            <h2>No Top Picks Today</h2>
             <p>No stocks met the strict criteria today.</p>
         </div>
         {% endif %}

@@ -108,21 +108,24 @@ def init_db():
     conn.commit()
     return conn
 
-def save_to_db(conn, pick, universe):
+def save_to_db(conn, picks, universe):
     c = conn.cursor()
     date_str = datetime.now().strftime("%Y-%m-%d")
-    # Check if we already have a pick for today/universe to avoid duplicates
+    
+    # Clear existing picks for today/universe to avoid duplicates/stale data
+    # We do this once before inserting the new batch
     c.execute("SELECT * FROM picks WHERE date = ? AND universe = ?", (date_str, universe))
     if c.fetchone():
-        print(f"Already have a pick for today ({universe}). Updating...")
+        print(f"Clearing existing picks for today ({universe})...")
         c.execute("DELETE FROM picks WHERE date = ? AND universe = ?", (date_str, universe))
     
-    # Handle missing description
-    desc = pick.get('description', 'No description available.')
-    pe = pick['metrics'].get('pe')
-    
-    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe, universe))
+    for pick in picks:
+        # Handle missing description
+        desc = pick.get('description', 'No description available.')
+        pe = pick['metrics'].get('pe')
+        
+        c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                  (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe, universe))
     conn.commit()
 
 def get_history(conn, universe):
@@ -152,7 +155,7 @@ def get_history(conn, universe):
 
 def generate_chart(ticker, history_data, filename):
     if history_data is None or history_data.empty:
-        print("No history data for chart.")
+        print(f"No history data for {ticker} chart.")
         return False
     
     chart_path = os.path.join(BASE_DIR, filename)
@@ -168,31 +171,32 @@ def generate_chart(ticker, history_data, filename):
     print(f"Generated {chart_path}")
     return True
 
-def generate_html(top_pick, history, filename, title, chart_filename):
+def generate_html(top_stocks, history, filename, title):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template('index.html')
     
     date_str = datetime.now().strftime("%Y-%m-%d")
     output_path = os.path.join(BASE_DIR, filename)
     
-    # Format top pick for template
-    pick_data = None
-    if top_pick:
-        pick_data = {
-            'ticker': top_pick['ticker'],
-            'score': top_pick['score'],
-            'peg': f"{top_pick['metrics']['peg']:.2f}" if top_pick['metrics']['peg'] else "N/A",
-            'pe': f"{top_pick['metrics']['pe']:.2f}" if top_pick['metrics'].get('pe') else "N/A",
-            'details': top_pick['details'],
-            'description': top_pick.get('description', 'No description available.')
-        }
+    # Format top stocks for template
+    formatted_stocks = []
+    if top_stocks:
+        for stock in top_stocks:
+            formatted_stocks.append({
+                'ticker': stock['ticker'],
+                'score': stock['score'],
+                'peg': f"{stock['metrics']['peg']:.2f}" if stock['metrics']['peg'] else "N/A",
+                'pe': f"{stock['metrics']['pe']:.2f}" if stock['metrics'].get('pe') else "N/A",
+                'details': stock['details'],
+                'description': stock.get('description', 'No description available.'),
+                'chart_filename': stock.get('chart_filename')
+            })
 
     html_content = template.render(
         date=date_str,
-        top_pick=pick_data,
+        top_stocks=formatted_stocks,
         history=history,
         title=title,
-        chart_filename=chart_filename,
         current_page=filename
     )
     
@@ -200,7 +204,7 @@ def generate_html(top_pick, history, filename, title, chart_filename):
         f.write(html_content)
     print(f"Generated {output_path}")
 
-def run_analysis(conn, universe_name, tickers, html_filename, chart_filename, title):
+def run_analysis(conn, universe_name, tickers, html_filename, title):
     print(f"Starting Analysis for {universe_name}...")
     
     # Limit for demo/speed if needed
@@ -218,29 +222,33 @@ def run_analysis(conn, universe_name, tickers, html_filename, chart_filename, ti
             
     ranked_stocks = analyze.rank_stocks(stocks_data)
     
-    top_pick = None
+    top_stocks = []
     if ranked_stocks:
-        top_pick = ranked_stocks[0]
-        print(f"Top Pick ({universe_name}): {top_pick['ticker']}")
+        # Select Top 5
+        top_5 = ranked_stocks[:5]
+        print(f"Top 5 Picks ({universe_name}): {[s['ticker'] for s in top_5]}")
         
-        # Fetch additional info for top pick
-        print("Fetching history and description...")
-        hist = fetch_data.get_stock_history(top_pick['ticker'])
-        # It does NOT pass the raw info. We need to fetch it again or modify analyze.py.
-        # Easier to fetch it again or just get it from the list if we kept it.
-        # We have stocks_data list of (ticker, info).
+        for stock in top_5:
+            print(f"Processing {stock['ticker']}...")
+            # Fetch additional info
+            hist = fetch_data.get_stock_history(stock['ticker'])
+            chart_filename = f"chart_{universe_name}_{stock['ticker']}.png"
+            generate_chart(stock['ticker'], hist, chart_filename)
+            stock['chart_filename'] = chart_filename
+            
+            # Find info in stocks_data
+            pick_info = next((info for t, info in stocks_data if t == stock['ticker']), None)
+            if pick_info:
+                stock['description'] = pick_info.get('longBusinessSummary', 'No description.')
+            
+            top_stocks.append(stock)
         
-        # Find info in stocks_data
-        pick_info = next((info for t, info in stocks_data if t == top_pick['ticker']), None)
-        if pick_info:
-            top_pick['description'] = pick_info.get('longBusinessSummary', 'No description.')
-        
-        save_to_db(conn, top_pick, universe_name)
+        save_to_db(conn, top_stocks, universe_name)
     else:
-        print("No top pick found.")
+        print(f"No top picks found for {universe_name}.")
         
     history = get_history(conn, universe_name)
-    generate_html(top_pick, history, html_filename, title, chart_filename)
+    generate_html(top_stocks, history, html_filename, title)
     # conn.close() - Do not close here, let main handle it
 
 if __name__ == "__main__":
@@ -249,10 +257,10 @@ if __name__ == "__main__":
     
     # 1. S&P 500 Analysis
     sp500_tickers = fetch_data.get_sp500_tickers()
-    run_analysis(conn, 'SP500', sp500_tickers, 'index.html', 'chart.png', 'Daily Stock Pick: S&P 500')
+    run_analysis(conn, 'SP500', sp500_tickers, 'index.html', 'Daily Stock Picks: S&P 500')
     
     # 2. Non-S&P 500 Analysis (S&P 400 + 600)
     non_sp500_tickers = fetch_data.get_non_sp500_tickers()
-    run_analysis(conn, 'NON_SP500', non_sp500_tickers, 'non_spy.html', 'chart_non_spy.png', 'Daily Stock Pick: Non-S&P 500')
+    run_analysis(conn, 'NON_SP500', non_sp500_tickers, 'non_spy.html', 'Daily Stock Picks: Non-S&P 500')
     
     conn.close()
