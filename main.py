@@ -273,23 +273,53 @@ def generate_guru_chart(equity_val, cash_val, filename):
     plt.close()
     print(f"Generated {chart_path}")
 
-def run_guru_analysis(html_filename, chart_filename):
-    print("Starting Guru Analysis (Warren Buffett)...")
+def run_guru_analysis(html_filename):
+    print("Starting Guru Analysis...")
     
-    # 1. Fetch Holdings
-    holdings = fetch_guru.get_dataroma_holdings()
+    gurus = [
+        {'name': 'Warren Buffett (Berkshire Hathaway)', 'code': 'BRK', 'ticker': 'BRK-B'},
+        {'name': 'Bill Gates (Foundation Trust)', 'code': 'BMG', 'ticker': None},
+        {'name': 'Ray Dalio (Bridgewater Associates)', 'code': 'DA', 'ticker': None}
+    ]
     
-    # 2. Fetch Cash
-    cash = fetch_guru.get_cash_position()
+    guru_data = []
     
-    # Calculate totals
-    total_equity = sum(h['value'] for h in holdings)
-    total_assets = total_equity + cash
-    
-    cash_pct = (cash / total_assets * 100) if total_assets > 0 else 0
-    
-    # Generate Chart
-    generate_guru_chart(total_equity, cash, chart_filename)
+    for guru in gurus:
+        print(f"Processing {guru['name']}...")
+        
+        # 1. Fetch Holdings
+        holdings = fetch_guru.get_dataroma_holdings(guru['code'])
+        
+        # 2. Fetch Cash (if ticker exists)
+        cash = fetch_guru.get_cash_position(guru['ticker'])
+        
+        # Calculate totals
+        total_equity = sum(h['value'] for h in holdings)
+        total_assets = total_equity + cash
+        
+        cash_pct = (cash / total_assets * 100) if total_assets > 0 else 0
+        
+        # Generate Chart (only if cash > 0)
+        chart_filename = None
+        if cash > 0:
+            chart_filename = f"chart_guru_{guru['code']}.png"
+            generate_guru_chart(total_equity, cash, chart_filename)
+            
+        # Format values
+        formatted_holdings = []
+        for h in holdings:
+            h['formatted_value'] = f"${h['value']:,.0f}"
+            formatted_holdings.append(h)
+            
+        guru_data.append({
+            'name': guru['name'],
+            'holdings': formatted_holdings,
+            'total_equity': f"{total_equity/1e9:.1f}",
+            'total_cash': f"{cash/1e9:.1f}" if cash > 0 else "N/A",
+            'cash_pct': f"{cash_pct:.1f}" if cash > 0 else "N/A",
+            'chart_filename': chart_filename,
+            'has_cash': cash > 0
+        })
     
     # Generate HTML
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
@@ -297,20 +327,10 @@ def run_guru_analysis(html_filename, chart_filename):
     
     date_str = datetime.now().strftime("%Y-%m-%d")
     output_path = os.path.join(BASE_DIR, html_filename)
-    
-    # Format values for display
-    formatted_holdings = []
-    for h in holdings:
-        h['formatted_value'] = f"${h['value']:,.0f}"
-        formatted_holdings.append(h)
         
     html_content = template.render(
         date=date_str,
-        holdings=formatted_holdings,
-        total_equity=f"{total_equity/1e9:.1f}",
-        total_cash=f"{cash/1e9:.1f}",
-        cash_pct=f"{cash_pct:.1f}",
-        chart_filename=chart_filename,
+        gurus=guru_data,
         current_page=html_filename
     )
     
@@ -331,6 +351,6 @@ if __name__ == "__main__":
     run_analysis(conn, 'NON_SP500', non_sp500_tickers, 'non_spy.html', 'Daily Stock Picks: Non-S&P 500')
     
     # 3. Guru Analysis
-    run_guru_analysis('guru.html', 'chart_guru_composition.png')
+    run_guru_analysis('guru.html')
     
     conn.close()

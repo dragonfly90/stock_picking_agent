@@ -61,7 +61,11 @@ def get_dataroma_holdings(manager_code="BRK"):
 def get_cash_position(ticker="BRK-B"):
     """
     Fetches 'Cash And Cash Equivalents' from yfinance balance sheet.
+    Returns 0 if ticker is None or data not found.
     """
+    if not ticker:
+        return 0
+        
     try:
         print(f"Fetching cash position for {ticker}...")
         stock = yf.Ticker(ticker)

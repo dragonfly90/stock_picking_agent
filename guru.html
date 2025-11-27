@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guru Tracker: Warren Buffett</title>
+    <title>Guru Portfolio Tracker</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -60,8 +60,22 @@
             cursor: default;
         }
 
-        .section {
-            margin-bottom: 40px;
+        .guru-section {
+            margin-bottom: 60px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 40px;
+        }
+
+        .guru-section:last-child {
+            border-bottom: none;
+        }
+
+        .guru-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
         }
 
         .chart-container {
@@ -92,8 +106,6 @@
 
         th {
             background-color: #f8f9fa;
-            position: sticky;
-            top: 0;
         }
 
         tr:hover {
@@ -140,7 +152,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Guru Tracker: Warren Buffett</h1>
+            <h1>Guru Portfolio Tracker</h1>
             <div class="date">Report generated on: 2025-11-27</div>
         </div>
 
@@ -150,28 +162,33 @@
             <a href="guru.html" class="active">Guru Tracker</a>
         </div>
 
-        <div class="summary-box">
-            <div class="stat">
-                <div class="stat-val">$267.3B</div>
-                <div class="stat-label">Equity Portfolio</div>
-            </div>
-            <div class="stat">
-                <div class="stat-val">$334.2B</div>
-                <div class="stat-label">Cash on Hand</div>
-            </div>
-            <div class="stat">
-                <div class="stat-val">55.6%</div>
-                <div class="stat-label">Cash Allocation</div>
-            </div>
-        </div>
+        
+        <div class="guru-section">
+            <div class="guru-title">Warren Buffett (Berkshire Hathaway)</div>
 
-        <div class="section chart-container">
-            <h2>Portfolio Composition</h2>
-            <img src="chart_guru_composition.png" alt="Portfolio Composition Chart">
-        </div>
+            
+            <div class="summary-box">
+                <div class="stat">
+                    <div class="stat-val">$267.3B</div>
+                    <div class="stat-label">Equity Portfolio</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">$334.2B</div>
+                    <div class="stat-label">Cash on Hand</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">55.6%</div>
+                    <div class="stat-label">Cash Allocation</div>
+                </div>
+            </div>
 
-        <div class="section">
-            <h2>Top Equity Holdings</h2>
+            <div class="chart-container">
+                <h3>Portfolio Composition</h3>
+                <img src="chart_guru_BRK.png" alt="Portfolio Composition Chart">
+            </div>
+            
+
+            <h3>Top Equity Holdings</h3>
             <table>
                 <thead>
                     <tr>
@@ -472,11 +489,140 @@
                     
                 </tbody>
             </table>
-            <p style="font-size: 0.8em; color: #7f8c8d; margin-top: 10px;">
-                * Equity data from 13F filings via Dataroma. Cash data from latest Berkshire Hathaway balance sheet via
-                yfinance.
-            </p>
         </div>
+        
+        <div class="guru-section">
+            <div class="guru-title">Bill Gates (Foundation Trust)</div>
+
+            
+            <div class="summary-box">
+                <div class="stat">
+                    <div class="stat-val">$0.0B</div>
+                    <div class="stat-label">Equity Portfolio</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">N/A</div>
+                    <div class="stat-label">Cash (Private/Not Avail)</div>
+                </div>
+            </div>
+            
+
+            <h3>Top Equity Holdings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Company</th>
+                        <th class="pct">% of Portfolio</th>
+                        <th class="val">Value ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="guru-section">
+            <div class="guru-title">Ray Dalio (Bridgewater Associates)</div>
+
+            
+            <div class="summary-box">
+                <div class="stat">
+                    <div class="stat-val">$1.1B</div>
+                    <div class="stat-label">Equity Portfolio</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">N/A</div>
+                    <div class="stat-label">Cash (Private/Not Avail)</div>
+                </div>
+            </div>
+            
+
+            <h3>Top Equity Holdings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Company</th>
+                        <th class="pct">% of Portfolio</th>
+                        <th class="val">Value ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/DHR" target="_blank">DHR</a></td>
+                        <td>Danaher Corp.</td>
+                        <td class="pct">15.34%</td>
+                        <td class="val">$170,672,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/ASML" target="_blank">ASML</a></td>
+                        <td>ASML Holding NV</td>
+                        <td class="pct">15.07%</td>
+                        <td class="val">$167,698,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/AER" target="_blank">AER</a></td>
+                        <td>AerCap Holdings N.V.</td>
+                        <td class="pct">13.75%</td>
+                        <td class="val">$152,944,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/META" target="_blank">META</a></td>
+                        <td>Meta Platforms Inc.</td>
+                        <td class="pct">12.69%</td>
+                        <td class="val">$141,165,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/AZO" target="_blank">AZO</a></td>
+                        <td>AutoZone Inc.</td>
+                        <td class="pct">11.52%</td>
+                        <td class="val">$128,184,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/GOOG" target="_blank">GOOG</a></td>
+                        <td>Alphabet Inc. CL C</td>
+                        <td class="pct">9.40%</td>
+                        <td class="val">$104,560,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/BKNG" target="_blank">BKNG</a></td>
+                        <td>Booking Holdings Inc.</td>
+                        <td class="pct">8.24%</td>
+                        <td class="val">$91,653,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/RPRX" target="_blank">RPRX</a></td>
+                        <td>Royalty Pharma plc</td>
+                        <td class="pct">7.45%</td>
+                        <td class="val">$82,924,000</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/ENOV" target="_blank">ENOV</a></td>
+                        <td>Enovis Corp.</td>
+                        <td class="pct">6.54%</td>
+                        <td class="val">$72,795,000</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+
+        <p style="font-size: 0.8em; color: #7f8c8d; margin-top: 20px; text-align: center;">
+            * Equity data from 13F filings via Dataroma. Cash data from latest public balance sheets via yfinance (where
+            available).
+        </p>
     </div>
 </body>
 
