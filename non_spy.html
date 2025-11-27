@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>Daily Stock Pick: Non-S&P 500</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -114,43 +114,46 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>{{ title }}</h1>
-            <div class="date">Report generated on: {{ date }}</div>
+            <h1>Daily Stock Pick: Non-S&P 500</h1>
+            <div class="date">Report generated on: 2025-11-26</div>
         </div>
 
         <div class="nav">
-            <a href="index.html" class="{% if current_page == 'index.html' %}active{% endif %}">S&P 500</a>
-            <a href="non_spy.html" class="{% if current_page == 'non_spy.html' %}active{% endif %}">Non-S&P 500</a>
+            <a href="index.html" class="">S&P 500</a>
+            <a href="non_spy.html" class="active">Non-S&P 500</a>
         </div>
 
-        {% if top_pick %}
+        
         <div class="highlight">
-            <h2>Top Pick: {{ top_pick.ticker }}</h2>
-            <div class="score">Score: {{ top_pick.score }}/5</div>
-            <p><strong>PEG Ratio:</strong> {{ top_pick.peg }} | <strong>P/E Ratio:</strong> {{ top_pick.pe }}</p>
+            <h2>Top Pick: ATR</h2>
+            <div class="score">Score: 5/5</div>
+            <p><strong>PEG Ratio:</strong> 0.67 | <strong>P/E Ratio:</strong> 19.87</p>
 
             <h3>Company Description</h3>
-            <p>{{ top_pick.description }}</p>
+            <p>AptarGroup, Inc. designs and manufactures a range of drug delivery, consumer product dispensing, and active material science solutions and services for the pharmaceutical, beauty, personal care, home care, and food and beverage markets. The company operates through Aptar Pharma, Aptar Beauty, and Aptar Closures segments. It also provides pumps for nasal allergy treatments; and metered dose inhaler valves for respiratory ailments, such as asthma and chronic obstructive pulmonary diseases; elastomer for injectable primary packaging components; and active material science solutions. In addition, the company offers dispensing pumps, closures, elastomeric components, aerosol valves, and digital health solutions. It primarily sells its products and services in Asia, Europe, Latin America, and North America. AptarGroup, Inc. was incorporated in 1992 and is headquartered in Crystal Lake, Illinois.</p>
 
             <h3>Price History (1 Year)</h3>
-            <img src="{{ chart_filename }}" alt="Price Chart">
+            <img src="chart_non_spy.png" alt="Price Chart">
 
             <h3>Why it was picked:</h3>
             <ul class="details-list">
-                {% for detail in top_pick.details %}
-                <li>✅ {{ detail }}</li>
-                {% endfor %}
+                
+                <li>✅ ROE: 15.62% (>15%)</li>
+                
+                <li>✅ Margin: 11.45% (>10%)</li>
+                
+                <li>✅ Rev Growth: 5.70% (>5%)</li>
+                
+                <li>✅ D/E: 45.647 (<50%)</li>
+                
+                <li>✅ PEG: 0.67 (<2.0)</li>
+                
             </ul>
         </div>
-        {% else %}
-        <div class="highlight">
-            <h2>No Top Pick Today</h2>
-            <p>No stocks met the strict criteria today.</p>
-        </div>
-        {% endif %}
+        
 
         <h2>Historical Top Picks</h2>
-        {% if history %}
+        
         <table>
             <thead>
                 <tr>
@@ -162,20 +165,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in history %}
+                
                 <tr>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.ticker }}</td>
-                    <td>{{ item.score }}</td>
-                    <td>{{ item.peg }}</td>
-                    <td>{{ item.pe }}</td>
+                    <td>2025-11-26</td>
+                    <td>ATR</td>
+                    <td>5</td>
+                    <td>0.67</td>
+                    <td>19.87</td>
                 </tr>
-                {% endfor %}
+                
             </tbody>
         </table>
-        {% else %}
-        <p>No history available yet.</p>
-        {% endif %}
+        
     </div>
 </body>
 

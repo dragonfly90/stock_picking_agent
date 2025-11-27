@@ -4,29 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Stock Pick</title>
+    <title>Daily Stock Pick: S&P 500</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #f4f4f9;
             color: #333;
+            background-color: #f4f4f9;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
             background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         h1 {
             color: #2c3e50;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .date {
@@ -35,22 +38,41 @@
             margin-bottom: 20px;
         }
 
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .nav a.active {
+            color: #2c3e50;
+            text-decoration: underline;
+            cursor: default;
+        }
+
         .highlight {
             background-color: #e8f8f5;
             border-left: 5px solid #1abc9c;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .highlight h2 {
-            margin-top: 0;
-            color: #16a085;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
         }
 
         .score {
-            font-size: 1.2em;
+            font-size: 24px;
             font-weight: bold;
-            color: #27ae60;
+            color: #28a745;
+            margin: 10px 0;
         }
 
         table {
@@ -61,17 +83,13 @@
 
         th,
         td {
-            text-align: left;
             padding: 12px;
+            text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
         th {
             background-color: #f8f9fa;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
         }
 
         .details-list {
@@ -82,26 +100,40 @@
         .details-list li {
             margin-bottom: 5px;
         }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Daily Stock Pick Agent</h1>
-        <div class="date">Report generated on: 2025-11-24</div>
+        <div class="header">
+            <h1>Daily Stock Pick: S&P 500</h1>
+            <div class="date">Report generated on: 2025-11-26</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html" class="active">S&P 500</a>
+            <a href="non_spy.html" class="">Non-S&P 500</a>
+        </div>
 
         
         <div class="highlight">
             <h2>Top Pick: ACGL</h2>
             <div class="score">Score: 5/5</div>
-            <p><strong>PEG Ratio:</strong> 0.22 | <strong>P/E Ratio:</strong> 8.62</p>
+            <p><strong>PEG Ratio:</strong> 0.23 | <strong>P/E Ratio:</strong> 8.85</p>
 
             <h3>Company Description</h3>
             <p>Arch Capital Group Ltd., together with its subsidiaries, provides insurance, reinsurance, and mortgage insurance products in the United States, Canada, Bermuda, the United Kingdom, Europe, and Australia. The Insurance segment offers commercial automobile; commercial multiperil; financial and professional line liability; admitted, excess, and surplus casualty lines; property and short-tail specialty; workers compensation; casualty; marine and aviation; excess and surplus casualty; construction and national accounts; alternative market risks and employer's liability; travel, accident, and health; contract and commercial surety coverage; and other insurance products, as well as Lloyd's syndicates; programs; and warranty and lenders solutions. Its Reinsurance segment provides reinsurance products for casualty; marine and aviation; property catastrophe; property excluding property catastrophe; and other specialty products. The Mortgage segment offers U.S. primary mortgage insurance business written predominantly on loans sold to the Federal National Mortgage Association and Federal Home Loan Mortgage Corporation; reinsurance and underwriting services related to the U.S. credit-risk transfer business and other U.S. mortgage reinsurance transactions; and international mortgage insurance and reinsurance business covering loans. It markets its products through a group of licensed independent retail and wholesale brokers. The company was formerly known as Risk Capital Holdings, Inc. Arch Capital Group Ltd. was founded in 1995 and is headquartered in Pembroke, Bermuda.</p>
 
             <h3>Price History (1 Year)</h3>
-            <img src="chart.png" alt="Price Chart"
-                style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+            <img src="chart.png" alt="Price Chart">
 
             <h3>Why it was picked:</h3>
             <ul class="details-list">
@@ -114,7 +146,7 @@
                 
                 <li>✅ D/E: 11.501 (<50%)</li>
                 
-                <li>✅ PEG: 0.22 (<2.0)</li>
+                <li>✅ PEG: 0.23 (<2.0)</li>
                 
             </ul>
         </div>
@@ -133,6 +165,22 @@
                 </tr>
             </thead>
             <tbody>
+                
+                <tr>
+                    <td>2025-11-26</td>
+                    <td>ACGL</td>
+                    <td>5</td>
+                    <td>0.23</td>
+                    <td>8.85</td>
+                </tr>
+                
+                <tr>
+                    <td>2025-11-25</td>
+                    <td>ACGL</td>
+                    <td>5</td>
+                    <td>0.22</td>
+                    <td>8.77</td>
+                </tr>
                 
                 <tr>
                     <td>2025-11-24</td>

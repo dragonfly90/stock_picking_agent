@@ -21,6 +21,48 @@ def get_sp500_tickers():
         print(f"Error fetching S&P 500 tickers: {e}")
         return []
 
+def get_sp400_tickers():
+    url = "https://en.wikipedia.org/wiki/List_of_S%26P_400_companies"
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        table = soup.find('table', {'id': 'constituents'})
+        tickers = []
+        for row in table.findAll('tr')[1:]:
+            # Ticker is usually in the first column, similar to S&P 500
+            cells = row.findAll('td')
+            if cells:
+                ticker = cells[0].text.strip()
+                tickers.append(ticker)
+        return tickers
+    except Exception as e:
+        print(f"Error fetching S&P 400 tickers: {e}")
+        return []
+
+def get_sp600_tickers():
+    url = "https://en.wikipedia.org/wiki/List_of_S%26P_600_companies"
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        table = soup.find('table', {'id': 'constituents'})
+        tickers = []
+        for row in table.findAll('tr')[1:]:
+            cells = row.findAll('td')
+            if cells:
+                ticker = cells[0].text.strip()
+                tickers.append(ticker)
+        return tickers
+    except Exception as e:
+        print(f"Error fetching S&P 600 tickers: {e}")
+        return []
+
+def get_non_sp500_tickers():
+    return get_sp400_tickers() + get_sp600_tickers()
+
 def get_stock_data(ticker):
     """Fetches financial data for a given ticker using yfinance."""
     try:

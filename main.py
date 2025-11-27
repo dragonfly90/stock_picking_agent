@@ -74,13 +74,13 @@ import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
+import fetch_data
+import analyze
 
 # Get the absolute path of the directory where this script is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, 'stocks.db')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
-OUTPUT_HTML_PATH = os.path.join(BASE_DIR, 'index.html')
-CHART_PATH = os.path.join(BASE_DIR, 'chart.png')
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -96,37 +96,48 @@ def init_db():
         c.execute("ALTER TABLE picks ADD COLUMN pe real")
     except sqlite3.OperationalError:
         pass # Column likely exists
+
+    # Add universe column if not exists (migration hack for demo)
+    try:
+        c.execute("ALTER TABLE picks ADD COLUMN universe text")
+    except sqlite3.OperationalError:
+        pass # Column likely exists
         
     c.execute('''CREATE TABLE IF NOT EXISTS picks
-                 (date text, ticker text, score integer, peg real, details text, description text, pe real)''')
+                 (date text, ticker text, score integer, peg real, details text, description text, pe real, universe text)''')
     conn.commit()
     return conn
 
-def save_to_db(conn, pick):
+def save_to_db(conn, pick, universe):
     c = conn.cursor()
     date_str = datetime.now().strftime("%Y-%m-%d")
-    # Check if we already have a pick for today to avoid duplicates
-    c.execute("SELECT * FROM picks WHERE date = ?", (date_str,))
+    # Check if we already have a pick for today/universe to avoid duplicates
+    c.execute("SELECT * FROM picks WHERE date = ? AND universe = ?", (date_str, universe))
     if c.fetchone():
-        print("Already have a pick for today. Updating...")
-        c.execute("DELETE FROM picks WHERE date = ?", (date_str,))
+        print(f"Already have a pick for today ({universe}). Updating...")
+        c.execute("DELETE FROM picks WHERE date = ? AND universe = ?", (date_str, universe))
     
     # Handle missing description
     desc = pick.get('description', 'No description available.')
     pe = pick['metrics'].get('pe')
     
-    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?)",
-              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe))
+    c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+              (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe, universe))
     conn.commit()
 
-def get_history(conn):
+def get_history(conn, universe):
     c = conn.cursor()
-    c.execute("SELECT * FROM picks ORDER BY date DESC LIMIT 30")
+    # Handle backward compatibility where universe might be NULL (assume SP500)
+    if universe == 'SP500':
+        c.execute("SELECT * FROM picks WHERE universe = ? OR universe IS NULL ORDER BY date DESC LIMIT 30", (universe,))
+    else:
+        c.execute("SELECT * FROM picks WHERE universe = ? ORDER BY date DESC LIMIT 30", (universe,))
+        
     rows = c.fetchall()
     history = []
     for row in rows:
         # Handle potentially missing description/pe in old rows if schema changed
-        # Row: date, ticker, score, peg, details, description, pe
+        # Row: date, ticker, score, peg, details, description, pe, universe
         desc = row[5] if len(row) > 5 else "N/A"
         pe = row[6] if len(row) > 6 else None
         
@@ -139,11 +150,12 @@ def get_history(conn):
         })
     return history
 
-def generate_chart(ticker, history_data):
+def generate_chart(ticker, history_data, filename):
     if history_data is None or history_data.empty:
         print("No history data for chart.")
         return False
     
+    chart_path = os.path.join(BASE_DIR, filename)
     plt.figure(figsize=(10, 5))
     plt.plot(history_data.index, history_data['Close'], label='Close Price')
     plt.title(f"{ticker} - 1 Year Price History")
@@ -151,16 +163,17 @@ def generate_chart(ticker, history_data):
     plt.ylabel("Price (USD)")
     plt.grid(True)
     plt.legend()
-    plt.savefig(CHART_PATH)
+    plt.savefig(chart_path)
     plt.close()
-    print(f"Generated {CHART_PATH}")
+    print(f"Generated {chart_path}")
     return True
 
-def generate_html(top_pick, history):
+def generate_html(top_pick, history, filename, title, chart_filename):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template('index.html')
     
     date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, filename)
     
     # Format top pick for template
     pick_data = None
@@ -177,24 +190,23 @@ def generate_html(top_pick, history):
     html_content = template.render(
         date=date_str,
         top_pick=pick_data,
-        history=history
+        history=history,
+        title=title,
+        chart_filename=chart_filename,
+        current_page=filename
     )
     
-    with open(OUTPUT_HTML_PATH, 'w') as f:
+    with open(output_path, 'w') as f:
         f.write(html_content)
-    print(f"Generated {OUTPUT_HTML_PATH}")
+    print(f"Generated {output_path}")
 
-if __name__ == "__main__":
-    # Initialize DB
-    conn = init_db()
+def run_analysis(conn, universe_name, tickers, html_filename, chart_filename, title):
+    print(f"Starting Analysis for {universe_name}...")
     
-    print("Starting Daily Analysis...")
-    tickers = fetch_data.get_sp500_tickers()
     # Limit for demo/speed if needed
     tickers = tickers[:50] 
     
     stocks_data = []
-    count = 0
     
     for ticker in tickers:
         try:
@@ -209,24 +221,11 @@ if __name__ == "__main__":
     top_pick = None
     if ranked_stocks:
         top_pick = ranked_stocks[0]
-        print(f"Top Pick: {top_pick['ticker']}")
+        print(f"Top Pick ({universe_name}): {top_pick['ticker']}")
         
         # Fetch additional info for top pick
         print("Fetching history and description...")
         hist = fetch_data.get_stock_history(top_pick['ticker'])
-        generate_chart(top_pick['ticker'], hist)
-        
-        # Get description from the info object we already have? 
-        # We need to check if 'longBusinessSummary' is in the info we stored.
-        # In fetch_data.get_stock_data we returned 'info'.
-        # Let's check if we need to re-fetch or if it's there.
-        # It should be in the info dict.
-        # Let's extract it.
-        # We need to find the info object for the top pick.
-        # ranked_stocks contains dicts constructed in analyze.py.
-        # analyze.py didn't pass through the whole info object, just metrics.
-        # Wait, analyze.py:
-        # scored_stocks.append({ 'ticker': ticker, 'score': ..., 'details': ..., 'metrics': ... })
         # It does NOT pass the raw info. We need to fetch it again or modify analyze.py.
         # Easier to fetch it again or just get it from the list if we kept it.
         # We have stocks_data list of (ticker, info).
@@ -236,10 +235,24 @@ if __name__ == "__main__":
         if pick_info:
             top_pick['description'] = pick_info.get('longBusinessSummary', 'No description.')
         
-        save_to_db(conn, top_pick)
+        save_to_db(conn, top_pick, universe_name)
     else:
         print("No top pick found.")
         
-    history = get_history(conn)
-    generate_html(top_pick, history)
+    history = get_history(conn, universe_name)
+    generate_html(top_pick, history, html_filename, title, chart_filename)
+    # conn.close() - Do not close here, let main handle it
+
+if __name__ == "__main__":
+    # Initialize DB
+    conn = init_db()
+    
+    # 1. S&P 500 Analysis
+    sp500_tickers = fetch_data.get_sp500_tickers()
+    run_analysis(conn, 'SP500', sp500_tickers, 'index.html', 'chart.png', 'Daily Stock Pick: S&P 500')
+    
+    # 2. Non-S&P 500 Analysis (S&P 400 + 600)
+    non_sp500_tickers = fetch_data.get_non_sp500_tickers()
+    run_analysis(conn, 'NON_SP500', non_sp500_tickers, 'non_spy.html', 'chart_non_spy.png', 'Daily Stock Pick: Non-S&P 500')
+    
     conn.close()
