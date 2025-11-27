@@ -75,6 +75,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 import fetch_data
+import fetch_guru
 import analyze
 
 # Get the absolute path of the directory where this script is located
@@ -161,7 +162,7 @@ def generate_chart(ticker, history_data, filename):
     chart_path = os.path.join(BASE_DIR, filename)
     plt.figure(figsize=(10, 5))
     plt.plot(history_data.index, history_data['Close'], label='Close Price')
-    plt.title(f"{ticker} - 1 Year Price History")
+    plt.title(f"{ticker} - 5 Year Price History")
     plt.xlabel("Date")
     plt.ylabel("Price (USD)")
     plt.grid(True)
@@ -251,6 +252,72 @@ def run_analysis(conn, universe_name, tickers, html_filename, title):
     generate_html(top_stocks, history, html_filename, title)
     # conn.close() - Do not close here, let main handle it
 
+import fetch_guru
+
+# ... (existing imports)
+
+def generate_guru_chart(equity_val, cash_val, filename):
+    chart_path = os.path.join(BASE_DIR, filename)
+    
+    labels = ['Equity Portfolio', 'Cash & Equivalents']
+    sizes = [equity_val, cash_val]
+    colors = ['#3498db', '#2ecc71']
+    explode = (0.1, 0)  # explode 1st slice
+    
+    plt.figure(figsize=(8, 6))
+    plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+            autopct='%1.1f%%', shadow=True, startangle=140)
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.title("Berkshire Hathaway Asset Allocation")
+    plt.savefig(chart_path)
+    plt.close()
+    print(f"Generated {chart_path}")
+
+def run_guru_analysis(html_filename, chart_filename):
+    print("Starting Guru Analysis (Warren Buffett)...")
+    
+    # 1. Fetch Holdings
+    holdings = fetch_guru.get_dataroma_holdings()
+    
+    # 2. Fetch Cash
+    cash = fetch_guru.get_cash_position()
+    
+    # Calculate totals
+    total_equity = sum(h['value'] for h in holdings)
+    total_assets = total_equity + cash
+    
+    cash_pct = (cash / total_assets * 100) if total_assets > 0 else 0
+    
+    # Generate Chart
+    generate_guru_chart(total_equity, cash, chart_filename)
+    
+    # Generate HTML
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('guru.html')
+    
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+    
+    # Format values for display
+    formatted_holdings = []
+    for h in holdings:
+        h['formatted_value'] = f"${h['value']:,.0f}"
+        formatted_holdings.append(h)
+        
+    html_content = template.render(
+        date=date_str,
+        holdings=formatted_holdings,
+        total_equity=f"{total_equity/1e9:.1f}",
+        total_cash=f"{cash/1e9:.1f}",
+        cash_pct=f"{cash_pct:.1f}",
+        chart_filename=chart_filename,
+        current_page=html_filename
+    )
+    
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"Generated {output_path}")
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
@@ -262,5 +329,8 @@ if __name__ == "__main__":
     # 2. Non-S&P 500 Analysis (S&P 400 + 600)
     non_sp500_tickers = fetch_data.get_non_sp500_tickers()
     run_analysis(conn, 'NON_SP500', non_sp500_tickers, 'non_spy.html', 'Daily Stock Picks: Non-S&P 500')
+    
+    # 3. Guru Analysis
+    run_guru_analysis('guru.html', 'chart_guru_composition.png')
     
     conn.close()

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guru Tracker: Warren Buffett</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .nav a.active {
+            color: #2c3e50;
+            text-decoration: underline;
+            cursor: default;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .val {
+            text-align: right;
+        }
+
+        .pct {
+            text-align: right;
+        }
+
+        .summary-box {
+            display: flex;
+            justify-content: space-around;
+            background: #e8f8f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #1abc9c;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Guru Tracker: Warren Buffett</h1>
+            <div class="date">Report generated on: {{ date }}</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html" class="active">Guru Tracker</a>
+        </div>
+
+        <div class="summary-box">
+            <div class="stat">
+                <div class="stat-val">${{ total_equity }}B</div>
+                <div class="stat-label">Equity Portfolio</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val">${{ total_cash }}B</div>
+                <div class="stat-label">Cash on Hand</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val">{{ cash_pct }}%</div>
+                <div class="stat-label">Cash Allocation</div>
+            </div>
+        </div>
+
+        <div class="section chart-container">
+            <h2>Portfolio Composition</h2>
+            <img src="{{ chart_filename }}" alt="Portfolio Composition Chart">
+        </div>
+
+        <div class="section">
+            <h2>Top Equity Holdings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Company</th>
+                        <th class="pct">% of Portfolio</th>
+                        <th class="val">Value ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in holdings %}
+                    <tr>
+                        <td><a href="https://finance.yahoo.com/quote/{{ stock.ticker }}" target="_blank">{{ stock.ticker
+                                }}</a></td>
+                        <td>{{ stock.name }}</td>
+                        <td class="pct">{{ stock.pct_portfolio }}%</td>
+                        <td class="val">{{ stock.formatted_value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p style="font-size: 0.8em; color: #7f8c8d; margin-top: 10px;">
+                * Equity data from 13F filings via Dataroma. Cash data from latest Berkshire Hathaway balance sheet via
+                yfinance.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
