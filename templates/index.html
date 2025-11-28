@@ -129,7 +129,9 @@
         <div class="highlight">
             <h2>#{{ loop.index }} Pick: {{ stock.ticker }}</h2>
             <div class="score">Score: {{ stock.score }}/5</div>
-            <p><strong>PEG Ratio:</strong> {{ stock.peg }} | <strong>P/E Ratio:</strong> {{ stock.pe }}</p>
+            <p><strong>PEG Ratio:</strong> {{ stock.peg }} | <strong>P/E Ratio:</strong> {{ stock.pe }} |
+                <strong>Dividend Yield:</strong> {{ stock.dividend_yield }}
+            </p>
 
             <h3>Company Description</h3>
             <p>{{ stock.description }}</p>
@@ -162,6 +164,7 @@
                     <th>Score</th>
                     <th>PEG</th>
                     <th>P/E</th>
+                    <th>Div Yield</th>
                 </tr>
             </thead>
             <tbody>
@@ -172,6 +175,7 @@
                     <td>{{ item.score }}</td>
                     <td>{{ item.peg }}</td>
                     <td>{{ item.pe }}</td>
+                    <td>{{ item.dividend_yield }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

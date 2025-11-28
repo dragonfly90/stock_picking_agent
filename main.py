@@ -103,9 +103,15 @@ def init_db():
         c.execute("ALTER TABLE picks ADD COLUMN universe text")
     except sqlite3.OperationalError:
         pass # Column likely exists
+
+    # Add dividend_yield column if not exists (migration hack for demo)
+    try:
+        c.execute("ALTER TABLE picks ADD COLUMN dividend_yield real")
+    except sqlite3.OperationalError:
+        pass # Column likely exists
         
     c.execute('''CREATE TABLE IF NOT EXISTS picks
-                 (date text, ticker text, score integer, peg real, details text, description text, pe real, universe text)''')
+                 (date text, ticker text, score integer, peg real, details text, description text, pe real, universe text, dividend_yield real)''')
     conn.commit()
     return conn
 
@@ -124,9 +130,10 @@ def save_to_db(conn, picks, universe):
         # Handle missing description
         desc = pick.get('description', 'No description available.')
         pe = pick['metrics'].get('pe')
+        dividend_yield = pick['metrics'].get('dividend_yield')
         
-        c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                  (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe, universe))
+        c.execute("INSERT INTO picks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  (date_str, pick['ticker'], pick['score'], pick['metrics']['peg'], str(pick['details']), desc, pe, universe, dividend_yield))
     conn.commit()
 
 def get_history(conn, universe):
@@ -140,17 +147,19 @@ def get_history(conn, universe):
     rows = c.fetchall()
     history = []
     for row in rows:
-        # Handle potentially missing description/pe in old rows if schema changed
-        # Row: date, ticker, score, peg, details, description, pe, universe
+        # Handle potentially missing description/pe/dividend_yield in old rows if schema changed
+        # Row: date, ticker, score, peg, details, description, pe, universe, dividend_yield
         desc = row[5] if len(row) > 5 else "N/A"
         pe = row[6] if len(row) > 6 else None
+        dividend_yield = row[8] if len(row) > 8 else None
         
         history.append({
             'date': row[0],
             'ticker': row[1],
             'score': row[2],
             'peg': f"{row[3]:.2f}" if row[3] else "N/A",
-            'pe': f"{pe:.2f}" if pe else "N/A"
+            'pe': f"{pe:.2f}" if pe else "N/A",
+            'dividend_yield': f"{dividend_yield*100:.2f}%" if dividend_yield else "N/A"
         })
     return history
 
@@ -183,11 +192,13 @@ def generate_html(top_stocks, history, filename, title):
     formatted_stocks = []
     if top_stocks:
         for stock in top_stocks:
+            dividend_yield = stock['metrics'].get('dividend_yield')
             formatted_stocks.append({
                 'ticker': stock['ticker'],
                 'score': stock['score'],
                 'peg': f"{stock['metrics']['peg']:.2f}" if stock['metrics']['peg'] else "N/A",
                 'pe': f"{stock['metrics']['pe']:.2f}" if stock['metrics'].get('pe') else "N/A",
+                'dividend_yield': f"{dividend_yield*100:.2f}%" if dividend_yield else "N/A",
                 'details': stock['details'],
                 'description': stock.get('description', 'No description available.'),
                 'chart_filename': stock.get('chart_filename')

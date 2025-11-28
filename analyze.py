@@ -71,7 +71,8 @@ def score_stock(info):
             'rev_growth': rev_growth,
             'de': de,
             'peg': peg,
-            'pe': info.get('trailingPE')
+            'pe': info.get('trailingPE'),
+            'dividend_yield': info.get('dividendYield')
         }
     }
 
