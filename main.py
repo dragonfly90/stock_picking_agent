@@ -77,6 +77,7 @@ from jinja2 import Environment, FileSystemLoader
 import fetch_data
 import fetch_guru
 import fetch_competitors
+import performance
 import analyze
 
 # Get the absolute path of the directory where this script is located
@@ -341,6 +342,15 @@ def run_guru_analysis(html_filename):
         total_equity = sum(h['value'] for h in holdings)
         total_assets = total_equity + cash
         
+        perf_chart_filename = None
+        if guru['code'] == 'BRK':
+            # Generate SPY vs BRK comparison chart
+            print("Generating SPY vs BRK performance chart...")
+            spy_returns = performance.get_yearly_returns('SPY', period="max")
+            brk_returns = performance.get_yearly_returns('BRK-B', period="max")
+            perf_chart_filename = "chart_performance_BRK_vs_SPY.png"
+            performance.generate_comparison_chart(spy_returns, brk_returns, os.path.join(BASE_DIR, perf_chart_filename))
+        
         cash_pct = (cash / total_assets * 100) if total_assets > 0 else 0
         
         # Generate Chart (only if cash > 0)
@@ -355,15 +365,16 @@ def run_guru_analysis(html_filename):
             h['formatted_value'] = f"${h['value']:,.0f}"
             formatted_holdings.append(h)
             
-        guru_data.append({
+        guru_entry = { # Create a dictionary for the current guru
             'name': guru['name'],
             'holdings': formatted_holdings,
             'total_equity': f"{total_equity/1e9:.1f}",
             'total_cash': f"{cash/1e9:.1f}" if cash > 0 else "N/A",
             'cash_pct': f"{cash_pct:.1f}" if cash > 0 else "N/A",
             'chart_filename': chart_filename,
+            'performance_chart': perf_chart_filename,
             'has_cash': cash > 0
-        })
+        }
     
     # Generate HTML
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))

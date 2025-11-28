@@ -186,6 +186,13 @@
                 <h3>Portfolio Composition</h3>
                 <img src="{{ guru.chart_filename }}" alt="Portfolio Composition Chart">
             </div>
+
+            {% if guru.performance_chart %}
+            <div class="chart-container">
+                <h3>Performance vs S&P 500</h3>
+                <img src="{{ guru.performance_chart }}" alt="Performance Chart">
+            </div>
+            {% endif %}
             {% else %}
             <div class="summary-box">
                 <div class="stat">
