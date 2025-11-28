@@ -373,8 +373,11 @@ def run_guru_analysis(html_filename):
             'cash_pct': f"{cash_pct:.1f}" if cash > 0 else "N/A",
             'chart_filename': chart_filename,
             'performance_chart': perf_chart_filename,
+            'chart_filename': chart_filename,
+            'performance_chart': perf_chart_filename,
             'has_cash': cash > 0
         }
+        guru_data.append(guru_entry)
     
     # Generate HTML
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
