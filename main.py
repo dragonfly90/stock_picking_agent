@@ -159,7 +159,7 @@ def get_history(conn, universe):
             'score': row[2],
             'peg': f"{row[3]:.2f}" if row[3] else "N/A",
             'pe': f"{pe:.2f}" if pe else "N/A",
-            'dividend_yield': f"{dividend_yield*100:.2f}%" if dividend_yield else "N/A"
+            'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A"
         })
     return history
 
@@ -198,7 +198,7 @@ def generate_html(top_stocks, history, filename, title):
                 'score': stock['score'],
                 'peg': f"{stock['metrics']['peg']:.2f}" if stock['metrics']['peg'] else "N/A",
                 'pe': f"{stock['metrics']['pe']:.2f}" if stock['metrics'].get('pe') else "N/A",
-                'dividend_yield': f"{dividend_yield*100:.2f}%" if dividend_yield else "N/A",
+                'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
                 'details': stock['details'],
                 'description': stock.get('description', 'No description available.'),
                 'chart_filename': stock.get('chart_filename')
