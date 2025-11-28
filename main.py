@@ -76,6 +76,7 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 import fetch_data
 import fetch_guru
+import fetch_competitors
 import analyze
 
 # Get the absolute path of the directory where this script is located
@@ -193,15 +194,34 @@ def generate_html(top_stocks, history, filename, title):
     if top_stocks:
         for stock in top_stocks:
             dividend_yield = stock['metrics'].get('dividend_yield')
+            industry = stock['metrics'].get('industry', 'N/A')
+            sector = stock['metrics'].get('sector', 'N/A')
+            
+            # Format competitors
+            formatted_competitors = []
+            for comp in stock.get('competitors', []):
+                mc = comp.get('market_cap')
+                formatted_competitors.append({
+                    'ticker': comp['ticker'],
+                    'name': comp['name'],
+                    'market_cap': f"${mc/1e9:.1f}B" if mc else "N/A",
+                    'pe': f"{comp['pe']:.2f}" if comp.get('pe') else "N/A",
+                    'peg': f"{comp['peg']:.2f}" if comp.get('peg') else "N/A",
+                    'dividend_yield': f"{comp['dividend_yield']:.2f}%" if comp.get('dividend_yield') else "N/A"
+                })
+            
             formatted_stocks.append({
                 'ticker': stock['ticker'],
                 'score': stock['score'],
                 'peg': f"{stock['metrics']['peg']:.2f}" if stock['metrics']['peg'] else "N/A",
                 'pe': f"{stock['metrics']['pe']:.2f}" if stock['metrics'].get('pe') else "N/A",
                 'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                'industry': industry,
+                'sector': sector,
                 'details': stock['details'],
                 'description': stock.get('description', 'No description available.'),
-                'chart_filename': stock.get('chart_filename')
+                'chart_filename': stock.get('chart_filename'),
+                'competitors': formatted_competitors
             })
 
     html_content = template.render(
@@ -252,6 +272,19 @@ def run_analysis(conn, universe_name, tickers, html_filename, title):
             pick_info = next((info for t, info in stocks_data if t == stock['ticker']), None)
             if pick_info:
                 stock['description'] = pick_info.get('longBusinessSummary', 'No description.')
+            
+            # Get competitors and comparison
+            sector = stock['metrics'].get('sector', '')
+            industry = stock['metrics'].get('industry', '')
+            peer_tickers = fetch_competitors.get_industry_peers(stock['ticker'], sector, industry)
+            
+            if peer_tickers:
+                # Include the current stock in comparison
+                all_tickers = [stock['ticker']] + peer_tickers
+                comparison = fetch_competitors.compare_stocks(all_tickers)
+                stock['competitors'] = comparison
+            else:
+                stock['competitors'] = []
             
             top_stocks.append(stock)
         

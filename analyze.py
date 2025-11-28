@@ -72,7 +72,9 @@ def score_stock(info):
             'de': de,
             'peg': peg,
             'pe': info.get('trailingPE'),
-            'dividend_yield': info.get('dividendYield')
+            'dividend_yield': info.get('dividendYield'),
+            'industry': info.get('industry'),
+            'sector': info.get('sector')
         }
     }
 

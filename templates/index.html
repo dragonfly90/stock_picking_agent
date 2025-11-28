@@ -136,6 +136,40 @@
             <h3>Company Description</h3>
             <p>{{ stock.description }}</p>
 
+            <h3>Industry & Sector</h3>
+            <p><strong>Industry:</strong> {{ stock.industry }} | <strong>Sector:</strong> {{ stock.sector }}</p>
+
+            {% if stock.competitors %}
+            <h3>Competitor Comparison</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;">
+                <thead>
+                    <tr style="background-color: #f8f9fa;">
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Company</th>
+                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #ddd;">Market Cap</th>
+                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #ddd;">P/E</th>
+                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #ddd;">PEG</th>
+                        <th style="padding: 8px; text-align: right; border-bottom: 1px solid #ddd;">Div Yield</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comp in stock.competitors %}
+                    <tr {% if comp.ticker==stock.ticker %}style="background-color: #e8f8f5; font-weight: bold;" {% endif
+                        %}>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">{{ comp.ticker }}{% if comp.ticker ==
+                            stock.ticker %} (This Stock){% endif %}<br><small style="color: #7f8c8d;">{{ comp.name
+                                }}</small></td>
+                        <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee;">{{ comp.market_cap
+                            }}</td>
+                        <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee;">{{ comp.pe }}</td>
+                        <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee;">{{ comp.peg }}</td>
+                        <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee;">{{
+                            comp.dividend_yield }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
             <h3>Price History (5 Years)</h3>
             <img src="{{ stock.chart_filename }}" alt="Price Chart for {{ stock.ticker }}">
 
