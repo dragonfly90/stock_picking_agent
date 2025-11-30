@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P 500 Consumer Staples Report</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .nav a.active {
+            color: #2c3e50;
+            text-decoration: underline;
+            cursor: default;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .positive {
+            color: green;
+        }
+
+        .negative {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>S&P 500 Consumer Staples Report</h1>
+            <div class="date">Report generated on: 2025-11-29</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html">Guru Tracker</a>
+            <a href="consumer_staples.html" class="active">Consumer Staples</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Company Name</th>
+                    <th>ROE</th>
+                    <th>Profit Margin</th>
+                    <th>Rev Growth</th>
+                    <th>Debt/Equity</th>
+                    <th>PEG Ratio</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td><strong>CLX</strong></td>
+                    <td>The Clorox Company</td>
+                    <td class="positive">443.65%</td>
+                    <td class="positive">11.68%</td>
+                    <td class="">-18.90%</td>
+                    <td class="">2230.435</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>CL</strong></td>
+                    <td>Colgate-Palmolive Company</td>
+                    <td class="positive">293.63%</td>
+                    <td class="positive">14.47%</td>
+                    <td class="">1.90%</td>
+                    <td class="">680.048</td>
+                    <td class="">20.47
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>KMB</strong></td>
+                    <td>Kimberly-Clark Corporation</td>
+                    <td class="positive">136.88%</td>
+                    <td class="">9.98%</td>
+                    <td class="">0.10%</td>
+                    <td class="">500.068</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>SYY</strong></td>
+                    <td>Sysco Corporation</td>
+                    <td class="positive">83.46%</td>
+                    <td class="">2.21%</td>
+                    <td class="">3.20%</td>
+                    <td class="">690.715</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>KO</strong></td>
+                    <td>The Coca-Cola Company</td>
+                    <td class="positive">42.44%</td>
+                    <td class="positive">27.34%</td>
+                    <td class="positive">5.10%</td>
+                    <td class="">144.771</td>
+                    <td class="positive">0.80
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PEP</strong></td>
+                    <td>PepsiCo, Inc.</td>
+                    <td class="positive">37.16%</td>
+                    <td class="">7.82%</td>
+                    <td class="">2.70%</td>
+                    <td class="">260.19</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>K</strong></td>
+                    <td>Kellanova</td>
+                    <td class="positive">32.11%</td>
+                    <td class="positive">10.08%</td>
+                    <td class="">0.80%</td>
+                    <td class="">145.099</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PG</strong></td>
+                    <td>The Procter & Gamble Company</td>
+                    <td class="positive">31.90%</td>
+                    <td class="positive">19.74%</td>
+                    <td class="">3.00%</td>
+                    <td class="">67.125</td>
+                    <td class="positive">1.01
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>HSY</strong></td>
+                    <td>The Hershey Company</td>
+                    <td class="positive">31.01%</td>
+                    <td class="positive">11.84%</td>
+                    <td class="positive">6.50%</td>
+                    <td class="">125.764</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>GIS</strong></td>
+                    <td>General Mills, Inc.</td>
+                    <td class="positive">30.87%</td>
+                    <td class="positive">15.24%</td>
+                    <td class="">-6.80%</td>
+                    <td class="">151.352</td>
+                    <td class="positive">0.08
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>COST</strong></td>
+                    <td>Costco Wholesale Corporation</td>
+                    <td class="positive">30.69%</td>
+                    <td class="">2.94%</td>
+                    <td class="positive">8.10%</td>
+                    <td class="positive">34.066</td>
+                    <td class="">4.57
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>MNST</strong></td>
+                    <td>Monster Beverage Corporation</td>
+                    <td class="positive">25.54%</td>
+                    <td class="positive">21.65%</td>
+                    <td class="positive">16.80%</td>
+                    <td class="positive">0.779</td>
+                    <td class="positive">1.08
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>TGT</strong></td>
+                    <td>Target Corporation</td>
+                    <td class="positive">25.09%</td>
+                    <td class="">3.58%</td>
+                    <td class="">-1.60%</td>
+                    <td class="">132.062</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>KR</strong></td>
+                    <td>The Kroger Co.</td>
+                    <td class="positive">25.05%</td>
+                    <td class="">1.86%</td>
+                    <td class="">0.10%</td>
+                    <td class="">271.402</td>
+                    <td class="positive">0.40
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>WMT</strong></td>
+                    <td>Walmart Inc.</td>
+                    <td class="positive">23.66%</td>
+                    <td class="">3.26%</td>
+                    <td class="positive">5.80%</td>
+                    <td class="">66.747</td>
+                    <td class="positive">1.10
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>DLTR</strong></td>
+                    <td>Dollar Tree, Inc.</td>
+                    <td class="positive">20.05%</td>
+                    <td class="">-15.80%</td>
+                    <td class="positive">12.30%</td>
+                    <td class="">203.675</td>
+                    <td class="positive">0.45
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>CHD</strong></td>
+                    <td>Church & Dwight Co., Inc.</td>
+                    <td class="positive">18.59%</td>
+                    <td class="positive">12.74%</td>
+                    <td class="">5.00%</td>
+                    <td class="">56.855</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>LW</strong></td>
+                    <td>Lamb Weston Holdings, Inc.</td>
+                    <td class="positive">16.22%</td>
+                    <td class="">4.55%</td>
+                    <td class="">0.30%</td>
+                    <td class="">223.019</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>STZ</strong></td>
+                    <td>Constellation Brands, Inc.</td>
+                    <td class="positive">15.91%</td>
+                    <td class="positive">12.71%</td>
+                    <td class="">-15.00%</td>
+                    <td class="">135.429</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>CPB</strong></td>
+                    <td>The Campbell's Company</td>
+                    <td class="positive">15.64%</td>
+                    <td class="">5.87%</td>
+                    <td class="">1.20%</td>
+                    <td class="">184.734</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>DG</strong></td>
+                    <td>Dollar General Corporation</td>
+                    <td class="positive">15.60%</td>
+                    <td class="">2.86%</td>
+                    <td class="positive">5.10%</td>
+                    <td class="">213.026</td>
+                    <td class="">2.16
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>MKC</strong></td>
+                    <td>McCormick & Company, Incorporated</td>
+                    <td class="">13.85%</td>
+                    <td class="positive">11.46%</td>
+                    <td class="">2.70%</td>
+                    <td class="">75.356</td>
+                    <td class="">21.30
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>KVUE</strong></td>
+                    <td>Kenvue Inc.</td>
+                    <td class="">13.47%</td>
+                    <td class="">9.55%</td>
+                    <td class="">-3.50%</td>
+                    <td class="">85.659</td>
+                    <td class="">6.09
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>MDLZ</strong></td>
+                    <td>Mondelez International, Inc.</td>
+                    <td class="">13.10%</td>
+                    <td class="">9.38%</td>
+                    <td class="positive">5.90%</td>
+                    <td class="">83.621</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>BG</strong></td>
+                    <td>Bunge Global SA</td>
+                    <td class="">9.76%</td>
+                    <td class="">2.20%</td>
+                    <td class="positive">71.60%</td>
+                    <td class="">102.816</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>CAG</strong></td>
+                    <td>Conagra Brands, Inc.</td>
+                    <td class="">9.65%</td>
+                    <td class="">7.42%</td>
+                    <td class="">-5.80%</td>
+                    <td class="">92.867</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>HRL</strong></td>
+                    <td>Hormel Foods Corporation</td>
+                    <td class="">9.44%</td>
+                    <td class="">6.26%</td>
+                    <td class="">4.60%</td>
+                    <td class="positive">35.301</td>
+                    <td class="">5.47
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>KDP</strong></td>
+                    <td>Keurig Dr Pepper Inc.</td>
+                    <td class="">6.29%</td>
+                    <td class="">9.78%</td>
+                    <td class="positive">10.70%</td>
+                    <td class="">73.567</td>
+                    <td class="">2.90
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>ADM</strong></td>
+                    <td>Archer-Daniels-Midland Company</td>
+                    <td class="">5.24%</td>
+                    <td class="">1.43%</td>
+                    <td class="">2.20%</td>
+                    <td class="positive">40.467</td>
+                    <td class="positive">0.05
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>TSN</strong></td>
+                    <td>Tyson Foods, Inc.</td>
+                    <td class="">2.76%</td>
+                    <td class="">0.87%</td>
+                    <td class="">2.20%</td>
+                    <td class="">53.19</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>KHC</strong></td>
+                    <td>The Kraft Heinz Company</td>
+                    <td class="">-9.69%</td>
+                    <td class="">-17.35%</td>
+                    <td class="">-2.30%</td>
+                    <td class="">50.968</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>TAP</strong></td>
+                    <td>Molson Coors Beverage Company</td>
+                    <td class="">-17.29%</td>
+                    <td class="">-18.64%</td>
+                    <td class="">-2.30%</td>
+                    <td class="">61.017</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>SJM</strong></td>
+                    <td>The J. M. Smucker Company</td>
+                    <td class="">-17.44%</td>
+                    <td class="">-13.61%</td>
+                    <td class="">2.60%</td>
+                    <td class="">131.357</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>EL</strong></td>
+                    <td>The Estée Lauder Companies Inc.</td>
+                    <td class="">-20.73%</td>
+                    <td class="">-6.44%</td>
+                    <td class="">3.60%</td>
+                    <td class="">242.211</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>MO</strong></td>
+                    <td>Altria Group, Inc.</td>
+                    <td class="">N/A</td>
+                    <td class="positive">43.98%</td>
+                    <td class="">-1.70%</td>
+                    <td class="">N/A</td>
+                    <td class="">2.17
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>BF.B</strong></td>
+                    <td>BF.B</td>
+                    <td class="">N/A</td>
+                    <td class="">N/A</td>
+                    <td class="">N/A</td>
+                    <td class="">N/A</td>
+                    <td class="">N/A
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PM</strong></td>
+                    <td>Philip Morris International Inc.</td>
+                    <td class="">N/A</td>
+                    <td class="positive">21.57%</td>
+                    <td class="positive">9.40%</td>
+                    <td class="">N/A</td>
+                    <td class="positive">1.71
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

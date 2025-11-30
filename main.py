@@ -396,6 +396,75 @@ def run_guru_analysis(html_filename):
         f.write(html_content)
     print(f"Generated {output_path}")
 
+def run_consumer_staples_analysis(html_filename, title):
+    print("Starting Consumer Staples Analysis...")
+    
+    # 1. Get S&P 500 tickers with sectors
+    all_stocks = fetch_data.get_sp500_tickers_with_sector()
+    
+    # 2. Filter for Consumer Staples
+    staples_tickers = [s['ticker'] for s in all_stocks if s['sector'] == 'Consumer Staples']
+    print(f"Found {len(staples_tickers)} Consumer Staples stocks.")
+    
+    staples_data = []
+    
+    for ticker in staples_tickers:
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                # Extract metrics
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                
+                # Fallback PEG calculation
+                if peg is None:
+                    pe = info.get('trailingPE')
+                    growth = info.get('earningsGrowth')
+                    if pe and growth and growth > 0:
+                        peg = pe / (growth * 100)
+                
+                staples_data.append({
+                    'ticker': ticker,
+                    'name': info.get('longName', ticker),
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'margin_val': margin if margin else -999,
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'growth_val': rev_growth if rev_growth else -999,
+                    'de': de if de is not None else "N/A",
+                    'de_val': de if de is not None else 9999,
+                    'peg': f"{peg:.2f}" if peg else "N/A",
+                    'peg_val': peg if peg else 9999
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+            
+    # Sort by ROE descending
+    staples_data.sort(key=lambda x: x['roe_val'], reverse=True)
+    
+    # Generate HTML
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('consumer_staples.html')
+    
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+    
+    html_content = template.render(
+        date=date_str,
+        stocks=staples_data,
+        title=title,
+        current_page=html_filename
+    )
+    
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
@@ -410,5 +479,8 @@ if __name__ == "__main__":
     
     # 3. Guru Analysis
     run_guru_analysis('guru.html')
+
+    # 4. Consumer Staples Analysis
+    run_consumer_staples_analysis('consumer_staples.html', 'S&P 500 Consumer Staples Report')
     
     conn.close()
