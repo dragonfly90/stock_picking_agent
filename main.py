@@ -427,6 +427,11 @@ def run_consumer_staples_analysis(html_filename, title):
                     if pe and growth and growth > 0:
                         peg = pe / (growth * 100)
                 
+                # Fetch competitors
+                sector = info.get('sector', 'Consumer Staples')
+                industry = info.get('industry', '')
+                competitors = fetch_competitors.get_industry_peers(ticker, sector, industry)
+                
                 staples_data.append({
                     'ticker': ticker,
                     'name': info.get('longName', ticker),
@@ -439,7 +444,8 @@ def run_consumer_staples_analysis(html_filename, title):
                     'de': de if de is not None else "N/A",
                     'de_val': de if de is not None else 9999,
                     'peg': f"{peg:.2f}" if peg else "N/A",
-                    'peg_val': peg if peg else 9999
+                    'peg_val': peg if peg else 9999,
+                    'competitors': competitors
                 })
         except Exception as e:
             print(f"Error processing {ticker}: {e}")

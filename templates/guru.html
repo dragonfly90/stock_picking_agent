@@ -157,9 +157,11 @@
         </div>
 
         <div class="nav">
-            <a href="index.html">S&P 500</a>
-            <a href="non_spy.html">Non-S&P 500</a>
-            <a href="guru.html" class="active">Guru Tracker</a>
+            <a href="index.html" class="{% if current_page == 'index.html' %}active{% endif %}">S&P 500</a>
+            <a href="non_spy.html" class="{% if current_page == 'non_spy.html' %}active{% endif %}">Non-S&P 500</a>
+            <a href="guru.html" class="{% if current_page == 'guru.html' %}active{% endif %}">Guru Tracker</a>
+            <a href="consumer_staples.html"
+                class="{% if current_page == 'consumer_staples.html' %}active{% endif %}">Consumer Staples</a>
         </div>
 
         {% for guru in gurus %}

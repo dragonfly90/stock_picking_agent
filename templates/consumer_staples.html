@@ -107,6 +107,15 @@
             <a href="consumer_staples.html" class="active">Consumer Staples</a>
         </div>
 
+        <div class="description"
+            style="margin-bottom: 30px; padding: 20px; background-color: #e8f8f5; border-radius: 5px; border-left: 5px solid #1abc9c;">
+            <h3>About Consumer Staples</h3>
+            <p>The Consumer Staples sector consists of companies that provide essential products that people use on a
+                daily basis, regardless of their financial situation. These include food, beverages, household goods,
+                and hygiene products. Because demand for these products remains relatively stable even during economic
+                downturns, Consumer Staples stocks are often considered defensive investments.</p>
+        </div>
+
         <table>
             <thead>
                 <tr>
@@ -117,6 +126,7 @@
                     <th>Rev Growth</th>
                     <th>Debt/Equity</th>
                     <th>PEG Ratio</th>
+                    <th>Competitors</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,6 +139,13 @@
                     <td class="{{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}</td>
                     <td class="{{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</td>
                     <td class="{{ 'positive' if stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{ stock.peg }}
+                    </td>
+                    <td>
+                        {% if stock.competitors %}
+                        <small>{{ stock.competitors|join(', ') }}</small>
+                        {% else %}
+                        <span style="color: #999;">N/A</span>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
