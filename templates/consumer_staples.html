@@ -90,6 +90,102 @@
         .negative {
             color: red;
         }
+
+        .stock-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8f8f5;
+        }
+
+        .stock-title {
+            flex: 1;
+        }
+
+        .stock-title h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .stock-title .company-name {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .stock-meta {
+            text-align: right;
+        }
+
+        .market-cap {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .dividend {
+            color: #27ae60;
+            font-size: 0.9em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .description {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .competitors-section {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e8f8f5;
+            border-radius: 5px;
+        }
+
+        .competitors-section h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 
@@ -116,41 +212,57 @@
                 downturns, Consumer Staples stocks are often considered defensive investments.</p>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Ticker</th>
-                    <th>Company Name</th>
-                    <th>ROE</th>
-                    <th>Profit Margin</th>
-                    <th>Rev Growth</th>
-                    <th>Debt/Equity</th>
-                    <th>PEG Ratio</th>
-                    <th>Competitors</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for stock in stocks %}
-                <tr>
-                    <td><strong>{{ stock.ticker }}</strong></td>
-                    <td>{{ stock.name }}</td>
-                    <td class="{{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</td>
-                    <td class="{{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}</td>
-                    <td class="{{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}</td>
-                    <td class="{{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</td>
-                    <td class="{{ 'positive' if stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{ stock.peg }}
-                    </td>
-                    <td>
-                        {% if stock.competitors %}
-                        <small>{{ stock.competitors|join(', ') }}</small>
-                        {% else %}
-                        <span style="color: #999;">N/A</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% for stock in stocks %}
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>{{ stock.ticker }}</h3>
+                    <div class="company-name">{{ stock.name }}</div>
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">{{ stock.market_cap }}</div>
+                    <div class="dividend">Dividend: {{ stock.dividend_yield }}</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value {{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{
+                        stock.peg }}</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> {{ stock.description }}
+            </div>
+
+            {% if stock.competitors %}
+            <div class="competitors-section">
+                <h4>Competitors:</h4>
+                <span>{{ stock.competitors|join(', ') }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
 </body>
 

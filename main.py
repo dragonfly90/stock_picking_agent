@@ -432,6 +432,11 @@ def run_consumer_staples_analysis(html_filename, title):
                 industry = info.get('industry', '')
                 competitors = fetch_competitors.get_industry_peers(ticker, sector, industry)
                 
+                # Get additional info
+                market_cap = info.get('marketCap')
+                dividend_yield = info.get('dividendYield')
+                description = info.get('longBusinessSummary', 'No description available.')
+                
                 staples_data.append({
                     'ticker': ticker,
                     'name': info.get('longName', ticker),
@@ -445,7 +450,10 @@ def run_consumer_staples_analysis(html_filename, title):
                     'de_val': de if de is not None else 9999,
                     'peg': f"{peg:.2f}" if peg else "N/A",
                     'peg_val': peg if peg else 9999,
-                    'competitors': competitors
+                    'competitors': competitors,
+                    'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'dividend_yield': f"{dividend_yield*100:.2f}%" if dividend_yield else "N/A",
+                    'description': description
                 })
         except Exception as e:
             print(f"Error processing {ticker}: {e}")
