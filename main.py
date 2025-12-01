@@ -452,7 +452,7 @@ def run_consumer_staples_analysis(html_filename, title):
                     'peg_val': peg if peg else 9999,
                     'competitors': competitors,
                     'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
-                    'dividend_yield': f"{dividend_yield/100:.2f}%" if dividend_yield else "N/A",
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
                     'description': description
                 })
         except Exception as e:
