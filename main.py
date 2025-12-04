@@ -479,6 +479,91 @@ def run_consumer_staples_analysis(html_filename, title):
         f.write(html_content)
     print(f"\nGenerated {output_path}")
 
+
+def run_tech_analysis(html_filename, title):
+    print("Starting Technology Sector Analysis...")
+    
+    # 1. Get S&P 500 tickers with sectors
+    all_stocks = fetch_data.get_sp500_tickers_with_sector()
+    
+    # 2. Filter for Technology / Information Technology
+    tech_tickers = [s['ticker'] for s in all_stocks if 'Technology' in s['sector'] or s['sector'] == 'Information Technology']
+    print(f"Found {len(tech_tickers)} Technology stocks.")
+    
+    tech_data = []
+    
+    for ticker in tech_tickers:
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                # Extract metrics
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                
+                # Fallback PEG calculation
+                if peg is None:
+                    pe = info.get('trailingPE')
+                    growth = info.get('earningsGrowth')
+                    if pe and growth and growth > 0:
+                        peg = pe / (growth * 100)
+                
+                # Fetch competitors
+                sector = info.get('sector', 'Technology')
+                industry = info.get('industry', '')
+                competitors = fetch_competitors.get_industry_peers(ticker, sector, industry)
+                
+                # Get additional info
+                market_cap = info.get('marketCap')
+                dividend_yield = info.get('dividendYield')
+                description = info.get('longBusinessSummary', 'No description available.')
+                
+                tech_data.append({
+                    'ticker': ticker,
+                    'name': info.get('longName', ticker),
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'margin_val': margin if margin else -999,
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'growth_val': rev_growth if rev_growth else -999,
+                    'de': de if de is not None else "N/A",
+                    'de_val': de if de is not None else 9999,
+                    'peg': f"{peg:.2f}" if peg else "N/A",
+                    'peg_val': peg if peg else 9999,
+                    'competitors': competitors,
+                    'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                    'description': description
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+            
+    # Sort by ROE descending
+    tech_data.sort(key=lambda x: x['roe_val'], reverse=True)
+    
+    # Generate HTML
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('tech.html')
+    
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+    
+    html_content = template.render(
+        date=date_str,
+        stocks=tech_data,
+        title=title,
+        current_page=html_filename
+    )
+    
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
@@ -496,5 +581,8 @@ if __name__ == "__main__":
 
     # 4. Consumer Staples Analysis
     run_consumer_staples_analysis('consumer_staples.html', 'S&P 500 Consumer Staples Report')
+    
+    # 5. Technology Analysis
+    run_tech_analysis('tech.html', 'S&P 500 Technology Report')
     
     conn.close()
