@@ -231,6 +231,11 @@
 
             <div class="metrics-grid">
                 <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.pe_val < 30 and stock.pe_val > 0 else '' }}">{{
+                        stock.pe }}</div>
+                </div>
+                <div class="metric-item">
                     <div class="metric-label">ROE</div>
                     <div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div>
                 </div>

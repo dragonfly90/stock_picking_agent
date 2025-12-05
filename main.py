@@ -503,10 +503,10 @@ def run_tech_analysis(html_filename, title):
                 rev_growth = info.get('revenueGrowth')
                 de = info.get('debtToEquity')
                 peg = info.get('pegRatio')
+                pe = info.get('trailingPE')
                 
                 # Fallback PEG calculation
                 if peg is None:
-                    pe = info.get('trailingPE')
                     growth = info.get('earningsGrowth')
                     if pe and growth and growth > 0:
                         peg = pe / (growth * 100)
@@ -534,16 +534,19 @@ def run_tech_analysis(html_filename, title):
                     'de_val': de if de is not None else 9999,
                     'peg': f"{peg:.2f}" if peg else "N/A",
                     'peg_val': peg if peg else 9999,
+                    'pe': f"{pe:.2f}" if pe else "N/A",
+                    'pe_val': pe if pe else 9999,
                     'competitors': competitors,
                     'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'market_cap_val': market_cap if market_cap else 0,
                     'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
                     'description': description
                 })
         except Exception as e:
             print(f"Error processing {ticker}: {e}")
             
-    # Sort by ROE descending
-    tech_data.sort(key=lambda x: x['roe_val'], reverse=True)
+    # Sort by market cap descending
+    tech_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
     
     # Generate HTML
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
