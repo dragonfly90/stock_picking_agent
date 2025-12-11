@@ -120,6 +120,62 @@ def get_cash_position(ticker="BRK-B"):
         print(f"Error fetching cash for {ticker}: {e}")
         return 0
 
+def get_cash_history(ticker="BRK-B"):
+    """
+    Fetches historical cash allocation percentage (Cash + Short Term Inv / Total Assets).
+    Returns a list of dictionaries: [{'date': date, 'cash_pct': pct}, ...]
+    """
+    if not ticker:
+        return []
+        
+    try:
+        print(f"Fetching cash history for {ticker}...")
+        stock = yf.Ticker(ticker)
+        bs = stock.quarterly_balance_sheet
+        
+        history = []
+        
+        # Iterate through columns (dates)
+        for date in bs.columns:
+            # 1. Get Cash
+            cash = 0
+            cash_keys = ['Cash And Cash Equivalents', 'Cash & Cash Equivalents', 'Cash']
+            for key in cash_keys:
+                if key in bs.index:
+                    cash = bs.loc[key][date]
+                    break
+            
+            # 2. Get Short Term Investments
+            invest_keys = ['Other Short Term Investments', 'Short Term Investments']
+            for key in invest_keys:
+                if key in bs.index:
+                    val = bs.loc[key][date]
+                    if pd.notna(val):
+                        cash += val
+            
+            # 3. Get Total Assets
+            total_assets = 0
+            if 'Total Assets' in bs.index:
+                total_assets = bs.loc['Total Assets'][date]
+                
+            if total_assets > 0:
+                pct = (cash / total_assets) * 100
+                history.append({
+                    'date': date,
+                    'cash_pct': pct,
+                    'cash_val': cash,
+                    'total_assets': total_assets
+                })
+        
+        # Sort by date ascending
+        history.sort(key=lambda x: x['date'])
+        return history
+        
+    except Exception as e:
+        print(f"Error fetching cash history for {ticker}: {e}")
+        return []
+
+
 if __name__ == "__main__":
     # Test
     holdings = get_dataroma_holdings()

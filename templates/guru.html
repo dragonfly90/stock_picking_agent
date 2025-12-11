@@ -196,6 +196,13 @@
                 <img src="{{ guru.performance_chart }}" alt="Performance Chart">
             </div>
             {% endif %}
+
+            {% if guru.cash_trend_chart %}
+            <div class="chart-container">
+                <h3>Cash Allocation Trend</h3>
+                <img src="{{ guru.cash_trend_chart }}" alt="Cash Allocation Trend Chart">
+            </div>
+            {% endif %}
             {% else %}
             <div class="summary-box">
                 <div class="stat">

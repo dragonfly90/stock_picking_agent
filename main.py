@@ -316,6 +316,28 @@ def generate_guru_chart(equity_val, cash_val, filename):
     plt.title("Berkshire Hathaway Asset Allocation")
     plt.savefig(chart_path)
     plt.close()
+    plt.savefig(chart_path)
+    plt.close()
+    print(f"Generated {chart_path}")
+
+def generate_cash_trend_chart(history, filename):
+    chart_path = os.path.join(BASE_DIR, filename)
+    
+    dates = [h['date'] for h in history]
+    pcts = [h['cash_pct'] for h in history]
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(dates, pcts, marker='o', linestyle='-', color='#2ecc71', linewidth=2)
+    
+    plt.title("Berkshire Hathaway Cash Allocation Trend")
+    plt.ylabel("Cash % of Total Assets")
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    # Format x-axis dates
+    plt.gcf().autofmt_xdate()
+    
+    plt.savefig(chart_path)
+    plt.close()
     print(f"Generated {chart_path}")
 
 def run_guru_analysis(html_filename):
@@ -343,6 +365,8 @@ def run_guru_analysis(html_filename):
         total_assets = total_equity + cash
         
         perf_chart_filename = None
+        cash_trend_filename = None
+        
         if guru['code'] == 'BRK':
             # Generate SPY vs BRK comparison chart
             print("Generating SPY vs BRK performance chart...")
@@ -350,6 +374,13 @@ def run_guru_analysis(html_filename):
             brk_returns = performance.get_yearly_returns('BRK-B', period="max")
             perf_chart_filename = "chart_performance_BRK_vs_SPY.png"
             performance.generate_comparison_chart(spy_returns, brk_returns, os.path.join(BASE_DIR, perf_chart_filename))
+            
+            # Generate Cash Trend Chart
+            print("Generating Cash Trend chart...")
+            history = fetch_guru.get_cash_history(guru['ticker'])
+            if history:
+                cash_trend_filename = "chart_cash_trend_BRK.png"
+                generate_cash_trend_chart(history, cash_trend_filename)
         
         cash_pct = (cash / total_assets * 100) if total_assets > 0 else 0
         
@@ -365,7 +396,7 @@ def run_guru_analysis(html_filename):
             h['formatted_value'] = f"${h['value']:,.0f}"
             formatted_holdings.append(h)
             
-        guru_entry = { # Create a dictionary for the current guru
+        guru_entry = {
             'name': guru['name'],
             'holdings': formatted_holdings,
             'total_equity': f"{total_equity/1e9:.1f}",
@@ -373,8 +404,7 @@ def run_guru_analysis(html_filename):
             'cash_pct': f"{cash_pct:.1f}" if cash > 0 else "N/A",
             'chart_filename': chart_filename,
             'performance_chart': perf_chart_filename,
-            'chart_filename': chart_filename,
-            'performance_chart': perf_chart_filename,
+            'cash_trend_chart': cash_trend_filename,
             'has_cash': cash > 0
         }
         guru_data.append(guru_entry)
