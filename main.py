@@ -551,6 +551,44 @@ def run_tech_analysis(html_filename, title):
                 dividend_yield = info.get('dividendYield')
                 description = info.get('longBusinessSummary', 'No description available.')
                 
+                # Custom Comparison Logic
+                comparison_table = []
+                CUSTOM_COMPETITORS = {
+                    'NVDA': ['AMD', 'INTC', 'QCOM', 'AVGO'],
+                    'AAPL': ['MSFT', 'GOOGL', 'META', 'NVDA']
+                }
+                
+                if ticker in CUSTOM_COMPETITORS:
+                    print(f"  Fetching comparison data for {ticker}...")
+                    comp_tickers = [ticker] + CUSTOM_COMPETITORS[ticker]
+                    for comp_ticker in comp_tickers:
+                        try:
+                            # Optimization: If it's self, use already fetched info
+                            if comp_ticker == ticker:
+                                c_info = info
+                            else:
+                                c_info = fetch_data.get_stock_data(comp_ticker)
+                            
+                            if c_info:
+                                c_mc = c_info.get('marketCap')
+                                c_pe = c_info.get('trailingPE')
+                                c_roe = c_info.get('returnOnEquity')
+                                c_margin = c_info.get('profitMargins')
+                                c_growth = c_info.get('revenueGrowth')
+                                
+                                comparison_table.append({
+                                    'ticker': comp_ticker,
+                                    'market_cap': f"${c_mc/1e9:.1f}B" if c_mc else "N/A",
+                                    'pe': f"{c_pe:.2f}" if c_pe else "N/A",
+                                    'roe': f"{c_roe:.2%}" if c_roe else "N/A",
+                                    'margin': f"{c_margin:.2%}" if c_margin else "N/A",
+                                    'growth': f"{c_growth:.2%}" if c_growth else "N/A",
+                                    'is_current': comp_ticker == ticker
+                                })
+                        except Exception as e:
+                            print(f"Error fetching comparison for {comp_ticker}: {e}")
+
+                
                 tech_data.append({
                     'ticker': ticker,
                     'name': info.get('longName', ticker),
@@ -570,7 +608,8 @@ def run_tech_analysis(html_filename, title):
                     'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
                     'market_cap_val': market_cap if market_cap else 0,
                     'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
-                    'description': description
+                    'description': description,
+                    'comparison_table': comparison_table
                 })
         except Exception as e:
             print(f"Error processing {ticker}: {e}")

@@ -264,6 +264,36 @@
                 <strong>About:</strong> {{ stock.description }}
             </div>
 
+            {% if stock.comparison_table %}
+            <div class="competitors-section" style="background-color: #fff; border: 1px solid #eee;">
+                <h4 style="margin-bottom: 15px; color: #2c3e50;">Sector Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comp in stock.comparison_table %}
+                        <tr style="{{ 'background-color: #e8f8f5; font-weight: bold;' if comp.is_current else '' }}">
+                            <td>{{ comp.ticker }}</td>
+                            <td>{{ comp.market_cap }}</td>
+                            <td>{{ comp.pe }}</td>
+                            <td>{{ comp.roe }}</td>
+                            <td>{{ comp.margin }}</td>
+                            <td>{{ comp.growth }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
             {% if stock.competitors %}
             <div class="competitors-section">
                 <h4>Competitors:</h4>
