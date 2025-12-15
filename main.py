@@ -664,11 +664,10 @@ def run_china_analysis(html_filename, title):
                 # Dividend Yield
                 dividend_yield = info.get('dividendYield')
                 
-                # Description (Translate or use as is - usually English in yfinance)
-                description = info.get('longBusinessSummary', '暂无简介')
-                
-                # Name
-                name = info.get('longName', ticker)
+                # Get Chinese Info
+                cn_info = fetch_china_data.get_china_stock_info(ticker)
+                description = cn_info['desc']
+                name = cn_info['name']
                 
                 china_data.append({
                     'ticker': ticker,
