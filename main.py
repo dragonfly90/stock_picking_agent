@@ -298,6 +298,7 @@ def run_analysis(conn, universe_name, tickers, html_filename, title):
     # conn.close() - Do not close here, let main handle it
 
 import fetch_guru
+import fetch_china_data
 
 # ... (existing imports)
 
@@ -635,6 +636,78 @@ def run_tech_analysis(html_filename, title):
         f.write(html_content)
     print(f"\nGenerated {output_path}")
 
+def run_china_analysis(html_filename, title):
+    print("Starting China Market Analysis...")
+    
+    # 1. Get China tickers
+    tickers = fetch_china_data.get_china_tickers()
+    print(f"Found {len(tickers)} China stocks.")
+    
+    china_data = []
+    
+    for ticker in tickers:
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_china_data.get_stock_data(ticker)
+            if info:
+                # Extract metrics
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                pe = info.get('trailingPE')
+                
+                # Market Cap (convert to Billions CNY)
+                market_cap = info.get('marketCap')
+                
+                # Dividend Yield
+                dividend_yield = info.get('dividendYield')
+                
+                # Description (Translate or use as is - usually English in yfinance)
+                description = info.get('longBusinessSummary', '暂无简介')
+                
+                # Name
+                name = info.get('longName', ticker)
+                
+                china_data.append({
+                    'ticker': ticker,
+                    'name': name,
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'de': de if de is not None else "N/A",
+                    'pe': f"{pe:.2f}" if pe else "N/A",
+                    'market_cap': f"¥{market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'market_cap_val': market_cap if market_cap else 0,
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                    'description': description
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+            
+    # Sort by Market Cap descending
+    china_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
+    
+    # Generate HTML
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('china.html')
+    
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+    
+    html_content = template.render(
+        date=date_str,
+        stocks=china_data,
+        title=title,
+        current_page=html_filename
+    )
+    
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
 
 if __name__ == "__main__":
     # Initialize DB
@@ -655,6 +728,7 @@ if __name__ == "__main__":
     run_consumer_staples_analysis('consumer_staples.html', 'S&P 500 Consumer Staples Report')
     
     # 5. Technology Analysis
-    run_tech_analysis('tech.html', 'S&P 500 Technology Report')
+    run_tech_analysis("tech.html", "S&P 500 Technology Report")
+    run_china_analysis("china.html", "A股精选 (China Picks)")
     
     conn.close()
