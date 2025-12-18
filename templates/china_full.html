@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.0em;
+        }
+
+        .nav a.active {
+            color: #2c3e50;
+            text-decoration: underline;
+            cursor: default;
+        }
+
+        .description {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e8f8f5;
+            border-radius: 5px;
+            border-left: 5px solid #1abc9c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .positive {
+            color: #e74c3c;
+            /* Red for up in China */
+        }
+
+        .negative {
+            color: #27ae60;
+            /* Green for down in China */
+        }
+
+        .market-cap {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ title }}</h1>
+            <div class="date">生成日期: {{ date }} | 共筛选出 {{ total_count }} 只股票</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html">Guru Tracker</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
+            <a href="tech.html">Technology</a>
+            <a href="china.html">A股精选</a>
+            <a href="china_full.html" class="active">A股全市场</a>
+        </div>
+
+        <div class="description">
+            <h3>筛选标准</h3>
+            <p>本列表基于实时行情数据，筛选出满足以下条件的A股公司：</p>
+            <ul>
+                <li><strong>市值 (Market Cap)</strong> > 100亿人民币</li>
+                <li><strong>市盈率 (PE)</strong> > 0 且 < 100 (盈利且估值合理)</li>
+            </ul>
+            <p>按市值从高到低排序。</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>代码</th>
+                    <th>名称</th>
+                    <th>现价</th>
+                    <th>涨跌幅</th>
+                    <th>市盈率 (PE)</th>
+                    <th>市净率 (PB)</th>
+                    <th>总市值</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.ticker }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.price }}</td>
+                    <td class="{{ 'positive' if stock.change_pct.startswith('-') == False else 'negative' }}">{{
+                        stock.change_pct }}</td>
+                    <td>{{ stock.pe }}</td>
+                    <td>{{ stock.pb }}</td>
+                    <td class="market-cap">{{ stock.market_cap }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
