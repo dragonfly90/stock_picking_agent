@@ -81,8 +81,7 @@
             margin-top: 20px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -98,13 +97,8 @@
             background-color: #f1f1f1;
         }
 
-        .positive {
-            color: green;
-        }
-
-        .negative {
-            color: red;
-        }
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
 
         .stock-card {
             background-color: #fff;
@@ -121,12 +115,10 @@
             align-items: center;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #e8f8f5;
+            border-bottom: 2px solid #e8eaf6;
         }
 
-        .stock-title {
-            flex: 1;
-        }
+        .stock-title { flex: 1; }
 
         .stock-title h3 {
             margin: 0;
@@ -139,9 +131,7 @@
             margin-top: 5px;
         }
 
-        .stock-meta {
-            text-align: right;
-        }
+        .stock-meta { text-align: right; }
 
         .market-cap {
             font-size: 1.2em;
@@ -156,8 +146,8 @@
 
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
             margin-bottom: 15px;
         }
 
@@ -189,11 +179,41 @@
             color: #555;
         }
 
+        .sector-intro {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e8eaf6;
+            border-radius: 5px;
+            border-left: 5px solid #5c6bc0;
+        }
+
+        .sector-intro h3 {
+            margin-top: 0;
+            color: #303f9f;
+        }
+
+        .subsector-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .badge-foundry { background: #e3f2fd; color: #1565c0; }
+        .badge-fabless { background: #f3e5f5; color: #7b1fa2; }
+        .badge-equipment { background: #fff3e0; color: #e65100; }
+        .badge-memory { background: #e8f5e9; color: #2e7d32; }
+        .badge-analog { background: #fce4ec; color: #c62828; }
+        .badge-eda { background: #e0f7fa; color: #00695c; }
+
         .competitors-section {
             margin-top: 15px;
-            padding: 10px;
-            background-color: #e8f8f5;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
             border-radius: 5px;
+            border: 1px solid #eee;
         }
 
         .competitors-section h4 {
@@ -217,21 +237,17 @@
             <a href="guru.html">Guru Tracker</a>
             <div class="nav-divider"></div>
             <a href="tech.html">Technology</a>
-            <a href="semiconductors.html">Semiconductors</a>
+            <a href="semiconductors.html" class="active">Semiconductors</a>
             <a href="ai.html">AI & LLM</a>
-            <a href="consumer_staples.html" class="active">Consumer Staples</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
             <div class="nav-divider"></div>
             <a href="china.html">A股精选</a>
             <a href="china_full.html">A股全市场</a>
         </div>
 
-        <div class="description"
-            style="margin-bottom: 30px; padding: 20px; background-color: #e8f8f5; border-radius: 5px; border-left: 5px solid #1abc9c;">
-            <h3>About Consumer Staples</h3>
-            <p>The Consumer Staples sector consists of companies that provide essential products that people use on a
-                daily basis, regardless of their financial situation. These include food, beverages, household goods,
-                and hygiene products. Because demand for these products remains relatively stable even during economic
-                downturns, Consumer Staples stocks are often considered defensive investments.</p>
+        <div class="sector-intro">
+            <h3>Semiconductor / Chips Sector</h3>
+            <p>The semiconductor industry designs and manufactures the chips that power everything from smartphones and data centers to automobiles and industrial equipment. This sector spans the full value chain: <strong>EDA tools</strong> (design software), <strong>fabless designers</strong> (chip design without fabs), <strong>foundries</strong> (contract manufacturing), <strong>equipment makers</strong> (lithography, etching), <strong>memory</strong> (DRAM, NAND), and <strong>analog/mixed-signal</strong> providers. The sector is highly cyclical but benefits from secular tailwinds including AI, EVs, IoT, and cloud computing.</p>
         </div>
 
         {% for stock in stocks %}
@@ -240,6 +256,9 @@
                 <div class="stock-title">
                     <h3>{{ stock.ticker }}</h3>
                     <div class="company-name">{{ stock.name }}</div>
+                    {% if stock.subsector %}
+                    <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                    {% endif %}
                 </div>
                 <div class="stock-meta">
                     <div class="market-cap">{{ stock.market_cap }}</div>
@@ -249,18 +268,20 @@
 
             <div class="metrics-grid">
                 <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 35 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div>
+                </div>
+                <div class="metric-item">
                     <div class="metric-label">ROE</div>
                     <div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">Profit Margin</div>
-                    <div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}
-                    </div>
+                    <div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">Rev Growth</div>
-                    <div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}
-                    </div>
+                    <div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">Debt/Equity</div>
@@ -268,8 +289,7 @@
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">PEG Ratio</div>
-                    <div class="metric-value {{ 'positive' if stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{
-                        stock.peg }}</div>
+                    <div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div>
                 </div>
             </div>
 
@@ -277,10 +297,33 @@
                 <strong>About:</strong> {{ stock.description }}
             </div>
 
-            {% if stock.competitors %}
+            {% if stock.comparison_table %}
             <div class="competitors-section">
-                <h4>Competitors:</h4>
-                <span>{{ stock.competitors|join(', ') }}</span>
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comp in stock.comparison_table %}
+                        <tr style="{{ 'background-color: #e8eaf6; font-weight: bold;' if comp.is_current else '' }}">
+                            <td>{{ comp.ticker }}</td>
+                            <td>{{ comp.market_cap }}</td>
+                            <td>{{ comp.pe }}</td>
+                            <td>{{ comp.roe }}</td>
+                            <td>{{ comp.margin }}</td>
+                            <td>{{ comp.growth }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% endif %}
         </div>

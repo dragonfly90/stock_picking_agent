@@ -39,25 +39,40 @@
         }
 
         .nav {
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
             margin-bottom: 30px;
-            padding: 10px;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
         }
 
         .nav a {
-            margin: 0 15px;
             text-decoration: none;
             color: #007bff;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
         }
 
         .nav a.active {
-            color: #2c3e50;
-            text-decoration: underline;
+            background: #2c3e50;
+            color: white;
             cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
         }
 
         .highlight {
@@ -122,9 +137,12 @@
             <a href="index.html" class="{% if current_page == 'index.html' %}active{% endif %}">S&P 500</a>
             <a href="non_spy.html" class="{% if current_page == 'non_spy.html' %}active{% endif %}">Non-S&P 500</a>
             <a href="guru.html" class="{% if current_page == 'guru.html' %}active{% endif %}">Guru Tracker</a>
-            <a href="consumer_staples.html"
-                class="{% if current_page == 'consumer_staples.html' %}active{% endif %}">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="tech.html" class="{% if current_page == 'tech.html' %}active{% endif %}">Technology</a>
+            <a href="semiconductors.html" class="{% if current_page == 'semiconductors.html' %}active{% endif %}">Semiconductors</a>
+            <a href="ai.html" class="{% if current_page == 'ai.html' %}active{% endif %}">AI & LLM</a>
+            <a href="consumer_staples.html" class="{% if current_page == 'consumer_staples.html' %}active{% endif %}">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="china.html" class="{% if current_page == 'china.html' %}active{% endif %}">A股精选</a>
             <a href="china_full.html" class="{% if current_page == 'china_full.html' %}active{% endif %}">A股全市场</a>
         </div>

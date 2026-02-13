@@ -75,6 +75,20 @@ def get_industry_peers(ticker, sector, industry, max_peers=4):
             'GOOGL': ['META', 'AAPL', 'MSFT', 'AMZN'],
             'NVDA': ['AMD', 'INTC', 'QCOM', 'AVGO'],
             'AMD': ['NVDA', 'INTC', 'QCOM', 'MU'],
+            'AVGO': ['NVDA', 'QCOM', 'TXN', 'ADI'],
+            'INTC': ['AMD', 'NVDA', 'TSM', 'QCOM'],
+            'QCOM': ['NVDA', 'AMD', 'AVGO', 'MRVL'],
+            'TXN': ['ADI', 'NXPI', 'ON', 'MCHP'],
+            'MU': ['NVDA', 'AMD', 'INTC', 'TSM'],
+            'AMAT': ['LRCX', 'KLAC', 'ASML', 'TSM'],
+            'LRCX': ['AMAT', 'KLAC', 'ASML', 'TSM'],
+            'SNPS': ['CDNS', 'ARM', 'MRVL', 'AVGO'],
+            'CDNS': ['SNPS', 'ARM', 'MRVL', 'AVGO'],
+            'CRM': ['NOW', 'PLTR', 'ORCL', 'SAP'],
+            'PLTR': ['CRM', 'AI', 'NOW', 'SNOW'],
+            'NOW': ['CRM', 'PLTR', 'DDOG', 'SNOW'],
+            'CRWD': ['PANW', 'DDOG', 'NOW', 'PLTR'],
+            'PANW': ['CRWD', 'DDOG', 'NOW', 'PLTR'],
         },
         'Consumer Cyclical': {
             'AMZN': ['WMT', 'TGT', 'HD', 'LOW'],
@@ -83,6 +97,7 @@ def get_industry_peers(ticker, sector, industry, max_peers=4):
         'Healthcare': {
             'JNJ': ['PFE', 'UNH', 'ABBV', 'MRK'],
             'UNH': ['CVS', 'CI', 'HUM', 'ELV'],
+            'ISRG': ['ABT', 'MDT', 'SYK', 'BSX'],
         },
         'Financial Services': {
             'JPM': ['BAC', 'WFC', 'C', 'GS'],

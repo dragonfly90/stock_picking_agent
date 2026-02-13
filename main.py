@@ -317,8 +317,6 @@ def generate_guru_chart(equity_val, cash_val, filename):
     plt.title("Berkshire Hathaway Asset Allocation")
     plt.savefig(chart_path)
     plt.close()
-    plt.savefig(chart_path)
-    plt.close()
     print(f"Generated {chart_path}")
 
 def generate_cash_trend_chart(history, filename):
@@ -708,26 +706,307 @@ def run_china_analysis(html_filename, title):
     print(f"\nGenerated {output_path}")
 
 
+# --- Curated Semiconductor Tickers with subsector classification ---
+SEMICONDUCTOR_TICKERS = {
+    'NVDA':  {'subsector': 'Fabless', 'subsector_class': 'fabless'},
+    'AMD':   {'subsector': 'Fabless', 'subsector_class': 'fabless'},
+    'INTC':  {'subsector': 'Foundry / IDM', 'subsector_class': 'foundry'},
+    'AVGO':  {'subsector': 'Fabless', 'subsector_class': 'fabless'},
+    'QCOM':  {'subsector': 'Fabless', 'subsector_class': 'fabless'},
+    'TXN':   {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'MU':    {'subsector': 'Memory', 'subsector_class': 'memory'},
+    'AMAT':  {'subsector': 'Equipment', 'subsector_class': 'equipment'},
+    'LRCX':  {'subsector': 'Equipment', 'subsector_class': 'equipment'},
+    'KLAC':  {'subsector': 'Equipment', 'subsector_class': 'equipment'},
+    'MRVL':  {'subsector': 'Fabless', 'subsector_class': 'fabless'},
+    'ADI':   {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'NXPI':  {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'ON':    {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'MCHP':  {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'SNPS':  {'subsector': 'EDA / IP', 'subsector_class': 'eda'},
+    'CDNS':  {'subsector': 'EDA / IP', 'subsector_class': 'eda'},
+    'ARM':   {'subsector': 'EDA / IP', 'subsector_class': 'eda'},
+    'ASML':  {'subsector': 'Equipment', 'subsector_class': 'equipment'},
+    'TSM':   {'subsector': 'Foundry', 'subsector_class': 'foundry'},
+    'GFS':   {'subsector': 'Foundry', 'subsector_class': 'foundry'},
+    'WOLF':  {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'MPWR':  {'subsector': 'Analog / Mixed-Signal', 'subsector_class': 'analog'},
+    'SMCI':  {'subsector': 'Equipment', 'subsector_class': 'equipment'},
+}
+
+# Peer comparison groups for semiconductors
+SEMI_COMPARISON_GROUPS = {
+    'NVDA': ['AMD', 'INTC', 'AVGO', 'QCOM'],
+    'AMD':  ['NVDA', 'INTC', 'QCOM', 'MRVL'],
+    'TSM':  ['INTC', 'GFS', 'ASML', 'AMAT'],
+    'ASML': ['AMAT', 'LRCX', 'KLAC', 'TSM'],
+    'SNPS': ['CDNS', 'ARM', 'MRVL', 'AVGO'],
+    'TXN':  ['ADI', 'NXPI', 'ON', 'MCHP'],
+    'MU':   ['NVDA', 'AMD', 'INTC', 'TSM'],
+}
+
+def run_semiconductor_analysis(html_filename, title):
+    print("Starting Semiconductor Sector Analysis...")
+
+    semi_data = []
+
+    for ticker, meta in SEMICONDUCTOR_TICKERS.items():
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                pe = info.get('trailingPE')
+
+                if peg is None:
+                    growth = info.get('earningsGrowth')
+                    if pe and growth and growth > 0:
+                        peg = pe / (growth * 100)
+
+                market_cap = info.get('marketCap')
+                dividend_yield = info.get('dividendYield')
+                description = info.get('longBusinessSummary', 'No description available.')
+
+                # Build comparison table for key tickers
+                comparison_table = []
+                if ticker in SEMI_COMPARISON_GROUPS:
+                    comp_tickers = [ticker] + SEMI_COMPARISON_GROUPS[ticker]
+                    for comp_ticker in comp_tickers:
+                        try:
+                            c_info = info if comp_ticker == ticker else fetch_data.get_stock_data(comp_ticker)
+                            if c_info:
+                                c_mc = c_info.get('marketCap')
+                                c_pe = c_info.get('trailingPE')
+                                c_roe = c_info.get('returnOnEquity')
+                                c_margin = c_info.get('profitMargins')
+                                c_growth = c_info.get('revenueGrowth')
+                                comparison_table.append({
+                                    'ticker': comp_ticker,
+                                    'market_cap': f"${c_mc/1e9:.1f}B" if c_mc else "N/A",
+                                    'pe': f"{c_pe:.2f}" if c_pe else "N/A",
+                                    'roe': f"{c_roe:.2%}" if c_roe else "N/A",
+                                    'margin': f"{c_margin:.2%}" if c_margin else "N/A",
+                                    'growth': f"{c_growth:.2%}" if c_growth else "N/A",
+                                    'is_current': comp_ticker == ticker
+                                })
+                        except Exception as e:
+                            print(f"Error fetching comparison for {comp_ticker}: {e}")
+
+                semi_data.append({
+                    'ticker': ticker,
+                    'name': info.get('longName', ticker),
+                    'subsector': meta['subsector'],
+                    'subsector_class': meta['subsector_class'],
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'margin_val': margin if margin else -999,
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'growth_val': rev_growth if rev_growth else -999,
+                    'de': de if de is not None else "N/A",
+                    'de_val': de if de is not None else 9999,
+                    'peg': f"{peg:.2f}" if peg else "N/A",
+                    'peg_val': peg if peg else 9999,
+                    'pe': f"{pe:.2f}" if pe else "N/A",
+                    'pe_val': pe if pe else 9999,
+                    'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'market_cap_val': market_cap if market_cap else 0,
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                    'description': description,
+                    'comparison_table': comparison_table
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+
+    semi_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
+
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('semiconductors.html')
+
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+
+    html_content = template.render(
+        date=date_str,
+        stocks=semi_data,
+        title=title,
+        current_page=html_filename
+    )
+
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
+# --- Curated AI / LLM Tickers with subsector classification ---
+AI_TICKERS = {
+    # AI Infrastructure (Chips & Hardware)
+    'NVDA':  {'subsector': 'AI Infrastructure', 'subsector_class': 'infrastructure'},
+    'AMD':   {'subsector': 'AI Infrastructure', 'subsector_class': 'infrastructure'},
+    'AVGO':  {'subsector': 'AI Infrastructure', 'subsector_class': 'infrastructure'},
+    'SMCI':  {'subsector': 'AI Infrastructure', 'subsector_class': 'infrastructure'},
+    'DELL':  {'subsector': 'AI Infrastructure', 'subsector_class': 'infrastructure'},
+    # AI Cloud & Platform
+    'MSFT':  {'subsector': 'AI Platform / Cloud', 'subsector_class': 'platform'},
+    'GOOGL': {'subsector': 'AI Platform / Cloud', 'subsector_class': 'platform'},
+    'AMZN':  {'subsector': 'AI Platform / Cloud', 'subsector_class': 'cloud'},
+    'META':  {'subsector': 'AI Platform / Cloud', 'subsector_class': 'platform'},
+    'ORCL':  {'subsector': 'AI Cloud', 'subsector_class': 'cloud'},
+    # AI Application & Enterprise
+    'CRM':   {'subsector': 'AI Application', 'subsector_class': 'application'},
+    'NOW':   {'subsector': 'AI Application', 'subsector_class': 'application'},
+    'PLTR':  {'subsector': 'AI Application', 'subsector_class': 'application'},
+    'AI':    {'subsector': 'AI Application', 'subsector_class': 'application'},
+    'PATH':  {'subsector': 'AI Application', 'subsector_class': 'application'},
+    'SNOW':  {'subsector': 'AI Data', 'subsector_class': 'data'},
+    'MDB':   {'subsector': 'AI Data', 'subsector_class': 'data'},
+    'DDOG':  {'subsector': 'AI Application', 'subsector_class': 'application'},
+    # AI Cybersecurity
+    'CRWD':  {'subsector': 'AI Cybersecurity', 'subsector_class': 'cybersecurity'},
+    'PANW':  {'subsector': 'AI Cybersecurity', 'subsector_class': 'cybersecurity'},
+    # Robotics / Autonomous
+    'TSLA':  {'subsector': 'AI Robotics / Autonomous', 'subsector_class': 'robotics'},
+    'ISRG':  {'subsector': 'AI Robotics', 'subsector_class': 'robotics'},
+}
+
+AI_COMPARISON_GROUPS = {
+    'NVDA':  ['AMD', 'AVGO', 'SMCI', 'DELL'],
+    'MSFT':  ['GOOGL', 'AMZN', 'META', 'ORCL'],
+    'GOOGL': ['MSFT', 'META', 'AMZN', 'ORCL'],
+    'CRM':   ['NOW', 'PLTR', 'AI', 'PATH'],
+    'PLTR':  ['CRM', 'AI', 'NOW', 'SNOW'],
+    'CRWD':  ['PANW', 'DDOG', 'NOW', 'PLTR'],
+    'TSLA':  ['ISRG', 'GOOGL', 'NVDA', 'META'],
+}
+
+def run_ai_analysis(html_filename, title):
+    print("Starting AI & LLM Sector Analysis...")
+
+    ai_data = []
+
+    for ticker, meta in AI_TICKERS.items():
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                pe = info.get('trailingPE')
+
+                if peg is None:
+                    growth = info.get('earningsGrowth')
+                    if pe and growth and growth > 0:
+                        peg = pe / (growth * 100)
+
+                market_cap = info.get('marketCap')
+                dividend_yield = info.get('dividendYield')
+                description = info.get('longBusinessSummary', 'No description available.')
+
+                comparison_table = []
+                if ticker in AI_COMPARISON_GROUPS:
+                    comp_tickers = [ticker] + AI_COMPARISON_GROUPS[ticker]
+                    for comp_ticker in comp_tickers:
+                        try:
+                            c_info = info if comp_ticker == ticker else fetch_data.get_stock_data(comp_ticker)
+                            if c_info:
+                                c_mc = c_info.get('marketCap')
+                                c_pe = c_info.get('trailingPE')
+                                c_roe = c_info.get('returnOnEquity')
+                                c_margin = c_info.get('profitMargins')
+                                c_growth = c_info.get('revenueGrowth')
+                                comparison_table.append({
+                                    'ticker': comp_ticker,
+                                    'market_cap': f"${c_mc/1e9:.1f}B" if c_mc else "N/A",
+                                    'pe': f"{c_pe:.2f}" if c_pe else "N/A",
+                                    'roe': f"{c_roe:.2%}" if c_roe else "N/A",
+                                    'margin': f"{c_margin:.2%}" if c_margin else "N/A",
+                                    'growth': f"{c_growth:.2%}" if c_growth else "N/A",
+                                    'is_current': comp_ticker == ticker
+                                })
+                        except Exception as e:
+                            print(f"Error fetching comparison for {comp_ticker}: {e}")
+
+                ai_data.append({
+                    'ticker': ticker,
+                    'name': info.get('longName', ticker),
+                    'subsector': meta['subsector'],
+                    'subsector_class': meta['subsector_class'],
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'margin_val': margin if margin else -999,
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'growth_val': rev_growth if rev_growth else -999,
+                    'de': de if de is not None else "N/A",
+                    'de_val': de if de is not None else 9999,
+                    'peg': f"{peg:.2f}" if peg else "N/A",
+                    'peg_val': peg if peg else 9999,
+                    'pe': f"{pe:.2f}" if pe else "N/A",
+                    'pe_val': pe if pe else 9999,
+                    'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'market_cap_val': market_cap if market_cap else 0,
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                    'description': description,
+                    'comparison_table': comparison_table
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+
+    ai_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
+
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('ai.html')
+
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+
+    html_content = template.render(
+        date=date_str,
+        stocks=ai_data,
+        title=title,
+        current_page=html_filename
+    )
+
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
-    
+
     # 1. S&P 500 Analysis
     sp500_tickers = fetch_data.get_sp500_tickers()
     run_analysis(conn, 'SP500', sp500_tickers, 'index.html', 'Daily Stock Picks: S&P 500')
-    
+
     # 2. Non-S&P 500 Analysis (S&P 400 + 600)
     non_sp500_tickers = fetch_data.get_non_sp500_tickers()
     run_analysis(conn, 'NON_SP500', non_sp500_tickers, 'non_spy.html', 'Daily Stock Picks: Non-S&P 500')
-    
+
     # 3. Guru Analysis
     run_guru_analysis('guru.html')
 
     # 4. Consumer Staples Analysis
     run_consumer_staples_analysis('consumer_staples.html', 'S&P 500 Consumer Staples Report')
-    
+
     # 5. Technology Analysis
     run_tech_analysis("tech.html", "S&P 500 Technology Report")
+
+    # 6. Semiconductor / Chips Analysis
+    run_semiconductor_analysis("semiconductors.html", "Semiconductor / Chips Sector Report")
+
+    # 7. AI & LLM Analysis
+    run_ai_analysis("ai.html", "AI & LLM Sector Report")
+
+    # 8. China Analysis
     run_china_analysis("china.html", "A股精选 (China Picks)")
-    
+
     conn.close()
