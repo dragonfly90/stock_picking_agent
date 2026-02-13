@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semiconductor / Chips Sector Report</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
+        }
+
+        .nav a.active {
+            background: #2c3e50;
+            color: white;
+            cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+
+        .stock-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8eaf6;
+        }
+
+        .stock-title { flex: 1; }
+
+        .stock-title h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .stock-title .company-name {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .stock-meta { text-align: right; }
+
+        .market-cap {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .dividend {
+            color: #27ae60;
+            font-size: 0.9em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .description {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .sector-intro {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e8eaf6;
+            border-radius: 5px;
+            border-left: 5px solid #5c6bc0;
+        }
+
+        .sector-intro h3 {
+            margin-top: 0;
+            color: #303f9f;
+        }
+
+        .subsector-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .badge-foundry { background: #e3f2fd; color: #1565c0; }
+        .badge-fabless { background: #f3e5f5; color: #7b1fa2; }
+        .badge-equipment { background: #fff3e0; color: #e65100; }
+        .badge-memory { background: #e8f5e9; color: #2e7d32; }
+        .badge-analog { background: #fce4ec; color: #c62828; }
+        .badge-eda { background: #e0f7fa; color: #00695c; }
+
+        .competitors-section {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+
+        .competitors-section h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Semiconductor / Chips Sector Report</h1>
+            <div class="date">Report generated on: 2026-02-13</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html">Guru Tracker</a>
+            <div class="nav-divider"></div>
+            <a href="tech.html">Technology</a>
+            <a href="semiconductors.html" class="active">Semiconductors</a>
+            <a href="ai.html">AI & LLM</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
+            <div class="nav-divider"></div>
+            <a href="china.html">A股精选</a>
+            <a href="china_full.html">A股全市场</a>
+        </div>
+
+        <div class="sector-intro">
+            <h3>Semiconductor / Chips Sector</h3>
+            <p>The semiconductor industry designs and manufactures the chips that power everything from smartphones and data centers to automobiles and industrial equipment. This sector spans the full value chain: <strong>EDA tools</strong> (design software), <strong>fabless designers</strong> (chip design without fabs), <strong>foundries</strong> (contract manufacturing), <strong>equipment makers</strong> (lithography, etching), <strong>memory</strong> (DRAM, NAND), and <strong>analog/mixed-signal</strong> providers. The sector is highly cyclical but benefits from secular tailwinds including AI, EVs, IoT, and cloud computing.</p>
+        </div>
+
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>NVDA</h3>
+                    <div class="company-name">NVIDIA Corporation</div>
+                    
+                    <span class="subsector-badge badge-fabless">Fabless</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$4551.4B</div>
+                    <div class="dividend">Dividend: 0.02%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">46.27</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">107.36%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">53.01%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">62.50%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">9.102</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.69</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> NVIDIA Corporation, a computing infrastructure company, provides graphics and compute and networking solutions in the United States, Singapore, Taiwan, China, Hong Kong, and internationally. The Compute & Networking segment includes its Data Centre accelerated computing platforms and artificial intelligence solutions and software; networking; automotive platforms and autonomous and electric vehicle solutions; Jetson for robotics and other embedded platforms; and DGX Cloud computing services. The Graphics segment offers GeForce GPUs for gaming and PCs, the GeForce NOW game streaming service and related infrastructure, and solutions for gaming platforms; Quadro/NVIDIA RTX GPUs for enterprise workstation graphics; virtual GPU or vGPU software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and Omniverse software for building and operating industrial AI and digital twin applications. It also customized agentic solutions designed in collaboration with NVIDIA to accelerate enterprise AI adoption. The company's products are used in gaming, professional visualization, data center, and automotive markets. It sells its products to original equipment manufacturers, original device manufacturers, system integrators and distributors, independent software vendors, cloud service providers, consumer internet companies, add-in board manufacturers, distributors, automotive manufacturers and tier-1 automotive suppliers, and other ecosystem participants. The company has a strategic partnership with Siemens Aktiengesellschaft to develop industrial and physical AI solutions for AI-driven innovation to every industry and industrial workflow. NVIDIA Corporation was incorporated in 1993 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>NVDA</td>
+                            <td>$4551.4B</td>
+                            <td>46.27</td>
+                            <td>107.36%</td>
+                            <td>53.01%</td>
+                            <td>62.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMD</td>
+                            <td>$335.8B</td>
+                            <td>78.60</td>
+                            <td>7.08%</td>
+                            <td>12.52%</td>
+                            <td>34.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>INTC</td>
+                            <td>$232.2B</td>
+                            <td>N/A</td>
+                            <td>0.02%</td>
+                            <td>-0.51%</td>
+                            <td>-4.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AVGO</td>
+                            <td>$1570.2B</td>
+                            <td>69.43</td>
+                            <td>31.05%</td>
+                            <td>36.20%</td>
+                            <td>16.40%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>QCOM</td>
+                            <td>$147.9B</td>
+                            <td>27.92</td>
+                            <td>21.48%</td>
+                            <td>11.96%</td>
+                            <td>5.00%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>TSM</h3>
+                    <div class="company-name">Taiwan Semiconductor Manufacturing Company Limited</div>
+                    
+                    <span class="subsector-badge badge-foundry">Foundry</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$1909.2B</div>
+                    <div class="dividend">Dividend: 0.96%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">34.96</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">35.22%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">45.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">20.50%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">18.187</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.86</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Taiwan Semiconductor Manufacturing Company Limited, together with its subsidiaries, manufactures, packages, tests, and sells integrated circuits and other semiconductor devices in Taiwan, China, Europe, the Middle East, Africa, Japan, the United States, and internationally. It provides various wafer fabrication processes, such as processes to manufacture complementary metal- oxide-semiconductor (CMOS) logic, mixed-signal, radio frequency, embedded memory, bipolar CMOS mixed-signal, and others. The company also involved in providing customer and engineering support services; manufacturing of masks; investment in technology start-up companies; research, designing, developing, manufacturing, packaging, testing, and sale of color filters; and investment activities. Its products are used in high performance computing, smartphones, Internet of things, automotive, and digital consumer electronics. The company was incorporated in 1987 and is headquartered in Hsinchu City, Taiwan.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>TSM</td>
+                            <td>$1909.2B</td>
+                            <td>34.96</td>
+                            <td>35.22%</td>
+                            <td>45.10%</td>
+                            <td>20.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>INTC</td>
+                            <td>$232.2B</td>
+                            <td>N/A</td>
+                            <td>0.02%</td>
+                            <td>-0.51%</td>
+                            <td>-4.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>GFS</td>
+                            <td>$27.1B</td>
+                            <td>N/A</td>
+                            <td>7.79%</td>
+                            <td>13.03%</td>
+                            <td>N/A</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ASML</td>
+                            <td>$546.1B</td>
+                            <td>47.85</td>
+                            <td>50.46%</td>
+                            <td>29.42%</td>
+                            <td>4.90%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMAT</td>
+                            <td>$260.7B</td>
+                            <td>33.68</td>
+                            <td>35.51%</td>
+                            <td>24.67%</td>
+                            <td>-3.50%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AVGO</h3>
+                    <div class="company-name">Broadcom Inc.</div>
+                    
+                    <span class="subsector-badge badge-fabless">Fabless</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$1570.2B</div>
+                    <div class="dividend">Dividend: 0.79%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">69.43</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">31.05%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">36.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">16.40%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">166.032</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.37</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Broadcom Inc. designs, develops, and supplies various semiconductor devices and infrastructure software solutions internationally. The company operates in two segments: Semiconductor Solutions and Infrastructure Software. The company offers networking connectivity, such as custom silicon solutions, ethernet switching & routing, ethernet NIC controllers, physical layer devices, and fiber optic components; wireless device connectivity, including RF semiconductor devices, connectivity solutions, custom touch controllers, and inductive charging ASICS; servers and storage system solutions, such as PCIE switches, SAS & raid products, fibre channel products, and HDD & SSD solutions; broadband solutions, includes set-top box, and broadband access; and industrial. The company also offers a private cloud software portfolio, including the VMware Cloud Foundation, Edge, vSphere foundation, telco cloud platform, private AI, live recovery, application networking and security, application development and data services; mainframe software, such as AIOPS & automation, database & data management, DEVX & DEVOPS, cybersecurity & compliance management, beyond code programs, foundational & open mainframe solutions; cybersecurity, such as endpoint, network, information, application security, and identity & access management; enterprise software; and fc san management. Its products are used in various applications in enterprise and data center networking, including artificial intelligence networking and connectivity, home connectivity, set-top boxes, broadband access, telecommunication equipment, wireless device and base stations, data center servers and storage systems, factory automation, power generation and alternative energy systems, and electronic displays. Broadcom Inc. was founded in 1961 and is headquartered in Palo Alto, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>ASML</h3>
+                    <div class="company-name">ASML Holding N.V.</div>
+                    
+                    <span class="subsector-badge badge-equipment">Equipment</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$546.1B</div>
+                    <div class="dividend">Dividend: 0.63%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">47.85</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">50.46%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">29.42%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">4.90%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">13.813</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">6.65</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> ASML Holding N.V. provides lithography solutions for the development, production, marketing, sales, upgrading, and servicing of advanced semiconductor equipment systems. It offers lithography, metrology, and inspection systems. The company also provides extreme ultraviolet lithography systems; and deep ultraviolet lithography systems comprising immersion and dry lithography systems solutions to manufacture various range of semiconductor nodes and technologies. In addition, it offers metrology and inspection systems, including YieldStar optical metrology systems to assess the quality of patterns on the wafers; and HMI electron beam solutions to identify and analyze individual chip defects. Further, the company provides computational lithography solutions, and lithography systems and control software solutions; and refurbishes and upgrades lithography systems, as well as offers customer support and related services. Additionally, it offers hardware, software, and services to chipmakers to produce the patterns of integrated circuits. The company operates in Japan, South Korea, Singapore, Taiwan, China, rest of Asia, the Netherlands, rest of Europe, the Middle East, Africa, and the United States. The company was formerly known as ASM Lithography Holding N.V. and changed its name to ASML Holding N.V. in 2001. ASML Holding N.V. was founded in 1984 and is headquartered in Veldhoven, the Netherlands.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>ASML</td>
+                            <td>$546.1B</td>
+                            <td>47.85</td>
+                            <td>50.46%</td>
+                            <td>29.42%</td>
+                            <td>4.90%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMAT</td>
+                            <td>$260.7B</td>
+                            <td>33.68</td>
+                            <td>35.51%</td>
+                            <td>24.67%</td>
+                            <td>-3.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>LRCX</td>
+                            <td>$290.5B</td>
+                            <td>47.40</td>
+                            <td>65.56%</td>
+                            <td>30.22%</td>
+                            <td>22.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>KLAC</td>
+                            <td>$190.6B</td>
+                            <td>42.19</td>
+                            <td>100.73%</td>
+                            <td>35.76%</td>
+                            <td>7.20%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>TSM</td>
+                            <td>$1909.2B</td>
+                            <td>34.96</td>
+                            <td>35.22%</td>
+                            <td>45.10%</td>
+                            <td>20.50%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>MU</h3>
+                    <div class="company-name">Micron Technology, Inc.</div>
+                    
+                    <span class="subsector-badge badge-memory">Memory</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$465.9B</div>
+                    <div class="dividend">Dividend: 0.11%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">39.39</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">22.55%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">28.15%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">56.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">21.244</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.22</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Micron Technology, Inc. designs, develops, manufactures, and sells memory and storage products in the United States, Taiwan, Japan, Mainland China, Hong Kong, Europe, and internationally. It operates through the Cloud Memory Business Unit; Core Data Center Business Unit; Mobile and Client Business Unit; and Automotive and Embedded Business Unit segments. The company provides memory products, including dynamic random access memory components and modules, CXL-based memory, LPDDR components and modules, graphics memory, high-bandwidth memory, and data center memory products; multichip packages (MCP) comprising embedded multimedia card-based, universal flash storage-based, and NAND-based MCPs; and technology leadership products that include 1y DRAM and G9 NAND technologies. It also offers storage products, such as data center solid-state drives (SSD), client SSD storage, and auto and industrial SSD storage; managed NAND; NAND flash; NOR flash; and memory cards. In addition, the company provides design tools, including FBGA and part decoders; DRAM power calculators; NAND power calculators; simulation models; chipset compatibility guides; serial presence-detection tools; cross-reference tools; UFSparm; SSD firmware; software and drivers; storage executive software; and obsolete part catalogs. It markets its semiconductor memory and storage products under the Micron and Crucial brands. The company serves the data center, PC, graphics, networking, automotive, industrial, and consumer embedded markets, as well as the smartphone and other mobile-device markets. It sells its products through its direct sales force, independent sales representatives, distributors, and retailers; web-based customer direct sales channel; and channel and distribution partners. Micron Technology, Inc. was founded in 1978 and is headquartered in Boise, Idaho.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>MU</td>
+                            <td>$465.9B</td>
+                            <td>39.39</td>
+                            <td>22.55%</td>
+                            <td>28.15%</td>
+                            <td>56.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NVDA</td>
+                            <td>$4551.4B</td>
+                            <td>46.27</td>
+                            <td>107.36%</td>
+                            <td>53.01%</td>
+                            <td>62.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMD</td>
+                            <td>$335.8B</td>
+                            <td>78.60</td>
+                            <td>7.08%</td>
+                            <td>12.52%</td>
+                            <td>34.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>INTC</td>
+                            <td>$232.2B</td>
+                            <td>N/A</td>
+                            <td>0.02%</td>
+                            <td>-0.51%</td>
+                            <td>-4.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>TSM</td>
+                            <td>$1909.2B</td>
+                            <td>34.96</td>
+                            <td>35.22%</td>
+                            <td>45.10%</td>
+                            <td>20.50%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AMD</h3>
+                    <div class="company-name">Advanced Micro Devices, Inc.</div>
+                    
+                    <span class="subsector-badge badge-fabless">Fabless</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$335.8B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">78.60</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">7.08%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">12.52%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">34.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">6.359</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.36</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Advanced Micro Devices, Inc. operates as a semiconductor company internationally. It operates in three segments: Data Center, Client and Gaming, and Embedded. The company offers artificial intelligence (AI) accelerators, microprocessors, and graphics processing units (GPUs) as standalone devices or as incorporated into accelerated processing units, chipsets, and data center and professional GPUs; and embedded processors and semi-custom system-on-chip (SoC) products, microprocessor and SoC development services and technology, data processing units, field programmable gate arrays (FPGA), system on modules, AI network interface cards, and adaptive SoC products. It provides processors under the AMD Ryzen, AMD Ryzen AI, AMD Ryzen PRO, AMD Ryzen Threadripper, AMD Ryzen Threadripper PRO, AMD Athlon, and AMD PRO A-Series brands; graphics under the AMD Radeon graphics and AMD Embedded Radeon graphics; professional graphics under the AMD Radeon Pro graphics brand; and AI and general-purpose compute infrastructure for hyperscale providers. The company offers data center graphics under the AMD Instinct accelerators and Radeon PRO V-series brands; server microprocessors under the AMD EPYC brand; low power solutions under the AMD Athlon, AMD Geode, AMD Ryzen, AMD EPYC, and AMD R-Series and G-Series brands; FPGA products under the Virtex-6, Virtex-7, Virtex UltraScale+, Kintex-7, Kintex UltraScale, Kintex UltraScale+, Artix-7, Artix UltraScale+, Spartan-6, and Spartan-7 brands; adaptive SOCs under the Zynq-7000, Zynq UltraScale+ MPSoC, Zynq UltraScale+ RFSoCs, Versal HBM, Versal Premium, Versal Prime, Versal AI Core, Versal AI Edge, Vitis, and Vivado brands; and compute and network acceleration board products under the Alveo and Pensando brands. It serves original equipment and design manufacturers, public cloud service providers, system integrators, distributors, and add-in-board manufacturers. The company was incorporated in 1969 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>AMD</td>
+                            <td>$335.8B</td>
+                            <td>78.60</td>
+                            <td>7.08%</td>
+                            <td>12.52%</td>
+                            <td>34.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NVDA</td>
+                            <td>$4551.4B</td>
+                            <td>46.27</td>
+                            <td>107.36%</td>
+                            <td>53.01%</td>
+                            <td>62.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>INTC</td>
+                            <td>$232.2B</td>
+                            <td>N/A</td>
+                            <td>0.02%</td>
+                            <td>-0.51%</td>
+                            <td>-4.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>QCOM</td>
+                            <td>$147.9B</td>
+                            <td>27.92</td>
+                            <td>21.48%</td>
+                            <td>11.96%</td>
+                            <td>5.00%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>MRVL</td>
+                            <td>$66.3B</td>
+                            <td>27.55</td>
+                            <td>18.04%</td>
+                            <td>31.75%</td>
+                            <td>36.80%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>LRCX</h3>
+                    <div class="company-name">Lam Research Corporation</div>
+                    
+                    <span class="subsector-badge badge-equipment">Equipment</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$290.5B</div>
+                    <div class="dividend">Dividend: 0.45%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">47.40</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">65.56%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">30.22%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">22.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">44.195</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">1.28</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Lam Research Corporation designs, manufactures, markets, refurbishes, and services semiconductor processing equipment used in the fabrication of integrated circuits in the United States, China, Korea, Taiwan, Japan, Southeast Asia, and Europe. The company offers ALTUS systems to deposit conformal or selective films for tungsten or molybdenum metallization applications; SABRE electrochemical deposition products for copper interconnect transition that offers copper damascene manufacturing; SPEED gapfill high-density plasma chemical vapor deposition (CVD) products; Striker single-wafer atomic layer deposition products for dielectric film solutions; and VECTOR plasma-enhanced CVD products. It also provides Flex for dielectric etch applications; Vantex, a dielectric etch system that provides RF technology and repeatable wafer-to-wafer performance enabled by Equipment Intelligence solutions; Kiyo for conductor etch applications; Syndion for through-silicon via etch applications; and Versys metal products for metal etch processes. In addition, the company offers Coronus bevel clean products to enhance die yield; and Da Vinci, DV-Prime, EOS, and SP series products to address various wafer cleaning applications. Further, it provides Reliant deposition, etch, and clean products; and Sense.i platform products, as well as customer service, spares, and upgrades. Lam Research Corporation was incorporated in 1980 and is headquartered in Fremont, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AMAT</h3>
+                    <div class="company-name">Applied Materials, Inc.</div>
+                    
+                    <span class="subsector-badge badge-equipment">Equipment</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$260.7B</div>
+                    <div class="dividend">Dividend: 0.56%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">33.68</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">35.51%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">24.67%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">-3.50%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">34.533</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">2.53</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Applied Materials, Inc. provides materials engineering solutions, equipment, services, and software to the semiconductor and related industries in the United States, China, Korea, Taiwan, Japan, Southeast Asia, Europe, and internationally. The company operates through Semiconductor Systems and Applied Global Services (AGS) segments. The Semiconductor Systems segment includes semiconductor capital equipment to enable materials engineering steps, including etch, rapid thermal processing, deposition, chemical mechanical planarization, metrology and inspection, wafer packaging, and ion implantation. The AGS segment offers integrated solutions to optimize equipment and fab performance and productivity comprising spares, upgrades, services, and 200 millimeter and other equipment and factory automation software for semiconductor and other products. It serves manufacturers of semiconductor wafers and chips, and other electronic devices. Applied Materials, Inc. was incorporated in 1967 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>INTC</h3>
+                    <div class="company-name">Intel Corporation</div>
+                    
+                    <span class="subsector-badge badge-foundry">Foundry / IDM</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$232.2B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">0.02%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-0.51%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">-4.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">37.282</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Intel Corporation designs, develops, manufactures, markets, sells, and services computing and related end products and services in the United States, Ireland, Israel, and internationally. It operates through three segments: CCG, DCAI, and Intel Foundry. The company offers client computing group products, including client and commercial CPUs, discrete client GPUs, edge computing, and connectivity products; data center and AI products, such as server CPUs, discrete GPUs, and networking products; and semiconductors comprising wafer fabrication, substrates, and other related products and services. It also provides driving assistance and self-driving solutions; and develops and manufactures multi-beam mask writing tools. The company sells its products through sales organizations, distributors, resellers, retailers, and OEM partners. It serves original equipment manufacturers, original design manufacturers, cloud service providers, and other manufacturers and service providers. The company was incorporated in 1968 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>TXN</h3>
+                    <div class="company-name">Texas Instruments Incorporated</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$202.6B</div>
+                    <div class="dividend">Dividend: 2.55%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">40.99</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">30.15%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">28.28%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">10.40%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">90.819</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Texas Instruments Incorporated designs, manufactures, and sells semiconductors to electronics designers and manufacturers in the United States, China, the rest of Asia, Europe, the Middle East, Africa, Japan, and internationally. It operates through Analog and Embedded Processing segments. The Analog segment offers power products to manage power requirements across various voltage levels, including battery-management solutions, DC/DC switching regulators, AC/DC and isolated controllers and converters, power switches, linear regulators, voltage references, multiphase controllers and power stages, and lighting products. This segment also provides signal chain products that sense, condition, and measure real-world signals and convert them into data to be transferred or converted for further processing and control, such as amplifiers, data converters, interface products, motor drives, clocks, and logic and sensing products. The Embedded Processing segment offers microcontrollers, processors, wireless connectivity, and radar products; and applications processors for specific computing activity. It also provides DLP products primarily for use in projecting high-definition images; calculators; and application-specific integrated circuits. Its products are used in various markets, such as industrial, automotive, personal electronics, communications equipment, enterprise systems, calculators, and others. The company markets and sells its semiconductor products through direct sales and distributors, as well as through its website. Texas Instruments Incorporated was founded in 1930 and is headquartered in Dallas, Texas.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>TXN</td>
+                            <td>$202.6B</td>
+                            <td>40.99</td>
+                            <td>30.15%</td>
+                            <td>28.28%</td>
+                            <td>10.40%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ADI</td>
+                            <td>$162.3B</td>
+                            <td>72.51</td>
+                            <td>6.57%</td>
+                            <td>20.57%</td>
+                            <td>25.90%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NXPI</td>
+                            <td>$61.1B</td>
+                            <td>30.50</td>
+                            <td>20.70%</td>
+                            <td>16.47%</td>
+                            <td>7.20%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ON</td>
+                            <td>$28.4B</td>
+                            <td>243.55</td>
+                            <td>1.50%</td>
+                            <td>2.02%</td>
+                            <td>-11.20%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>MCHP</td>
+                            <td>$42.7B</td>
+                            <td>N/A</td>
+                            <td>-1.09%</td>
+                            <td>-1.57%</td>
+                            <td>15.60%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>KLAC</h3>
+                    <div class="company-name">KLA Corporation</div>
+                    
+                    <span class="subsector-badge badge-equipment">Equipment</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$190.6B</div>
+                    <div class="dividend">Dividend: 0.52%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">42.19</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">100.73%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">35.76%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">7.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">111.778</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">1.03</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> KLA Corporation, together with its subsidiaries, designs, manufactures, and markets process control, process-enabling, and yield management solutions for the semiconductor and related electronics industries worldwide. The company operates through three segments: Semiconductor Process Control; Specialty Semiconductor Process; and PCB and Component Inspection. It offers inspection and review tools to identify, locate, characterize, review, and analyze defects on various surfaces of patterned and unpatterned wafers; metrology systems to measure pattern dimensions, film thickness, film stress, layer-to-layer alignment, pattern placement, surface topography, and electro-optical properties for wafers; chemical process control equipment; wired and wireless sensor wafers and reticles; wafer defect inspection, review, and metrology systems; reticle inspection and metrology systems; wafer inspection and metrology systems; and semiconductor software solutions that provide run-time process control, defect excursion identification, process corrections, and defect classification to accelerate yield learning rates and reduce production risk. The company also provides etch, plasma dicing, deposition, and other wafer processing technologies and solutions for the semiconductor and microelectronics industry. In addition, it offers direct imaging, inspection, optical shaping, inkjet and additive printing, and computer-aided manufacturing and engineering solutions for the PCB market and inspection and metrology systems for quality control and yield improvement in advanced and traditional semiconductor packaging markets. The company was formerly known as KLA-Tencor Corporation and changed its name to KLA Corporation in July 2019. KLA Corporation was incorporated in 1975 and is headquartered in Milpitas, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>ADI</h3>
+                    <div class="company-name">Analog Devices, Inc.</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$162.3B</div>
+                    <div class="dividend">Dividend: 1.20%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">72.51</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">6.57%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">20.57%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">25.90%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">26.5</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">1.10</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Analog Devices, Inc. engages in the design, manufacture, testing, and marketing of integrated circuits (ICs), software, and subsystems products in the United States, rest of North and South America, Europe, Japan, China, and rest of Asia. It provides data converter products, which translate real-world analog signals into digital data, as well as translates digital data into analog signals; power management and reference products for power conversion, driver monitoring, sequencing, and energy management applications in the automotive, communications, industrial, and consumer markets; and power ICs that include performance, integration, and software design simulation tools for accurate power supply designs. The company also offers amplifiers to condition analog signals; and radio frequency and microwave ICs to support cellular infrastructure; and micro-electro-mechanical systems technology solutions, including accelerometers used to sense acceleration, gyroscopes for sense rotation, inertial measurement units to sense multiple degrees of freedom, and broadband switches for radio and instrument systems, as well as isolators. In addition, it provides digital signal processing and system products for numeric calculations. The company serves clients in the industrial, automotive, consumer, instrumentation, aerospace, defense and healthcare, and communications markets through a direct sales force, third-party distributors, and independent sales representatives, as well as online. The company was incorporated in 1965 and is headquartered in Wilmington, Massachusetts.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>QCOM</h3>
+                    <div class="company-name">QUALCOMM Incorporated</div>
+                    
+                    <span class="subsector-badge badge-fabless">Fabless</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$147.9B</div>
+                    <div class="dividend">Dividend: 2.57%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">27.92</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">21.48%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">11.96%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">5.00%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">64.218</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> QUALCOMM Incorporated engages in the development and commercialization of foundational technologies for the wireless industry worldwide. It operates through three segments: Qualcomm CDMA Technologies (QCT); Qualcomm Technology Licensing (QTL); and Qualcomm Strategic Initiatives (QSI). The QCT segment develops and supplies integrated circuits and system software with connectivity and computing technologies for use in mobile devices; automotive systems for connectivity, digital cockpit, and ADAS/AD; and IoT, including consumer electronic devices, industrial devices, and edge networking products. The QTL segment grants licenses or provides rights to use portions of its intellectual property portfolio, which include various patent rights useful in the manufacture and sale of wireless products comprising products implementing LTE, and/or OFDMA-based 5G products and derivatives; to use cellular standard-essential patents, including 3G, 4G and 5G for cellular devices. The QSI segment invests in early-stage companies in various industries, including 5G, artificial intelligence, automotive, consumer, enterprise, cloud, IoT, and extended reality, and investments, including non-marketable equity securities and, to a lesser extent, marketable equity securities, and convertible debt instruments. It also provides development, and other services and sells related products to the United States government agencies and their contractors. In addition, the company is also involved in Qualcomm government technologies and data center businesses. QUALCOMM Incorporated was incorporated in 1985 and is headquartered in San Diego, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>ARM</h3>
+                    <div class="company-name">Arm Holdings plc</div>
+                    
+                    <span class="subsector-badge badge-eda">EDA / IP</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$129.8B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">162.92</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">11.27%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">17.15%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">26.30%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">5.912</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Arm Holdings plc architects, develops, and licenses central processing unit products and related technologies for semiconductor companies and original equipment manufacturers. The company is involved in the licensing, marketing, research, and development of microprocessors, systems intellectual property (IPs), graphics processing units, physical IP and associated systems IPs, software, tools, and other related services. It also offers arm central processing units, accelerators, system IP products, and compute platform products, as well as development tools and software. The company's products are used in various markets, such as automotive, computing infrastructure, consumer technologies, and Internet of things. It operates in the United States, the People's Republic of China, Taiwan, the Republic of Korea, and internationally. The company was founded in 1990 and is headquartered in Cambridge, the United Kingdom. Arm Holdings plc is a subsidiary of SoftBank Group Corp.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>SNPS</h3>
+                    <div class="company-name">Synopsys, Inc.</div>
+                    
+                    <span class="subsector-badge badge-eda">EDA / IP</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$81.0B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">52.33</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">7.16%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">18.89%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">37.80%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">50.459</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Synopsys, Inc. provides design IP solutions in the semiconductor and electronics industries. It operates in two segments, Design Automation and Design IP. The company offers Digital and Custom IC Design solution that provides digital design implementation solutions; Verification solution that offers virtual prototyping, static and formal verification, simulation, emulation, field programmable gate array (FPGA)-based prototyping, and debug solutions; FPGA design products that are programmed to perform specific functions; synopsys technology computer-aided design (TCAD), mask synthesis, and manufacturing analytic solutions; and AI-driven EDA solutions. It also provides pre-verified and silicon-proven IP solutions, logic libraries and embedded memories, processor and security solutions, IP Offerings for the automotive market, SOC infrastructure IP, data path and building block IP, and mathematical and floating-point components. The company was incorporated in 1986 and is headquartered in Sunnyvale, California.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #e8eaf6; font-weight: bold;">
+                            <td>SNPS</td>
+                            <td>$81.0B</td>
+                            <td>52.33</td>
+                            <td>7.16%</td>
+                            <td>18.89%</td>
+                            <td>37.80%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>CDNS</td>
+                            <td>$78.6B</td>
+                            <td>74.12</td>
+                            <td>21.74%</td>
+                            <td>20.35%</td>
+                            <td>10.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ARM</td>
+                            <td>$129.8B</td>
+                            <td>162.92</td>
+                            <td>11.27%</td>
+                            <td>17.15%</td>
+                            <td>26.30%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>MRVL</td>
+                            <td>$66.3B</td>
+                            <td>27.55</td>
+                            <td>18.04%</td>
+                            <td>31.75%</td>
+                            <td>36.80%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AVGO</td>
+                            <td>$1570.2B</td>
+                            <td>69.43</td>
+                            <td>31.05%</td>
+                            <td>36.20%</td>
+                            <td>16.40%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>CDNS</h3>
+                    <div class="company-name">Cadence Design Systems, Inc.</div>
+                    
+                    <span class="subsector-badge badge-eda">EDA / IP</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$78.6B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">74.12</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">21.74%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">20.35%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">10.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">47.685</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">3.58</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Cadence Design Systems, Inc. provides software, hardware, and other services worldwide. The company offers functional verification services, such as Jasper, a formal verification platform; Xcelium, a parallel logic simulation platform; Palladium, an enterprise emulation platform; and Protium, a prototyping platform for chip verification. It also provides digital IC design and sign off products, including Genus synthesis and Joules RTL power solutions, as well as Modus DFT software solution to reduce systems-on-chip design-for-test time; physical implementation tools, such as place and route, optimization, and performing sign-off checks for manufacturing; and Innovus implementation system, a digital IC design and signoff solution. In addition, the company offers custom IC design and simulation, such as Virtuoso Studio, a solution platform for custom, analog, mixed-signal, photonics, and RF semiconductors; and system design and analysis products, a Multiphysics platform that helps in design and simulate electronics and entire systems in electromagnetic, thermal, structure, computational fluid dynamics, molecular, PCB and packaging, mechanical, and structural analysis. Further, it provides semiconductor IP product for design architectures; Functional Verification; digital ic design and signoff; EDA product that addresses the design and verification for semiconductor chips and manufacturing process technologies; and verification IP with memory models to emulate and model the expected behavior and interaction of standard industry system interface protocols. Additionally, it offers services related to methodology, education, and hosted design solutions, as well as technical support and maintenance services. It serves consumer, hyperscale computing, 5G communications, mobile, automotive, aerospace and defense, industrial, and life science industries. Cadence Design Systems, Inc. was incorporated in 1987 and is headquartered in San Jose, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>MRVL</h3>
+                    <div class="company-name">Marvell Technology, Inc.</div>
+                    
+                    <span class="subsector-badge badge-fabless">Fabless</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$66.3B</div>
+                    <div class="dividend">Dividend: 0.31%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">27.55</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">18.04%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">31.75%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">36.80%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">33.988</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Marvell Technology, Inc., together with its subsidiaries, provides data infrastructure semiconductor solutions, spanning the data center core to network edge. The company develops and scales system-on-a-chip architectures, integrating analog, mixed-signal, and digital signal processing functionality. It offers a portfolio of ethernet solutions, including spanning controllers, network adapters, physical transceivers, and switches; single or multiple core processors; and custom application specific integrated circuits. The company also provides interconnect products, including pulse amplitude modulation, coherent and coherent-lite digital signal processors (DSPs), laser drivers, trans-impedance amplifiers, silicon photonics, co-packaged optics, linear pluggable optics chipsets, data center interconnect, active electrical cable DSPs and peripheral component interconnect express retimer solutions; fibre channel products comprising host bus adapters and controllers; storage controllers for hard disk drives and solid-state-drives; host system interfaces, including serial advanced technology attachment and serial attached SCSI, peripheral component interconnect express, non-volatile memory express (NVMe), and NVMe over fabrics. It operates in the United States, Argentina, China, India, Israel, Japan, Singapore, South Korea, Taiwan, and Vietnam. Marvell Technology, Inc. was incorporated in 1995 and is headquartered in Wilmington, Delaware.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>NXPI</h3>
+                    <div class="company-name">NXP Semiconductors N.V.</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$61.1B</div>
+                    <div class="dividend">Dividend: 1.67%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">30.50</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">20.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">16.47%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">7.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">116.946</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> NXP Semiconductors N.V. provides semiconductor products in China, the United States, Germany, Japan, Singapore, South Korea, Mexico, the Netherlands, Taiwan, and internationally. The company's product portfolio includes microcontrollers; application processors; communication processors; wireless connectivity solutions, such as near field communications, ultra-wideband, Bluetooth low-energy, Zigbee, Thread, and Wi-Fi and Wi-Fi/Bluetooth integrated SoCs; analog and interface devices; radio frequency power amplifiers; and security controllers, as well as semiconductor-based environmental and inertial sensors, including pressure, inertial, magnetic, and gyroscopic sensors. Its products are used in various applications, including automotive, industrial and Internet of Things, mobile, and communication infrastructure. The company markets its products to various original equipment manufacturers, contract manufacturers, and distributors. NXP Semiconductors N.V. was incorporated in 2006 and is headquartered in Eindhoven, the Netherlands.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>MPWR</h3>
+                    <div class="company-name">Monolithic Power Systems, Inc.</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$56.3B</div>
+                    <div class="dividend">Dividend: 0.69%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">90.88</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">17.94%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">22.07%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">20.80%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Monolithic Power Systems, Inc. designs, develops, markets, and sells semiconductor-based power electronics solutions for the storage and computing, automotive, enterprise data, consumer, communications, and industrial markets in the United States, China, Taiwan, South Korea, Europe, Southeast Asia, Japan, and internationally. The company provides direct current (DC) to DC integrated circuits (ICs) that are used to convert and control voltages of various electronic systems, such as cloud-based and on-premises CPU servers, server artificial intelligence applications, storage applications, notebooks, infotainment, workstation applications, power sources, home appliances, and network infrastructure and satellite communications applications. It also offers alternating current to DC, driver metal-oxide-semiconductor field-effect transistor, power management ICs, current limit switch, and lighting control products. The company sells its products through third-party distributors, value-added resellers, end customers and other resellers, original design manufacturers, and original equipment manufacturers. Monolithic Power Systems, Inc. was incorporated in 1997 and is headquartered in Kirkland, Washington.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>MCHP</h3>
+                    <div class="company-name">Microchip Technology Incorporated</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$42.7B</div>
+                    <div class="dividend">Dividend: 2.31%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">-1.09%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-1.57%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">15.60%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">82.382</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Microchip Technology Incorporated develops, manufactures, and sells smart, connected, and secure embedded control solutions in the Americas, Europe, and Asia. It operates through two segments, Semiconductor Products and Technology Licensing. The company offers general purpose 8-bit, 16-bit, 32-bit, and 64-bit mixed-signal microcontrollers; 32-bit and 64-bit embedded mixed-signal microprocessors; and specialized mixed-signal microcontrollers for automotive, industrial, computing, communications, lighting, power supplies, motor control, human machine interface, security, wired connectivity, and wireless connectivity applications. It also provides analog products, including power management, linear, mixed-signal, high voltage, thermal management, discrete diodes and MOSFETS, radio frequency (RF), drivers, safety, security, timing, USB, ethernet, wireless, and other interface products; field-programmable gate array (FPGA) products; and application development tools that enable system designers to program mixed-signal microcontroller, FPGA, and microprocessor products. In addition, the company offers memory products that consist of serial electrically erasable programmable read only memory (EEPROMs), serial flash memories, parallel flash memories, serial static random-access memory (SRAM), and electrically erasable random-access memory (EERAMs) for production of footprint devices; and licenses its SuperFlash embedded flash and non-volatile memory technologies to foundries, integrated device manufacturers, and design partners for use in the manufacture of microcontroller products, gate array, RF, analog, and neuromorphic compute products, as well as provides engineering services. Further, it provides wafer foundry and assembly, and test subcontracting manufacturing services; and timing systems, application specific integrated circuits, and products for aerospace applications. The company was incorporated in 1989 and is headquartered in Chandler, Arizona.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>ON</h3>
+                    <div class="company-name">ON Semiconductor Corporation</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$28.4B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">243.55</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">1.50%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">2.02%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">-11.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">42.294</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> ON Semiconductor Corporation provides intelligent sensing and power solutions in Hong Kong, Singapore, the United Kingdom, the United States, and internationally. It operates through three segments: Power Solutions Group, Analog and Mixed-Signal Group, and Intelligent Sensing Group. The Power Solutions Group segment offers discrete, module, and integrated semiconductor devices designed to enable power conversion, including power switching, signal conditioning, and circuit protection technologies. Its Analog and Mixed-Signal Group segment designs and develops analog and mixed-signal solutions, including power management, sensor interface, connectivity, and standard products for automotive, industrial automation, AI data centers, computing, and mobile end markets. The Intelligent Sensing Group segment develops complementary metal-oxide-semiconductor image sensors, image signal processors, short-wave infrared sensors, and other products, as well as photon-counting technologies, including single-photon avalanche diode arrays and silicon photomultiplier devices for depth sensing, factory automation, safety systems, and robotics industries. ON Semiconductor Corporation was incorporated in 1992 and is headquartered in Scottsdale, Arizona.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>GFS</h3>
+                    <div class="company-name">GlobalFoundries Inc.</div>
+                    
+                    <span class="subsector-badge badge-foundry">Foundry</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$27.1B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">7.79%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">13.03%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">13.669</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> GlobalFoundries Inc., a semiconductor foundry, provides range of mainstream wafer fabrication services and technologies worldwide. It offers semiconductor devices, including microprocessors, mobile application processors, baseband processors, network processors, radio frequency modems, microcontrollers, and power management units. The company was incorporated in 2008 and is headquartered in Malta, New York.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>SMCI</h3>
+                    <div class="company-name">Super Micro Computer, Inc.</div>
+                    
+                    <span class="subsector-badge badge-equipment">Equipment</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$18.2B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">22.21</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">13.19%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">3.11%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">123.40%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">75.28</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">1.16</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Super Micro Computer, Inc., together with its subsidiaries, develops and sells server and storage solutions based on modular and open-standard architecture in the United States, Asia, Europe, and internationally. The company offers liquid and air-cooled AI servers for training and inferencing with integrated graphics processing units (GPUs) or PCIe based architectures; SuperBlade, MicroBlade, FlexTwin, GrandTwin, and BigTwin blade and multi-node systems; SuperStorage systems; Hyper, CloudDC, and WIO and rackmount systems; embedded (5G/IoT/Edge) systems; and MicroCloud server systems. It also provides workstations and networking devices; and modular server subsystems and accessories, including server boards, chassis, power supplies, and other accessories. In addition, the company offers remote system management solutions, such as Server Management suite comprising Supermicro Server Manager, Supermicro Power Management software, Supermicro Update Manager, SuperCloud Composer, and SuperDoctor 5. Further, the company identifies service requirements; creates and executes project plans; conducts verification testing; offers training; and provides technical documentation. Additionally, it offers rack level services from design to deployment for full rack and cluster level deployments of AI and HPC datacenters; help desk services and on-site product support; and warranties, maintenance, and technical support services. The company serves enterprise data centers, cloud computing, artificial intelligence, 5G, and edge computing markets through direct and indirect sales force, distributors, value-added resellers, system integrators, and original equipment manufacturers. Super Micro Computer, Inc. was incorporated in 1993 and is headquartered in San Jose, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>WOLF</h3>
+                    <div class="company-name">Wolfspeed, Inc.</div>
+                    
+                    <span class="subsector-badge badge-analog">Analog / Mixed-Signal</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$0.7B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">-137.04%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-91.64%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">-6.60%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">313.357</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Wolfspeed, Inc., a semiconductor company, focuses on silicon carbide and gallium nitride (GaN) technologies in Europe, Hong Kong, China, rest of Asia Pacific, the United States, and internationally. The company offers silicon carbide and GaN materials, including silicon carbide bare wafers, epitaxial wafers, and GaN epitaxial layers on silicon carbide wafers to manufacture products for RF, power, and other applications. It also provides power devices, such as silicon carbide Schottky diodes, metal oxide semiconductor field effect transistors (MOSFETs), and power modules for customers and distributors to use in applications, including electric vehicles comprising charging infrastructure, server power supplies, solar inverters, uninterruptible power supplies, industrial power supplies, and other applications. The company was formerly known as Cree, Inc. and changed its name to Wolfspeed, Inc. in October 2021. Wolfspeed, Inc. was founded in 1987 and is headquartered in Durham, North Carolina.
+            </div>
+
+            
+        </div>
+        
+    </div>
+</body>
+
+</html>

@@ -39,25 +39,40 @@
         }
 
         .nav {
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
             margin-bottom: 30px;
-            padding: 10px;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
         }
 
         .nav a {
-            margin: 0 15px;
             text-decoration: none;
             color: #007bff;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
         }
 
         .nav a.active {
-            color: #2c3e50;
-            text-decoration: underline;
+            background: #2c3e50;
+            color: white;
             cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
         }
 
         .guru-section {
@@ -153,16 +168,19 @@
     <div class="container">
         <div class="header">
             <h1>Guru Portfolio Tracker</h1>
-            <div class="date">Report generated on: 2026-02-12</div>
+            <div class="date">Report generated on: 2026-02-13</div>
         </div>
 
         <div class="nav">
             <a href="index.html" class="">S&P 500</a>
             <a href="non_spy.html" class="">Non-S&P 500</a>
             <a href="guru.html" class="active">Guru Tracker</a>
-            <a href="consumer_staples.html"
-                class="">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="tech.html" class="">Technology</a>
+            <a href="semiconductors.html" class="">Semiconductors</a>
+            <a href="ai.html" class="">AI & LLM</a>
+            <a href="consumer_staples.html" class="">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="china.html" class="">A股精选</a>
             <a href="china_full.html" class="">A股全市场</a>
         </div>
@@ -647,7 +665,7 @@
         <div
             style="margin-top: 30px; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; font-size: 0.8em; color: #555;">
             <strong>Debug Info:</strong><br>
-            Generated: 2026-02-12<br>
+            Generated: 2026-02-13<br>
             
             Warren Buffett (Berkshire Hathaway): 41 holdings found.<br>
             

@@ -39,25 +39,40 @@
         }
 
         .nav {
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
             margin-bottom: 30px;
-            padding: 10px;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
         }
 
         .nav a {
-            margin: 0 15px;
             text-decoration: none;
             color: #007bff;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
         }
 
         .nav a.active {
-            color: #2c3e50;
-            text-decoration: underline;
+            background: #2c3e50;
+            color: white;
             cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
         }
 
         .highlight {
@@ -115,16 +130,19 @@
     <div class="container">
         <div class="header">
             <h1>Daily Stock Picks: Non-S&P 500</h1>
-            <div class="date">Report generated on: 2026-02-12</div>
+            <div class="date">Report generated on: 2026-02-13</div>
         </div>
 
         <div class="nav">
             <a href="index.html" class="">S&P 500</a>
             <a href="non_spy.html" class="active">Non-S&P 500</a>
             <a href="guru.html" class="">Guru Tracker</a>
-            <a href="consumer_staples.html"
-                class="">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="tech.html" class="">Technology</a>
+            <a href="semiconductors.html" class="">Semiconductors</a>
+            <a href="ai.html" class="">AI & LLM</a>
+            <a href="consumer_staples.html" class="">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="china.html" class="">A股精选</a>
             <a href="china_full.html" class="">A股全市场</a>
         </div>
@@ -132,9 +150,43 @@
         
         
         <div class="highlight">
-            <h2>#1 Pick: AFG</h2>
+            <h2>#1 Pick: AR</h2>
             <div class="score">Score: 4/5</div>
-            <p><strong>PEG Ratio:</strong> 0.70 | <strong>P/E Ratio:</strong> 12.78 |
+            <p><strong>PEG Ratio:</strong> 0.54 | <strong>P/E Ratio:</strong> 16.66 |
+                <strong>Dividend Yield:</strong> N/A
+            </p>
+
+            <h3>Company Description</h3>
+            <p>Antero Resources Corporation, an independent oil and natural gas company, engages in the development, production, exploration, and acquisition of natural gas, natural gas liquids (NGLs), and oil properties in the United States. It operates in three segments: Exploration and Production; Marketing; and Equity Method Investment in Antero Midstream. As of December 31, 2025, the company had approximately 537,000 net acres in the Appalachian Basin; and approximately 168,000 net acres in the Upper Devonian Shale. Its gathering and compression systems also comprise 731 miles of gas gathering pipelines in the Appalachian Basin. The company was formerly known as Antero Resources Appalachian Corporation and changed its name to Antero Resources Corporation in June 2013. Antero Resources Corporation was incorporated in 2002 and is headquartered in Denver, Colorado.</p>
+
+            <h3>Industry & Sector</h3>
+            <p><strong>Industry:</strong> Oil & Gas E&P | <strong>Sector:</strong> Energy</p>
+
+            
+
+            <h3>Price History (5 Years)</h3>
+            <img src="chart_NON_SP500_AR.png" alt="Price Chart for AR">
+
+            <h3>Why it was picked:</h3>
+            <ul class="details-list">
+                
+                <li>✅ ROE: 9.04% (<=15%)</li>
+                
+                <li>✅ Margin: 12.02% (>10%)</li>
+                
+                <li>✅ Rev Growth: 19.80% (>5%)</li>
+                
+                <li>✅ D/E: 45.706 (<50%)</li>
+                
+                <li>✅ PEG: 0.54 (<2.0)</li>
+                
+            </ul>
+        </div>
+        
+        <div class="highlight">
+            <h2>#2 Pick: AFG</h2>
+            <div class="score">Score: 4/5</div>
+            <p><strong>PEG Ratio:</strong> 0.70 | <strong>P/E Ratio:</strong> 12.81 |
                 <strong>Dividend Yield:</strong> 2.73%
             </p>
 
@@ -166,44 +218,10 @@
         </div>
         
         <div class="highlight">
-            <h2>#2 Pick: AM</h2>
-            <div class="score">Score: 4/5</div>
-            <p><strong>PEG Ratio:</strong> 1.30 | <strong>P/E Ratio:</strong> 20.86 |
-                <strong>Dividend Yield:</strong> 4.40%
-            </p>
-
-            <h3>Company Description</h3>
-            <p>Antero Midstream Corporation owns, operates, and develops midstream energy assets in the Appalachian Basin. It operates in two segments, Gathering and Processing, and Water Handling. The Gathering and Processing segment includes a network of gathering pipelines, compressor stations, and processing and fractionation plants that collects and processes natural gas and NGLs from Antero Resources' wells in West Virginia and Ohio. The Water Handling segment delivers water from sources, including the Ohio River, local reservoirs, and various regional waterways; uses water handling systems to transport flowback and produced water; and offers pumping stations, water storage, and blending facilities. The company was founded in 2002 and is headquartered in Denver, Colorado.</p>
-
-            <h3>Industry & Sector</h3>
-            <p><strong>Industry:</strong> Oil & Gas Midstream | <strong>Sector:</strong> Energy</p>
-
-            
-
-            <h3>Price History (5 Years)</h3>
-            <img src="chart_NON_SP500_AM.png" alt="Price Chart for AM">
-
-            <h3>Why it was picked:</h3>
-            <ul class="details-list">
-                
-                <li>✅ ROE: 22.52% (>15%)</li>
-                
-                <li>✅ Margin: 37.81% (>10%)</li>
-                
-                <li>✅ Rev Growth: 8.70% (>5%)</li>
-                
-                <li>✅ D/E: 145.682 (>=50%)</li>
-                
-                <li>✅ PEG: 1.30 (<2.0)</li>
-                
-            </ul>
-        </div>
-        
-        <div class="highlight">
             <h2>#3 Pick: AYI</h2>
             <div class="score">Score: 4/5</div>
-            <p><strong>PEG Ratio:</strong> 1.77 | <strong>P/E Ratio:</strong> 24.75 |
-                <strong>Dividend Yield:</strong> 0.22%
+            <p><strong>PEG Ratio:</strong> 1.72 | <strong>P/E Ratio:</strong> 24.10 |
+                <strong>Dividend Yield:</strong> 0.23%
             </p>
 
             <h3>Company Description</h3>
@@ -228,7 +246,7 @@
                 
                 <li>✅ D/E: 32.573 (<50%)</li>
                 
-                <li>✅ PEG: 1.77 (<2.0)</li>
+                <li>✅ PEG: 1.72 (<2.0)</li>
                 
             </ul>
         </div>
@@ -236,7 +254,7 @@
         <div class="highlight">
             <h2>#4 Pick: APPF</h2>
             <div class="score">Score: 4/5</div>
-            <p><strong>PEG Ratio:</strong> N/A | <strong>P/E Ratio:</strong> 46.07 |
+            <p><strong>PEG Ratio:</strong> N/A | <strong>P/E Ratio:</strong> 45.23 |
                 <strong>Dividend Yield:</strong> N/A
             </p>
 
@@ -270,7 +288,7 @@
         <div class="highlight">
             <h2>#5 Pick: BHF</h2>
             <div class="score">Score: 3/5</div>
-            <p><strong>PEG Ratio:</strong> 0.02 | <strong>P/E Ratio:</strong> 4.49 |
+            <p><strong>PEG Ratio:</strong> 0.02 | <strong>P/E Ratio:</strong> 4.50 |
                 <strong>Dividend Yield:</strong> N/A
             </p>
 
@@ -317,6 +335,51 @@
                 </tr>
             </thead>
             <tbody>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>AR</td>
+                    <td>4</td>
+                    <td>0.54</td>
+                    <td>16.66</td>
+                    <td>N/A</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>AFG</td>
+                    <td>4</td>
+                    <td>0.70</td>
+                    <td>12.81</td>
+                    <td>2.73%</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>AYI</td>
+                    <td>4</td>
+                    <td>1.72</td>
+                    <td>24.10</td>
+                    <td>0.23%</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>APPF</td>
+                    <td>4</td>
+                    <td>N/A</td>
+                    <td>45.23</td>
+                    <td>N/A</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>BHF</td>
+                    <td>3</td>
+                    <td>0.02</td>
+                    <td>4.50</td>
+                    <td>N/A</td>
+                </tr>
                 
                 <tr>
                     <td>2026-02-12</td>
@@ -540,51 +603,6 @@
                     <td>4</td>
                     <td>N/A</td>
                     <td>45.71</td>
-                    <td>N/A</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>AFG</td>
-                    <td>5</td>
-                    <td>0.68</td>
-                    <td>12.52</td>
-                    <td>2.79%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>ATR</td>
-                    <td>5</td>
-                    <td>0.70</td>
-                    <td>20.74</td>
-                    <td>1.44%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>AM</td>
-                    <td>4</td>
-                    <td>1.20</td>
-                    <td>19.14</td>
-                    <td>4.80%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>AYI</td>
-                    <td>4</td>
-                    <td>1.75</td>
-                    <td>24.52</td>
-                    <td>0.22%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>APPF</td>
-                    <td>4</td>
-                    <td>N/A</td>
-                    <td>47.34</td>
                     <td>N/A</td>
                 </tr>
                 

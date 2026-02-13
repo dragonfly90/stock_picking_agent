@@ -39,25 +39,40 @@
         }
 
         .nav {
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
             margin-bottom: 30px;
-            padding: 10px;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
         }
 
         .nav a {
-            margin: 0 15px;
             text-decoration: none;
             color: #007bff;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
         }
 
         .nav a.active {
-            color: #2c3e50;
-            text-decoration: underline;
+            background: #2c3e50;
+            color: white;
             cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
         }
 
         .stock-card {
@@ -149,15 +164,19 @@
     <div class="container">
         <div class="header">
             <h1>A股精选 (China Picks)</h1>
-            <div class="date">生成日期: 2026-02-12</div>
+            <div class="date">生成日期: 2026-02-13</div>
         </div>
 
         <div class="nav">
             <a href="index.html">S&P 500</a>
             <a href="non_spy.html">Non-S&P 500</a>
             <a href="guru.html">Guru Tracker</a>
-            <a href="consumer_staples.html">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="tech.html">Technology</a>
+            <a href="semiconductors.html">Semiconductors</a>
+            <a href="ai.html">AI & LLM</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="china.html" class="active">A股精选</a>
             <a href="china_full.html">A股全市场</a>
         </div>
@@ -176,8 +195,8 @@
                     <div class="company-name">工商银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥2559.0B</div>
-                    <div class="dividend">股息率: 4.20%</div>
+                    <div class="market-cap">¥2534.0B</div>
+                    <div class="dividend">股息率: 4.26%</div>
                 </div>
             </div>
 
@@ -186,7 +205,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        7.25</div>
+                        7.18</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -218,8 +237,8 @@
                     <div class="company-name">农业银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥2313.4B</div>
-                    <div class="dividend">股息率: 3.61%</div>
+                    <div class="market-cap">¥2278.4B</div>
+                    <div class="dividend">股息率: 3.71%</div>
                 </div>
             </div>
 
@@ -228,7 +247,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        8.47</div>
+                        8.35</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -260,8 +279,8 @@
                     <div class="company-name">建设银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥2304.7B</div>
-                    <div class="dividend">股息率: 4.37%</div>
+                    <div class="market-cap">¥2275.9B</div>
+                    <div class="dividend">股息率: 4.45%</div>
                 </div>
             </div>
 
@@ -270,7 +289,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        6.78</div>
+                        6.69</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -302,8 +321,8 @@
                     <div class="company-name">中国石油</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥2020.6B</div>
-                    <div class="dividend">股息率: 4.33%</div>
+                    <div class="market-cap">¥1929.0B</div>
+                    <div class="dividend">股息率: 4.26%</div>
                 </div>
             </div>
 
@@ -312,7 +331,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        12.84</div>
+                        12.26</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -344,8 +363,8 @@
                     <div class="company-name">贵州茅台</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥1861.6B</div>
-                    <div class="dividend">股息率: 3.43%</div>
+                    <div class="market-cap">¥1860.0B</div>
+                    <div class="dividend">股息率: 3.47%</div>
                 </div>
             </div>
 
@@ -354,7 +373,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        20.72</div>
+                        20.69</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -382,54 +401,12 @@
         <div class="stock-card">
             <div class="stock-header">
                 <div class="stock-title">
-                    <h3>300750.SZ</h3>
-                    <div class="company-name">宁德时代</div>
-                </div>
-                <div class="stock-meta">
-                    <div class="market-cap">¥1729.3B</div>
-                    <div class="dividend">股息率: 1.51%</div>
-                </div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-item">
-                    <div class="metric-label">市盈率 (PE)</div>
-                    <div
-                        class="metric-value positive">
-                        26.05</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">净资产收益率 (ROE)</div>
-                    <div class="metric-value positive">22.14%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">净利率 (Margin)</div>
-                    <div class="metric-value positive">16.52%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">营收增长 (Growth)</div>
-                    <div class="metric-value positive">12.90%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">负债权益比 (D/E)</div>
-                    <div class="metric-value">37.135</div>
-                </div>
-            </div>
-
-            <div class="description">
-                <strong>简介:</strong> 全球领先的锂离子电池研发制造公司，专注于新能源汽车动力电池系统、储能系统的研发、生产和销售。
-            </div>
-        </div>
-        
-        <div class="stock-card">
-            <div class="stock-header">
-                <div class="stock-title">
                     <h3>601988.SS</h3>
                     <div class="company-name">中国银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥1720.6B</div>
-                    <div class="dividend">股息率: 4.27%</div>
+                    <div class="market-cap">¥1710.9B</div>
+                    <div class="dividend">股息率: 4.33%</div>
                 </div>
             </div>
 
@@ -438,7 +415,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        7.12</div>
+                        7.08</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -466,12 +443,12 @@
         <div class="stock-card">
             <div class="stock-header">
                 <div class="stock-title">
-                    <h3>601318.SS</h3>
-                    <div class="company-name">中国平安</div>
+                    <h3>300750.SZ</h3>
+                    <div class="company-name">宁德时代</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥1204.9B</div>
-                    <div class="dividend">股息率: 3.81%</div>
+                    <div class="market-cap">¥1680.8B</div>
+                    <div class="dividend">股息率: 1.48%</div>
                 </div>
             </div>
 
@@ -480,7 +457,49 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        8.70</div>
+                        25.37</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">净资产收益率 (ROE)</div>
+                    <div class="metric-value positive">22.14%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">净利率 (Margin)</div>
+                    <div class="metric-value positive">16.52%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">营收增长 (Growth)</div>
+                    <div class="metric-value positive">12.90%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">负债权益比 (D/E)</div>
+                    <div class="metric-value">37.135</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>简介:</strong> 全球领先的锂离子电池研发制造公司，专注于新能源汽车动力电池系统、储能系统的研发、生产和销售。
+            </div>
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>601318.SS</h3>
+                    <div class="company-name">中国平安</div>
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">¥1182.2B</div>
+                    <div class="dividend">股息率: 3.86%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">市盈率 (PE)</div>
+                    <div
+                        class="metric-value positive">
+                        8.53</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -512,8 +531,8 @@
                     <div class="company-name">工业富联</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥1098.8B</div>
-                    <div class="dividend">股息率: 1.76%</div>
+                    <div class="market-cap">¥1087.2B</div>
+                    <div class="dividend">股息率: 1.75%</div>
                 </div>
             </div>
 
@@ -522,7 +541,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        35.93</div>
+                        35.55</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -554,8 +573,8 @@
                     <div class="company-name">招商银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥999.6B</div>
-                    <div class="dividend">股息率: 7.65%</div>
+                    <div class="market-cap">¥992.4B</div>
+                    <div class="dividend">股息率: 7.73%</div>
                 </div>
             </div>
 
@@ -564,7 +583,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        6.86</div>
+                        6.82</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -596,7 +615,7 @@
                     <div class="company-name">中芯国际</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥932.7B</div>
+                    <div class="market-cap">¥935.5B</div>
                     <div class="dividend">股息率: N/A</div>
                 </div>
             </div>
@@ -606,7 +625,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        242.88</div>
+                        243.60</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -638,8 +657,8 @@
                     <div class="company-name">比亚迪</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥848.9B</div>
-                    <div class="dividend">股息率: 1.44%</div>
+                    <div class="market-cap">¥840.6B</div>
+                    <div class="dividend">股息率: 1.45%</div>
                 </div>
             </div>
 
@@ -648,7 +667,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        65.58</div>
+                        64.94</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -680,8 +699,8 @@
                     <div class="company-name">中国神华</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥845.6B</div>
-                    <div class="dividend">股息率: 7.56%</div>
+                    <div class="market-cap">¥823.6B</div>
+                    <div class="dividend">股息率: 7.61%</div>
                 </div>
             </div>
 
@@ -690,7 +709,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        15.59</div>
+                        15.13</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -722,8 +741,8 @@
                     <div class="company-name">中国石化</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥798.4B</div>
-                    <div class="dividend">股息率: 2.69%</div>
+                    <div class="market-cap">¥770.6B</div>
+                    <div class="dividend">股息率: 2.67%</div>
                 </div>
             </div>
 
@@ -732,7 +751,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        22.76</div>
+                        21.97</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -764,8 +783,8 @@
                     <div class="company-name">长江电力</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥639.1B</div>
-                    <div class="dividend">股息率: 3.56%</div>
+                    <div class="market-cap">¥636.2B</div>
+                    <div class="dividend">股息率: 3.61%</div>
                 </div>
             </div>
 
@@ -774,7 +793,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        19.64</div>
+                        19.55</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -806,8 +825,8 @@
                     <div class="company-name">美的集团</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥606.5B</div>
-                    <div class="dividend">股息率: 5.02%</div>
+                    <div class="market-cap">¥600.8B</div>
+                    <div class="dividend">股息率: 5.01%</div>
                 </div>
             </div>
 
@@ -816,7 +835,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        13.71</div>
+                        13.58</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -848,7 +867,7 @@
                     <div class="company-name">寒武纪</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥469.1B</div>
+                    <div class="market-cap">¥472.6B</div>
                     <div class="dividend">股息率: N/A</div>
                 </div>
             </div>
@@ -858,7 +877,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        251.70</div>
+                        251.84</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -886,54 +905,12 @@
         <div class="stock-card">
             <div class="stock-header">
                 <div class="stock-title">
-                    <h3>600030.SS</h3>
-                    <div class="company-name">中信证券</div>
-                </div>
-                <div class="stock-meta">
-                    <div class="market-cap">¥413.0B</div>
-                    <div class="dividend">股息率: 2.03%</div>
-                </div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-item">
-                    <div class="metric-label">市盈率 (PE)</div>
-                    <div
-                        class="metric-value positive">
-                        15.23</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">净资产收益率 (ROE)</div>
-                    <div class="metric-value ">9.70%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">净利率 (Margin)</div>
-                    <div class="metric-value positive">40.16%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">营收增长 (Growth)</div>
-                    <div class="metric-value positive">17.90%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">负债权益比 (D/E)</div>
-                    <div class="metric-value">235.969</div>
-                </div>
-            </div>
-
-            <div class="description">
-                <strong>简介:</strong> 中国领先的证券公司，业务涵盖证券经纪、投行、资产管理等全方位金融服务。
-            </div>
-        </div>
-        
-        <div class="stock-card">
-            <div class="stock-header">
-                <div class="stock-title">
                     <h3>000858.SZ</h3>
                     <div class="company-name">五粮液</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥406.1B</div>
-                    <div class="dividend">股息率: 5.42%</div>
+                    <div class="market-cap">¥411.7B</div>
+                    <div class="dividend">股息率: 5.49%</div>
                 </div>
             </div>
 
@@ -942,7 +919,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        14.27</div>
+                        14.49</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -970,12 +947,12 @@
         <div class="stock-card">
             <div class="stock-header">
                 <div class="stock-title">
-                    <h3>601166.SS</h3>
-                    <div class="company-name">兴业银行</div>
+                    <h3>600030.SS</h3>
+                    <div class="company-name">中信证券</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥393.4B</div>
-                    <div class="dividend">股息率: 8.62%</div>
+                    <div class="market-cap">¥409.3B</div>
+                    <div class="dividend">股息率: 2.05%</div>
                 </div>
             </div>
 
@@ -984,7 +961,49 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        5.79</div>
+                        15.09</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">净资产收益率 (ROE)</div>
+                    <div class="metric-value ">9.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">净利率 (Margin)</div>
+                    <div class="metric-value positive">40.16%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">营收增长 (Growth)</div>
+                    <div class="metric-value positive">17.90%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">负债权益比 (D/E)</div>
+                    <div class="metric-value">235.969</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>简介:</strong> 中国领先的证券公司，业务涵盖证券经纪、投行、资产管理等全方位金融服务。
+            </div>
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>601166.SS</h3>
+                    <div class="company-name">兴业银行</div>
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">¥391.3B</div>
+                    <div class="dividend">股息率: 8.74%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">市盈率 (PE)</div>
+                    <div
+                        class="metric-value positive">
+                        5.76</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1016,7 +1035,7 @@
                     <div class="company-name">恒瑞医药</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥389.9B</div>
+                    <div class="market-cap">¥386.5B</div>
                     <div class="dividend">股息率: 0.34%</div>
                 </div>
             </div>
@@ -1026,7 +1045,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        50.64</div>
+                        50.20</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1058,8 +1077,8 @@
                     <div class="company-name">立讯精密</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥367.4B</div>
-                    <div class="dividend">股息率: 0.70%</div>
+                    <div class="market-cap">¥370.1B</div>
+                    <div class="dividend">股息率: 0.71%</div>
                 </div>
             </div>
 
@@ -1068,7 +1087,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        23.24</div>
+                        23.41</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1100,7 +1119,7 @@
                     <div class="company-name">北方华创</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥344.2B</div>
+                    <div class="market-cap">¥352.4B</div>
                     <div class="dividend">股息率: 0.17%</div>
                 </div>
             </div>
@@ -1110,7 +1129,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        54.67</div>
+                        55.94</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1142,8 +1161,8 @@
                     <div class="company-name">浦发银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥332.4B</div>
-                    <div class="dividend">股息率: 4.03%</div>
+                    <div class="market-cap">¥329.4B</div>
+                    <div class="dividend">股息率: 4.11%</div>
                 </div>
             </div>
 
@@ -1152,7 +1171,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        7.13</div>
+                        7.06</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1184,8 +1203,8 @@
                     <div class="company-name">海康威视</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥297.8B</div>
-                    <div class="dividend">股息率: 3.40%</div>
+                    <div class="market-cap">¥296.8B</div>
+                    <div class="dividend">股息率: 3.39%</div>
                 </div>
             </div>
 
@@ -1194,7 +1213,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        22.72</div>
+                        22.64</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1226,8 +1245,8 @@
                     <div class="company-name">万华化学</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥275.5B</div>
-                    <div class="dividend">股息率: 1.41%</div>
+                    <div class="market-cap">¥266.0B</div>
+                    <div class="dividend">股息率: 1.42%</div>
                 </div>
             </div>
 
@@ -1236,7 +1255,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        24.86</div>
+                        24.00</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1268,8 +1287,8 @@
                     <div class="company-name">迈瑞医疗</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥227.9B</div>
-                    <div class="dividend">股息率: 2.85%</div>
+                    <div class="market-cap">¥225.2B</div>
+                    <div class="dividend">股息率: 2.87%</div>
                 </div>
             </div>
 
@@ -1278,7 +1297,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        26.48</div>
+                        26.13</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1306,12 +1325,54 @@
         <div class="stock-card">
             <div class="stock-header">
                 <div class="stock-title">
+                    <h3>603986.SS</h3>
+                    <div class="company-name">兆易创新</div>
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">¥216.4B</div>
+                    <div class="dividend">股息率: 0.11%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">市盈率 (PE)</div>
+                    <div
+                        class="metric-value ">
+                        152.07</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">净资产收益率 (ROE)</div>
+                    <div class="metric-value ">7.98%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">净利率 (Margin)</div>
+                    <div class="metric-value positive">15.85%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">营收增长 (Growth)</div>
+                    <div class="metric-value positive">31.40%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">负债权益比 (D/E)</div>
+                    <div class="metric-value">3.979</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>简介:</strong> 全球领先的Fabless芯片供应商，主要产品包括存储器、微控制器和传感器，在NOR Flash领域全球领先。
+            </div>
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
                     <h3>000651.SZ</h3>
                     <div class="company-name">格力电器</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥215.3B</div>
-                    <div class="dividend">股息率: 7.75%</div>
+                    <div class="market-cap">¥214.9B</div>
+                    <div class="dividend">股息率: 7.81%</div>
                 </div>
             </div>
 
@@ -1320,7 +1381,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        6.73</div>
+                        6.72</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1352,8 +1413,8 @@
                     <div class="company-name">平安银行</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥212.7B</div>
-                    <div class="dividend">股息率: 5.40%</div>
+                    <div class="market-cap">¥211.7B</div>
+                    <div class="dividend">股息率: 5.46%</div>
                 </div>
             </div>
 
@@ -1362,7 +1423,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        5.27</div>
+                        5.25</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1390,54 +1451,12 @@
         <div class="stock-card">
             <div class="stock-header">
                 <div class="stock-title">
-                    <h3>603986.SS</h3>
-                    <div class="company-name">兆易创新</div>
-                </div>
-                <div class="stock-meta">
-                    <div class="market-cap">¥212.6B</div>
-                    <div class="dividend">股息率: 0.12%</div>
-                </div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-item">
-                    <div class="metric-label">市盈率 (PE)</div>
-                    <div
-                        class="metric-value ">
-                        147.92</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">净资产收益率 (ROE)</div>
-                    <div class="metric-value ">7.98%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">净利率 (Margin)</div>
-                    <div class="metric-value positive">15.85%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">营收增长 (Growth)</div>
-                    <div class="metric-value positive">31.40%</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-label">负债权益比 (D/E)</div>
-                    <div class="metric-value">3.979</div>
-                </div>
-            </div>
-
-            <div class="description">
-                <strong>简介:</strong> 全球领先的Fabless芯片供应商，主要产品包括存储器、微控制器和传感器，在NOR Flash领域全球领先。
-            </div>
-        </div>
-        
-        <div class="stock-card">
-            <div class="stock-header">
-                <div class="stock-title">
                     <h3>603288.SS</h3>
                     <div class="company-name">海天味业</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥210.3B</div>
-                    <div class="dividend">股息率: 3.08%</div>
+                    <div class="market-cap">¥208.6B</div>
+                    <div class="dividend">股息率: 3.12%</div>
                 </div>
             </div>
 
@@ -1446,7 +1465,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        29.70</div>
+                        29.45</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1478,8 +1497,8 @@
                     <div class="company-name">中国中免</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥194.8B</div>
-                    <div class="dividend">股息率: 1.34%</div>
+                    <div class="market-cap">¥195.8B</div>
+                    <div class="dividend">股息率: 1.38%</div>
                 </div>
             </div>
 
@@ -1488,7 +1507,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        57.42</div>
+                        57.36</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1520,8 +1539,8 @@
                     <div class="company-name">中兴通讯</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥179.5B</div>
-                    <div class="dividend">股息率: 1.65%</div>
+                    <div class="market-cap">¥177.8B</div>
+                    <div class="dividend">股息率: 1.64%</div>
                 </div>
             </div>
 
@@ -1530,7 +1549,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        30.76</div>
+                        30.46</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1562,8 +1581,8 @@
                     <div class="company-name">伊利股份</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥168.3B</div>
-                    <div class="dividend">股息率: 6.33%</div>
+                    <div class="market-cap">¥167.5B</div>
+                    <div class="dividend">股息率: 6.39%</div>
                 </div>
             </div>
 
@@ -1572,7 +1591,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value positive">
-                        20.95</div>
+                        20.85</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1604,7 +1623,7 @@
                     <div class="company-name">韦尔股份</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥147.6B</div>
+                    <div class="market-cap">¥146.0B</div>
                     <div class="dividend">股息率: 0.53%</div>
                 </div>
             </div>
@@ -1614,7 +1633,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        33.83</div>
+                        33.47</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1646,7 +1665,7 @@
                     <div class="company-name">隆基绿能</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥140.1B</div>
+                    <div class="market-cap">¥137.4B</div>
                     <div class="dividend">股息率: N/A</div>
                 </div>
             </div>
@@ -1688,8 +1707,8 @@
                     <div class="company-name">科大讯飞</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥133.6B</div>
-                    <div class="dividend">股息率: 0.18%</div>
+                    <div class="market-cap">¥132.1B</div>
+                    <div class="dividend">股息率: 0.17%</div>
                 </div>
             </div>
 
@@ -1698,7 +1717,7 @@
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
                         class="metric-value ">
-                        160.56</div>
+                        158.67</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1730,8 +1749,8 @@
                     <div class="company-name">爱尔眼科</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥98.9B</div>
-                    <div class="dividend">股息率: 2.24%</div>
+                    <div class="market-cap">¥96.3B</div>
+                    <div class="dividend">股息率: 2.26%</div>
                 </div>
             </div>
 
@@ -1739,8 +1758,8 @@
                 <div class="metric-item">
                     <div class="metric-label">市盈率 (PE)</div>
                     <div
-                        class="metric-value ">
-                        30.31</div>
+                        class="metric-value positive">
+                        29.51</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">净资产收益率 (ROE)</div>
@@ -1772,8 +1791,8 @@
                     <div class="company-name">三六零</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥91.8B</div>
-                    <div class="dividend">股息率: 1.56%</div>
+                    <div class="market-cap">¥90.3B</div>
+                    <div class="dividend">股息率: 1.52%</div>
                 </div>
             </div>
 
@@ -1814,7 +1833,7 @@
                     <div class="company-name">昆仑万维</div>
                 </div>
                 <div class="stock-meta">
-                    <div class="market-cap">¥79.1B</div>
+                    <div class="market-cap">¥75.8B</div>
                     <div class="dividend">股息率: N/A</div>
                 </div>
             </div>

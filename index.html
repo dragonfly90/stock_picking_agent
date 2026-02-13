@@ -39,25 +39,40 @@
         }
 
         .nav {
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
             margin-bottom: 30px;
-            padding: 10px;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
         }
 
         .nav a {
-            margin: 0 15px;
             text-decoration: none;
             color: #007bff;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
         }
 
         .nav a.active {
-            color: #2c3e50;
-            text-decoration: underline;
+            background: #2c3e50;
+            color: white;
             cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
         }
 
         .highlight {
@@ -115,16 +130,19 @@
     <div class="container">
         <div class="header">
             <h1>Daily Stock Picks: S&P 500</h1>
-            <div class="date">Report generated on: 2026-02-12</div>
+            <div class="date">Report generated on: 2026-02-13</div>
         </div>
 
         <div class="nav">
             <a href="index.html" class="active">S&P 500</a>
             <a href="non_spy.html" class="">Non-S&P 500</a>
             <a href="guru.html" class="">Guru Tracker</a>
-            <a href="consumer_staples.html"
-                class="">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="tech.html" class="">Technology</a>
+            <a href="semiconductors.html" class="">Semiconductors</a>
+            <a href="ai.html" class="">AI & LLM</a>
+            <a href="consumer_staples.html" class="">Consumer Staples</a>
+            <div class="nav-divider"></div>
             <a href="china.html" class="">A股精选</a>
             <a href="china_full.html" class="">A股全市场</a>
         </div>
@@ -134,8 +152,8 @@
         <div class="highlight">
             <h2>#1 Pick: ALL</h2>
             <div class="score">Score: 5/5</div>
-            <p><strong>PEG Ratio:</strong> 0.05 | <strong>P/E Ratio:</strong> 5.38 |
-                <strong>Dividend Yield:</strong> 2.11%
+            <p><strong>PEG Ratio:</strong> 0.05 | <strong>P/E Ratio:</strong> 5.43 |
+                <strong>Dividend Yield:</strong> 2.09%
             </p>
 
             <h3>Company Description</h3>
@@ -168,7 +186,7 @@
         <div class="highlight">
             <h2>#2 Pick: ACGL</h2>
             <div class="score">Score: 5/5</div>
-            <p><strong>PEG Ratio:</strong> 0.22 | <strong>P/E Ratio:</strong> 8.50 |
+            <p><strong>PEG Ratio:</strong> 0.22 | <strong>P/E Ratio:</strong> 8.61 |
                 <strong>Dividend Yield:</strong> N/A
             </p>
 
@@ -202,7 +220,7 @@
         <div class="highlight">
             <h2>#3 Pick: GOOGL</h2>
             <div class="score">Score: 5/5</div>
-            <p><strong>PEG Ratio:</strong> 0.92 | <strong>P/E Ratio:</strong> 28.74 |
+            <p><strong>PEG Ratio:</strong> 0.92 | <strong>P/E Ratio:</strong> 28.56 |
                 <strong>Dividend Yield:</strong> 0.27%
             </p>
 
@@ -236,7 +254,7 @@
         <div class="highlight">
             <h2>#4 Pick: GOOG</h2>
             <div class="score">Score: 5/5</div>
-            <p><strong>PEG Ratio:</strong> 0.93 | <strong>P/E Ratio:</strong> 28.82 |
+            <p><strong>PEG Ratio:</strong> 0.92 | <strong>P/E Ratio:</strong> 28.65 |
                 <strong>Dividend Yield:</strong> 0.27%
             </p>
 
@@ -262,7 +280,7 @@
                 
                 <li>✅ D/E: 16.133 (<50%)</li>
                 
-                <li>✅ PEG: 0.93 (<2.0)</li>
+                <li>✅ PEG: 0.92 (<2.0)</li>
                 
             </ul>
         </div>
@@ -270,7 +288,7 @@
         <div class="highlight">
             <h2>#5 Pick: AMGN</h2>
             <div class="score">Score: 4/5</div>
-            <p><strong>PEG Ratio:</strong> 0.23 | <strong>P/E Ratio:</strong> 25.78 |
+            <p><strong>PEG Ratio:</strong> 0.23 | <strong>P/E Ratio:</strong> 25.70 |
                 <strong>Dividend Yield:</strong> 2.64%
             </p>
 
@@ -317,6 +335,51 @@
                 </tr>
             </thead>
             <tbody>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>ALL</td>
+                    <td>5</td>
+                    <td>0.05</td>
+                    <td>5.43</td>
+                    <td>2.09%</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>ACGL</td>
+                    <td>5</td>
+                    <td>0.22</td>
+                    <td>8.61</td>
+                    <td>N/A</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>GOOGL</td>
+                    <td>5</td>
+                    <td>0.92</td>
+                    <td>28.56</td>
+                    <td>0.27%</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>GOOG</td>
+                    <td>5</td>
+                    <td>0.92</td>
+                    <td>28.65</td>
+                    <td>0.27%</td>
+                </tr>
+                
+                <tr>
+                    <td>2026-02-13</td>
+                    <td>AMGN</td>
+                    <td>4</td>
+                    <td>0.23</td>
+                    <td>25.70</td>
+                    <td>2.64%</td>
+                </tr>
                 
                 <tr>
                     <td>2026-02-12</td>
@@ -541,51 +604,6 @@
                     <td>0.98</td>
                     <td>30.68</td>
                     <td>0.25%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>ACGL</td>
-                    <td>5</td>
-                    <td>0.24</td>
-                    <td>9.38</td>
-                    <td>N/A</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>GOOGL</td>
-                    <td>5</td>
-                    <td>0.87</td>
-                    <td>30.78</td>
-                    <td>0.25%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>GOOG</td>
-                    <td>5</td>
-                    <td>0.87</td>
-                    <td>30.86</td>
-                    <td>0.25%</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>AMZN</td>
-                    <td>5</td>
-                    <td>0.90</td>
-                    <td>32.91</td>
-                    <td>N/A</td>
-                </tr>
-                
-                <tr>
-                    <td>2026-02-05</td>
-                    <td>ALL</td>
-                    <td>4</td>
-                    <td>0.02</td>
-                    <td>5.44</td>
-                    <td>1.98%</td>
                 </tr>
                 
             </tbody>

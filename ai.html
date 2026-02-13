@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & LLM Sector Report</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: #e3f2fd;
+        }
+
+        .nav a.active {
+            background: #2c3e50;
+            color: white;
+            cursor: default;
+        }
+
+        .nav-divider {
+            width: 1px;
+            background: #dee2e6;
+            margin: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+
+        .stock-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #fce4ec;
+        }
+
+        .stock-title { flex: 1; }
+
+        .stock-title h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .stock-title .company-name {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .stock-meta { text-align: right; }
+
+        .market-cap {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .dividend {
+            color: #27ae60;
+            font-size: 0.9em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .description {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .sector-intro {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+            border-radius: 5px;
+            border-left: 5px solid #ad1457;
+        }
+
+        .sector-intro h3 {
+            margin-top: 0;
+            color: #880e4f;
+        }
+
+        .subsector-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .badge-infrastructure { background: #e3f2fd; color: #1565c0; }
+        .badge-platform { background: #f3e5f5; color: #7b1fa2; }
+        .badge-application { background: #fff3e0; color: #e65100; }
+        .badge-cloud { background: #e8f5e9; color: #2e7d32; }
+        .badge-robotics { background: #fce4ec; color: #c62828; }
+        .badge-data { background: #e0f7fa; color: #00695c; }
+        .badge-cybersecurity { background: #fff8e1; color: #f57f17; }
+
+        .competitors-section {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+
+        .competitors-section h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI & LLM Sector Report</h1>
+            <div class="date">Report generated on: 2026-02-13</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html">Guru Tracker</a>
+            <div class="nav-divider"></div>
+            <a href="tech.html">Technology</a>
+            <a href="semiconductors.html">Semiconductors</a>
+            <a href="ai.html" class="active">AI & LLM</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
+            <div class="nav-divider"></div>
+            <a href="china.html">A股精选</a>
+            <a href="china_full.html">A股全市场</a>
+        </div>
+
+        <div class="sector-intro">
+            <h3>AI & Large Language Model Sector</h3>
+            <p>This report tracks companies driving the artificial intelligence revolution. The AI ecosystem includes <strong>infrastructure</strong> providers (GPU/chip makers, cloud platforms), <strong>platform</strong> companies (foundation model builders, MLOps), and <strong>application</strong> leaders (enterprise AI, autonomous driving, robotics). The sector is experiencing explosive growth driven by generative AI, enterprise adoption, and the race to build artificial general intelligence. Key themes include AI compute demand, data center buildout, and the monetization of AI capabilities.</p>
+        </div>
+
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>NVDA</h3>
+                    <div class="company-name">NVIDIA Corporation</div>
+                    
+                    <span class="subsector-badge badge-infrastructure">AI Infrastructure</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$4551.4B</div>
+                    <div class="dividend">Dividend: 0.02%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">46.27</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">107.36%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">53.01%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">62.50%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">9.102</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.69</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> NVIDIA Corporation, a computing infrastructure company, provides graphics and compute and networking solutions in the United States, Singapore, Taiwan, China, Hong Kong, and internationally. The Compute & Networking segment includes its Data Centre accelerated computing platforms and artificial intelligence solutions and software; networking; automotive platforms and autonomous and electric vehicle solutions; Jetson for robotics and other embedded platforms; and DGX Cloud computing services. The Graphics segment offers GeForce GPUs for gaming and PCs, the GeForce NOW game streaming service and related infrastructure, and solutions for gaming platforms; Quadro/NVIDIA RTX GPUs for enterprise workstation graphics; virtual GPU or vGPU software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and Omniverse software for building and operating industrial AI and digital twin applications. It also customized agentic solutions designed in collaboration with NVIDIA to accelerate enterprise AI adoption. The company's products are used in gaming, professional visualization, data center, and automotive markets. It sells its products to original equipment manufacturers, original device manufacturers, system integrators and distributors, independent software vendors, cloud service providers, consumer internet companies, add-in board manufacturers, distributors, automotive manufacturers and tier-1 automotive suppliers, and other ecosystem participants. The company has a strategic partnership with Siemens Aktiengesellschaft to develop industrial and physical AI solutions for AI-driven innovation to every industry and industrial workflow. NVIDIA Corporation was incorporated in 1993 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>NVDA</td>
+                            <td>$4551.4B</td>
+                            <td>46.27</td>
+                            <td>107.36%</td>
+                            <td>53.01%</td>
+                            <td>62.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMD</td>
+                            <td>$335.8B</td>
+                            <td>78.60</td>
+                            <td>7.08%</td>
+                            <td>12.52%</td>
+                            <td>34.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AVGO</td>
+                            <td>$1570.2B</td>
+                            <td>69.43</td>
+                            <td>31.05%</td>
+                            <td>36.20%</td>
+                            <td>16.40%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>SMCI</td>
+                            <td>$18.2B</td>
+                            <td>22.21</td>
+                            <td>13.19%</td>
+                            <td>3.11%</td>
+                            <td>123.40%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>DELL</td>
+                            <td>$75.6B</td>
+                            <td>15.08</td>
+                            <td>N/A</td>
+                            <td>5.00%</td>
+                            <td>10.80%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>GOOGL</h3>
+                    <div class="company-name">Alphabet Inc.</div>
+                    
+                    <span class="subsector-badge badge-platform">AI Platform / Cloud</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$3738.0B</div>
+                    <div class="dividend">Dividend: 0.27%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">28.56</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">35.71%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">32.81%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">18.00%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">16.133</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.92</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Alphabet Inc. offers various products and platforms in the United States, Europe, the Middle East, Africa, the Asia-Pacific, Canada, and Latin America. It operates through Google Services, Google Cloud, and Other Bets segments. The Google Services segment provides products and services, including ads, Android, Chrome, devices, Gmail, Google Drive, Google Maps, Google Photos, Google Play, Search, and YouTube. It is also involved in the sale of apps and in-app purchases and digital content in Google Play and YouTube; and devices, as well as the provision of YouTube consumer subscription services, such as YouTube TV, YouTube Music and Premium, NFL Sunday Ticket, and Google One. The Google Cloud segment offers consumption-based fees and subscriptions for AI solutions, including AI infrastructure, Vertex AI platform, and Gemini enterprise. It also provides cybersecurity, and data and analytics services; Google Workspace that include cloud-based communication and collaboration tools for enterprises, such as Calendar, Gmail, Docs, Drive, and Meet; and other enterprise services. The Other Bets segment sells transportation and internet services. Alphabet Inc. was incorporated in 1998 and is headquartered in Mountain View, California.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>GOOGL</td>
+                            <td>$3738.0B</td>
+                            <td>28.56</td>
+                            <td>35.71%</td>
+                            <td>32.81%</td>
+                            <td>18.00%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>MSFT</td>
+                            <td>$2986.6B</td>
+                            <td>25.13</td>
+                            <td>34.39%</td>
+                            <td>39.04%</td>
+                            <td>16.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>META</td>
+                            <td>$1643.7B</td>
+                            <td>27.70</td>
+                            <td>30.24%</td>
+                            <td>30.08%</td>
+                            <td>23.80%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMZN</td>
+                            <td>$2142.7B</td>
+                            <td>27.84</td>
+                            <td>22.29%</td>
+                            <td>10.83%</td>
+                            <td>13.60%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ORCL</td>
+                            <td>$449.7B</td>
+                            <td>29.41</td>
+                            <td>69.03%</td>
+                            <td>25.28%</td>
+                            <td>14.20%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>MSFT</h3>
+                    <div class="company-name">Microsoft Corporation</div>
+                    
+                    <span class="subsector-badge badge-platform">AI Platform / Cloud</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$2986.6B</div>
+                    <div class="dividend">Dividend: 0.91%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">25.13</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">34.39%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">39.04%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">16.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">31.539</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.42</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Microsoft Corporation develops and supports software, services, devices, and solutions worldwide. The Productivity and Business Processes segment offers Microsoft 365 commercial, enterprise mobility + security, windows commercial, power BI, exchange, sharepoint, Microsoft teams, security and compliance, and copilot; Microsoft 365 commercial products, such as Windows commercial on-premises and office licensed services; Microsoft 365 consumer products and cloud services, including Microsoft 365 consumer subscriptions, office licensed on-premises, and other consumer services; LinkedIn; dynamics products and cloud services, such as dynamics 365, cloud-based applications, and on-premises ERP and CRM applications. Its Intelligent Cloud segment provides Server products and cloud services comprising Azure and other cloud services, GitHub, Nuance Healthcare, virtual desktop offerings, and other cloud services; server products, including SQL and windows server, visual studio and system center related client access licenses, and other on-premises offerings; enterprise and partner services, such as enterprise support and nuance professional services, industry solutions, Microsoft partner network, and learning experience. The Personal Computing segment provides windows and devices, such as Windows OEM licensing and devices and surface and PC accessories; gaming services and solutions, such as Xbox hardware, content, and services, first- and third-party content Xbox game pass, subscriptions, and cloud gaming, advertising, and other cloud services; search and news advertising services that includes Bing and Copilot, Microsoft News and Edge, and third-party affiliates. It sells its products through OEMs, distributors, and resellers; and online and retail stores. The company was founded in 1975 and is headquartered in Redmond, Washington.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>MSFT</td>
+                            <td>$2986.6B</td>
+                            <td>25.13</td>
+                            <td>34.39%</td>
+                            <td>39.04%</td>
+                            <td>16.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>GOOGL</td>
+                            <td>$3738.0B</td>
+                            <td>28.56</td>
+                            <td>35.71%</td>
+                            <td>32.81%</td>
+                            <td>18.00%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AMZN</td>
+                            <td>$2142.7B</td>
+                            <td>27.84</td>
+                            <td>22.29%</td>
+                            <td>10.83%</td>
+                            <td>13.60%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>META</td>
+                            <td>$1643.7B</td>
+                            <td>27.70</td>
+                            <td>30.24%</td>
+                            <td>30.08%</td>
+                            <td>23.80%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ORCL</td>
+                            <td>$449.7B</td>
+                            <td>29.41</td>
+                            <td>69.03%</td>
+                            <td>25.28%</td>
+                            <td>14.20%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AMZN</h3>
+                    <div class="company-name">Amazon.com, Inc.</div>
+                    
+                    <span class="subsector-badge badge-cloud">AI Platform / Cloud</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$2142.7B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">27.84</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">22.29%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">10.83%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">13.60%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">43.435</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">5.57</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Amazon.com, Inc. engages in the retail sale of consumer products, advertising, and subscriptions service through online and physical stores in North America and internationally. The company operates through three segments: North America, International, and Amazon Web Services (AWS). It also manufactures and sells electronic devices, including Kindle, fire tablets, fire TVs, echo, ring, blink, and eero; and develops and produces media content. In addition, the company offers programs that enable sellers to sell their products in its stores; and programs that allow authors, independent publishers, musicians, filmmakers, Twitch streamers, skill and app developers, and others to publish and sell content. Further, it provides compute, storage, Artificial intelligence, database, analytics, machine learning, and other services, as well as advertising services through programs, such as sponsored ads, display, and video advertising. Additionally, the company offers Amazon Prime, a membership program. The company's products offered through its stores include merchandise and content purchased for resale and products offered by third-party sellers. It serves consumers, sellers, developers, enterprises, content creators, advertisers, and employees. The company was incorporated in 1994 and is headquartered in Seattle, Washington.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>META</h3>
+                    <div class="company-name">Meta Platforms, Inc.</div>
+                    
+                    <span class="subsector-badge badge-platform">AI Platform / Cloud</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$1643.7B</div>
+                    <div class="dividend">Dividend: 0.32%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">27.70</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">30.24%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">30.08%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">23.80%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">39.164</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">2.59</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Meta Platforms, Inc. engages in the development of products that enable people to connect and share with friends and family through mobile devices, personal computers, virtual reality (VR) headsets, and AI glasses in the United States, Canada, Europe, Asia-Pacific, and internationally. It operates through two segments, Family of Apps (FoA) and Reality Labs (RL). The FoA segment offers Facebook, which enables people to build community through feed, reels, stories, groups, marketplace, and other; Instagram that brings people closer through Instagram feed, stories, reels, live, and messaging; Messenger, a messaging application for people to connect with friends, family, communities, and businesses across platforms and devices through text, audio, and video calls; Meta AI, an assistant that's available across apps, as a stand-alone app, on AI glasses, and on the web; Threads, an application for text-based updates and public conversations; and WhatsApp, a messaging application that is used by people and businesses to communicate and transact in a private way. The RL segment provides virtual and augmented reality products, including consumer hardware, software, and content that help people feel connected anytime and anywhere, as well as Meta Quest devices that enable social experiences across gaming, fitness, entertainment, and more. The segment also includes wearables such as AI glasses like Ray Ban Meta and Oakley Meta glasses, featuring Meta AI for advanced conversational and hands free interaction; and the Meta Ray Ban Display, which combines AI glasses with an integrated lens display and the Meta Neural Band, a wrist worn device using electromyography that lets people control their AI glasses through neuromuscular signals. The company was formerly known as Facebook, Inc. and changed its name to Meta Platforms, Inc. in October 2021. The company was incorporated in 2004 and is headquartered in Menlo Park, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AVGO</h3>
+                    <div class="company-name">Broadcom Inc.</div>
+                    
+                    <span class="subsector-badge badge-infrastructure">AI Infrastructure</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$1570.2B</div>
+                    <div class="dividend">Dividend: 0.79%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">69.43</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">31.05%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">36.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">16.40%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">166.032</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.37</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Broadcom Inc. designs, develops, and supplies various semiconductor devices and infrastructure software solutions internationally. The company operates in two segments: Semiconductor Solutions and Infrastructure Software. The company offers networking connectivity, such as custom silicon solutions, ethernet switching & routing, ethernet NIC controllers, physical layer devices, and fiber optic components; wireless device connectivity, including RF semiconductor devices, connectivity solutions, custom touch controllers, and inductive charging ASICS; servers and storage system solutions, such as PCIE switches, SAS & raid products, fibre channel products, and HDD & SSD solutions; broadband solutions, includes set-top box, and broadband access; and industrial. The company also offers a private cloud software portfolio, including the VMware Cloud Foundation, Edge, vSphere foundation, telco cloud platform, private AI, live recovery, application networking and security, application development and data services; mainframe software, such as AIOPS & automation, database & data management, DEVX & DEVOPS, cybersecurity & compliance management, beyond code programs, foundational & open mainframe solutions; cybersecurity, such as endpoint, network, information, application security, and identity & access management; enterprise software; and fc san management. Its products are used in various applications in enterprise and data center networking, including artificial intelligence networking and connectivity, home connectivity, set-top boxes, broadband access, telecommunication equipment, wireless device and base stations, data center servers and storage systems, factory automation, power generation and alternative energy systems, and electronic displays. Broadcom Inc. was founded in 1961 and is headquartered in Palo Alto, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>TSLA</h3>
+                    <div class="company-name">Tesla, Inc.</div>
+                    
+                    <span class="subsector-badge badge-robotics">AI Robotics / Autonomous</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$1565.0B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">386.18</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">4.93%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">4.00%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">-3.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">17.763</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Tesla, Inc. designs, develops, manufactures, leases, and sells electric vehicles, and energy generation and storage systems in the United States, China, and internationally. The company operates in two segments, Automotive; and Energy Generation and Storage. The company offers electric vehicles, as well as sells automotive regulatory credits; and non-warranty maintenance services and collision, automotive insurance services, as well as part sales and retail merchandise sale. It also provides sedans and sport utility vehicles through direct and used vehicle sales, a network of Tesla Superchargers, and in-app upgrades; purchase financing and leasing services; services for electric vehicles through its company-owned service locations and Tesla mobile service technicians; and vehicle limited warranties and extended service plans. In addition, the company engages in the design, manufacture, installation, sale, and leasing of solar energy generation and energy storage products, and related services to residential, commercial, and industrial customers and utilities through its website, stores, and galleries, as well as through a network of channel partners. Further, it provides services and repairs to its energy product customers, including under warranty and extended service plans; and various financing options to its residential customers; lithium-ion battery energy storage products, such as Powerwall and Megapack; energy generation products, including solar panels and solar roof; self-driving development and artificial intelligence software, vehicle control and infotainment software, and battery and powertrain. The company was formerly known as Tesla Motors, Inc. and changed its name to Tesla, Inc. in February 2017. Tesla, Inc. was incorporated in 2003 and is headquartered in Austin, Texas.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>TSLA</td>
+                            <td>$1565.0B</td>
+                            <td>386.18</td>
+                            <td>4.93%</td>
+                            <td>4.00%</td>
+                            <td>-3.10%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>ISRG</td>
+                            <td>$170.0B</td>
+                            <td>60.97</td>
+                            <td>16.69%</td>
+                            <td>28.38%</td>
+                            <td>18.80%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>GOOGL</td>
+                            <td>$3738.0B</td>
+                            <td>28.56</td>
+                            <td>35.71%</td>
+                            <td>32.81%</td>
+                            <td>18.00%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NVDA</td>
+                            <td>$4551.4B</td>
+                            <td>46.27</td>
+                            <td>107.36%</td>
+                            <td>53.01%</td>
+                            <td>62.50%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>META</td>
+                            <td>$1643.7B</td>
+                            <td>27.70</td>
+                            <td>30.24%</td>
+                            <td>30.08%</td>
+                            <td>23.80%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>ORCL</h3>
+                    <div class="company-name">Oracle Corporation</div>
+                    
+                    <span class="subsector-badge badge-cloud">AI Cloud</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$449.7B</div>
+                    <div class="dividend">Dividend: 1.28%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">29.41</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">69.03%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">25.28%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">14.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">432.511</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.32</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Oracle Corporation offers products and services that address enterprise information technology environments worldwide. Its Oracle cloud software as a service offering include various cloud software applications, including Oracle Fusion cloud enterprise resource planning ERP, Oracle Fusion cloud enterprise performance management EPM, Oracle Fusion cloud supply chain and manufacturing management SCM, Oracle Fusion cloud human capital management HCM, and NetSuite applications suite, Oracle Health applications, as well as Oracle Fusion Sales, Service, and Marketing. The company also offers cloud-based industry solutions for various industries; Oracle cloud license and on-premise license; and Oracle license support services. In addition, it provides cloud and license business' infrastructure technologies, such as the Oracle Database and MySQL Database; Java, a software development language; and middleware, including development tools and others. The company's cloud and license business' infrastructure technologies also comprise cloud-based compute, storage, and networking capabilities; and Oracle autonomous database, as well as AI, Internet-of-Things, machine learning, digital assistant, and blockchain. Further, it provides hardware products and other hardware-related software offerings, including Oracle engineered systems, enterprise servers, storage solutions, industry-specific hardware, virtualization software, operating systems, management software, and related hardware support services, and consulting and advanced customer services. It markets and sells its cloud, license, hardware, support, and services offerings directly to businesses in various industries, government agencies, and educational institutions, as well as through indirect channels. Oracle Corporation has a strategic alliance with Metron, Inc. The company was founded in 1977 and is headquartered in Austin, Texas.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AMD</h3>
+                    <div class="company-name">Advanced Micro Devices, Inc.</div>
+                    
+                    <span class="subsector-badge badge-infrastructure">AI Infrastructure</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$335.8B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">78.60</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">7.08%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">12.52%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">34.10%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">6.359</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.36</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Advanced Micro Devices, Inc. operates as a semiconductor company internationally. It operates in three segments: Data Center, Client and Gaming, and Embedded. The company offers artificial intelligence (AI) accelerators, microprocessors, and graphics processing units (GPUs) as standalone devices or as incorporated into accelerated processing units, chipsets, and data center and professional GPUs; and embedded processors and semi-custom system-on-chip (SoC) products, microprocessor and SoC development services and technology, data processing units, field programmable gate arrays (FPGA), system on modules, AI network interface cards, and adaptive SoC products. It provides processors under the AMD Ryzen, AMD Ryzen AI, AMD Ryzen PRO, AMD Ryzen Threadripper, AMD Ryzen Threadripper PRO, AMD Athlon, and AMD PRO A-Series brands; graphics under the AMD Radeon graphics and AMD Embedded Radeon graphics; professional graphics under the AMD Radeon Pro graphics brand; and AI and general-purpose compute infrastructure for hyperscale providers. The company offers data center graphics under the AMD Instinct accelerators and Radeon PRO V-series brands; server microprocessors under the AMD EPYC brand; low power solutions under the AMD Athlon, AMD Geode, AMD Ryzen, AMD EPYC, and AMD R-Series and G-Series brands; FPGA products under the Virtex-6, Virtex-7, Virtex UltraScale+, Kintex-7, Kintex UltraScale, Kintex UltraScale+, Artix-7, Artix UltraScale+, Spartan-6, and Spartan-7 brands; adaptive SOCs under the Zynq-7000, Zynq UltraScale+ MPSoC, Zynq UltraScale+ RFSoCs, Versal HBM, Versal Premium, Versal Prime, Versal AI Core, Versal AI Edge, Vitis, and Vivado brands; and compute and network acceleration board products under the Alveo and Pensando brands. It serves original equipment and design manufacturers, public cloud service providers, system integrators, distributors, and add-in-board manufacturers. The company was incorporated in 1969 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>PLTR</h3>
+                    <div class="company-name">Palantir Technologies Inc.</div>
+                    
+                    <span class="subsector-badge badge-application">AI Application</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$307.8B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">204.97</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">25.98%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">36.31%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">70.00%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">3.063</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.30</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Palantir Technologies Inc. builds and deploys software platforms for the intelligence community to assist in counterterrorism investigations and operations in the United States, the United Kingdom, and internationally. It provides Palantir Gotham, a software platform, which enables users to identify patterns hidden deep within datasets, ranging from signals intelligence sources to reports from confidential informants, as well as facilitates the hand-off between analysts and operational users, helping operators plan and execute real-world responses to threats that have been identified within the platform. The company also offers Palantir Foundry, a platform that transforms the ways organizations operate by creating a central operating system for their data; and allows individual users to integrate and analyze the data they need in one place. In addition, it provides Palantir Apollo, a software that delivers software and updates across the business, as well as enables customers to deploy their software virtually in any environment; and Palantir Artificial Intelligence Platform that provides unified access to open-source, self-hosted, and commercial large language models (LLMs) that can transform structured and unstructured data into LLM-understandable objects and can turn organizations' actions and processes into tools for humans and LLM-driven agents. The company has a strategic alliance with Stagwell Inc. for the development of AI-driven platform for marketers that will
+bring the full power of data and AI together to increase marketing ROI. The company was incorporated in 2003 and is headquartered in Denver, Colorado.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>PLTR</td>
+                            <td>$307.8B</td>
+                            <td>204.97</td>
+                            <td>25.98%</td>
+                            <td>36.31%</td>
+                            <td>70.00%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>CRM</td>
+                            <td>$176.5B</td>
+                            <td>24.76</td>
+                            <td>12.18%</td>
+                            <td>17.91%</td>
+                            <td>8.60%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AI</td>
+                            <td>$1.5B</td>
+                            <td>N/A</td>
+                            <td>-46.77%</td>
+                            <td>-108.05%</td>
+                            <td>-20.30%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NOW</td>
+                            <td>$109.0B</td>
+                            <td>61.85</td>
+                            <td>15.49%</td>
+                            <td>13.16%</td>
+                            <td>20.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>SNOW</td>
+                            <td>$59.2B</td>
+                            <td>N/A</td>
+                            <td>-53.09%</td>
+                            <td>-30.76%</td>
+                            <td>28.70%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>CRM</h3>
+                    <div class="company-name">Salesforce, Inc.</div>
+                    
+                    <span class="subsector-badge badge-application">AI Application</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$176.5B</div>
+                    <div class="dividend">Dividend: 0.90%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">24.76</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">12.18%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">17.91%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">8.60%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">19.385</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.64</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Salesforce, Inc. provides customer relationship management technology that connects companies and customers together worldwide. The company offers Agentforce, an agentic layer of the salesforce platform; Data Cloud, a data engine; Industries AI for creating industry-specific AI agents with Agentforce; Salesforce Starter, a suite of solution for small and medium-size business; Slack, a workplace communication and productivity platform; Tableau, an end-to-end analytics solution for range of enterprise use cases and intelligent analytics with AI models, spot trends, predict outcomes, timely recommendations, and take action from any device; and integration and analytics solutions, as well as Agentforce Command Center, an observability solution to manage, track, and scale AI agent activity. It also provides marketing platform; commerce services, which empowers shopping experience across various customer touchpoint; and field service solution that enables companies to connect service agents, dispatchers, and mobile employees through one centralized platform to schedule and dispatch work, as well as track and manage jobs. The company has a strategic partnership with Google to integrate Agentforce 360 with Google Workspace for sales and IT service, which expands the Salesforce Gemini integration. Salesforce, Inc. was incorporated in 1999 and is headquartered in San Francisco, California.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>CRM</td>
+                            <td>$176.5B</td>
+                            <td>24.76</td>
+                            <td>12.18%</td>
+                            <td>17.91%</td>
+                            <td>8.60%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NOW</td>
+                            <td>$109.0B</td>
+                            <td>61.85</td>
+                            <td>15.49%</td>
+                            <td>13.16%</td>
+                            <td>20.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>PLTR</td>
+                            <td>$307.8B</td>
+                            <td>204.97</td>
+                            <td>25.98%</td>
+                            <td>36.31%</td>
+                            <td>70.00%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>AI</td>
+                            <td>$1.5B</td>
+                            <td>N/A</td>
+                            <td>-46.77%</td>
+                            <td>-108.05%</td>
+                            <td>-20.30%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>PATH</td>
+                            <td>$6.0B</td>
+                            <td>26.62</td>
+                            <td>12.56%</td>
+                            <td>14.79%</td>
+                            <td>15.90%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>ISRG</h3>
+                    <div class="company-name">Intuitive Surgical, Inc.</div>
+                    
+                    <span class="subsector-badge badge-robotics">AI Robotics</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$170.0B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">60.97</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">16.69%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">28.38%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">18.80%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">0.953</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">3.67</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Intuitive Surgical, Inc. develops, manufactures, and markets products that enable physicians and healthcare providers to enhance the quality of and access to minimally invasive care in the United States and internationally. It offers the da Vinci Surgical System that enables surgical procedures using a minimally invasive approach; and Ion endoluminal system, which extends its commercial offerings beyond surgery into diagnostic endoluminal procedures enabling minimally invasive biopsies in the lung. The company also provides a suite of stapling, energy, and core instrumentation for its multi-port da Vinci surgical systems; progressive learning pathways to support the use of its technology; infrastructure of customer service and support specialists, a complement of services to its customers, including installation, repair, maintenance, 24/7 technical support, and proactive system health monitoring; and integrated digital capabilities providing connected offerings, streamlining performance for hospitals with program-enhancing insights. It sells its products through direct sales organizations, such as capital and clinical sales teams. Intuitive Surgical, Inc. was incorporated in 1995 and is headquartered in Sunnyvale, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>PANW</h3>
+                    <div class="company-name">Palo Alto Networks, Inc.</div>
+                    
+                    <span class="subsector-badge badge-cybersecurity">AI Cybersecurity</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$113.5B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">103.04</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">15.32%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">11.69%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">15.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">4.951</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Palo Alto Networks, Inc. provides cybersecurity solutions in the Americas, Europe, the Middle East, Africa, the Asia Pacific, and Japan. It offers Prisma Access, a secure access service edge solution; Strata Cloud Manager, a network security management solution; and Prisma AIRS to protect customers' entire AI ecosystem. It provides a comprehensive cloud native application protection platform; and Code to Cloud platform, as well as offers VM-Series and CN-Series virtual firewalls for inline network security on multi- and hybrid-cloud environments. It provides security operation solutions through the Cortex platform that includes Cortex XSIAM, an AI-driven security operations platform; Cortex XDR to prevent, detect, and respond to cybersecurity attacks; and Cortex XSOAR for security orchestration, automation, and response; and Cortex Xpanse for attack surface management, as well as offers threat intelligence and advisory services under the Unit 42 name. It provides subscription services covering the areas of threat prevention, malware and persistent threat, URL filtering, laptop and mobile device protection, DNS security, Internet of Things security, SaaS security API, and SaaS security inline; and threat intelligence, data loss prevention, services to resolve network disruptions, and sensitive data protection. It offers professional services, including architecture design and planning, implementation, configuration, and firewall migration; education services, such as certifications, as well as online and in-classroom training; and support services. It sells its products and services through its channel partners, as well as directly to enterprises, service providers, and government entities operating in various industries, including education, energy, financial services, government entities, healthcare, Internet and media, manufacturing, public sector, and telecommunications. The company was incorporated in 2005 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>NOW</h3>
+                    <div class="company-name">ServiceNow, Inc.</div>
+                    
+                    <span class="subsector-badge badge-application">AI Application</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$109.0B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">61.85</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value positive">15.49%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">13.16%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">20.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">18.536</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">18.19</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> ServiceNow, Inc. provides cloud-based solution for digital workflows in the North America, Europe, the Middle East and Africa, Asia Pacific, and internationally. The company provides asset management, integrated risk management, IT service management, Operational Technology management, Security Operations, strategic portfolio management, IT operations management products; customer service management product; field service management applications; and sales and order management services. It also offers human resources delivery; legal and contract operations; workplace service delivery products; app engine product; automation engine; platform privacy and security product; and source-to-pay operations. In addition, the company provides RaptorDB, a database built to manage workloads at scale; ServiceNow Impact that provides customers with software tools, guided plans, and AI-driven recommendations; customer support; and workflow data fabric. It serves government, financial services, healthcare and life science, manufacturing, Public Sector, retail, technology, and Telecom sectors through service providers and resale partners. The company was formerly known as Service-now.com and changed its name to ServiceNow, Inc. in May 2012. ServiceNow, Inc. was founded in 2004 and is headquartered in Santa Clara, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>CRWD</h3>
+                    <div class="company-name">CrowdStrike Holdings, Inc.</div>
+                    
+                    <span class="subsector-badge badge-cybersecurity">AI Cybersecurity</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$103.7B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">-8.81%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-6.88%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">22.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">20.154</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> CrowdStrike Holdings, Inc. provides cybersecurity solutions in the United States and internationally. Its unified platform provides cloud-delivered protection of endpoints, cloud workloads, identity, and data through a software as a service (SaaS) subscription-based model. The company offers corporate endpoint and cloud workload security, managed security, security and vulnerability management, IT operations management, identity protection, threat intelligence, data protection, SaaS security posture management, and AI powered workflow automation, and securing generative AI workload services, as well as security orchestration, automation, and response; and security information and event management, and log management services. It primarily sells subscriptions to its Falcon platform and cloud modules. CrowdStrike Holdings, Inc. was incorporated in 2011 and is headquartered in Austin, Texas.
+            </div>
+
+            
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE</th>
+                            <th>Margin</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr style="background-color: #fce4ec; font-weight: bold;">
+                            <td>CRWD</td>
+                            <td>$103.7B</td>
+                            <td>N/A</td>
+                            <td>-8.81%</td>
+                            <td>-6.88%</td>
+                            <td>22.20%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>PANW</td>
+                            <td>$113.5B</td>
+                            <td>103.04</td>
+                            <td>15.32%</td>
+                            <td>11.69%</td>
+                            <td>15.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>DDOG</td>
+                            <td>$44.2B</td>
+                            <td>394.16</td>
+                            <td>3.34%</td>
+                            <td>3.14%</td>
+                            <td>29.20%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>NOW</td>
+                            <td>$109.0B</td>
+                            <td>61.85</td>
+                            <td>15.49%</td>
+                            <td>13.16%</td>
+                            <td>20.70%</td>
+                        </tr>
+                        
+                        <tr style="">
+                            <td>PLTR</td>
+                            <td>$307.8B</td>
+                            <td>204.97</td>
+                            <td>25.98%</td>
+                            <td>36.31%</td>
+                            <td>70.00%</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>DELL</h3>
+                    <div class="company-name">Dell Technologies Inc.</div>
+                    
+                    <span class="subsector-badge badge-infrastructure">AI Infrastructure</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$75.6B</div>
+                    <div class="dividend">Dividend: 1.86%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">15.08</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">5.00%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">10.80%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">0.39</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Dell Technologies Inc. designs, develops, manufactures, markets, sells, and supports various comprehensive and integrated solutions, products, and services in the Americas, Europe, the Middle East, Asia, and internationally. The company operates in two segments, Infrastructure Solutions Group (ISG) and Client Solutions Group (CSG). The ISG segment provides modern and traditional storage solutions, including all-flash arrays, scale-out file, object platforms, hyper-converged infrastructure, and software-defined storage; and general-purpose and AI-optimized servers. This segment also offers networking products and services comprising wide area network infrastructure, data center and edge networking switches, and cables and optics that help its business customers to transform and modernize their infrastructure and complementing its server and storage solutions; and software, peripherals, and services, including consulting and support, and deployment. The CSG segment provides notebooks, desktops, and workstations and branded peripherals that include displays, docking stations, keyboards, mice, webcam and audio devices, and third-party software and peripherals; and configuration, support and deployment, and extended warranties services. The company is involved in originating, collecting, and servicing customer financing arrangements; and offers payment and consumption solutions and services, such as as-a-Service, subscription, utility, leases, and loans, as well as fixed-term loans. It serves enterprises, governmental agencies and other public institutions, educational institutions, healthcare organizations, small and medium-sized businesses, and consumers. The company was formerly known as Denali Holding Inc. and changed its name to Dell Technologies Inc. in August 2016. Dell Technologies Inc. was founded in 1984 and is headquartered in Round Rock, Texas.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>SNOW</h3>
+                    <div class="company-name">Snowflake Inc.</div>
+                    
+                    <span class="subsector-badge badge-data">AI Data</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$59.2B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">-53.09%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-30.76%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">28.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">125.912</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Snowflake Inc. provides a cloud-based data platform for various organizations in the United States and internationally. The company's platform includes artificial intelligence (AI) Data Cloud, which enables customers to consolidate data into a single source of truth to drive meaningful business insights, build data applications, and share data and data products, as well as applies AI for solving business problems. It serves financial services, advertising, media and entertainment, retail and consumer goods, healthcare and life sciences, manufacturing, technology, telecom, travel and hospitality, and government and defense industries, as well as the public sector. the company has a collaboration with OpenAI, L.L.C. for the development of AI solutions for joint enterprise customers that deliver tangible return on investment. The company was formerly known as Snowflake Computing, Inc. and changed its name to Snowflake Inc. in April 2019. Snowflake Inc. was incorporated in 2012 and is based in Bozeman, Montana.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>DDOG</h3>
+                    <div class="company-name">Datadog, Inc.</div>
+                    
+                    <span class="subsector-badge badge-application">AI Application</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$44.2B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">394.16</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">3.34%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">3.14%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">29.20%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">34.269</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Datadog, Inc. operates an observability and security platform for cloud applications in the United States and internationally. The company's products comprise infrastructure and application performance monitoring, log management, digital experience monitoring, continuous profiler, database monitoring, data observability, universal service monitoring, network monitoring, error tracking, incident management, workflow automation, observability pipelines, cloud cost and cloud security management, application security management, cloud SIEM, sensitive data scanner, event management and CI and LLM visibility. Datadog, Inc. was incorporated in 2010 and is headquartered in New York, New York.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>MDB</h3>
+                    <div class="company-name">MongoDB, Inc.</div>
+                    
+                    <span class="subsector-badge badge-data">AI Data</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$29.0B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">-3.23%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-3.06%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">18.70%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">2.297</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> MongoDB, Inc., together with its subsidiaries, provides general purpose database platform worldwide. The company provides MongoDB Atlas, a hosted multi-cloud database-as-a-service solution; MongoDB Enterprise Advanced, a commercial database server for enterprise customers to run in the cloud, on-premises, or in a hybrid environment; and Community Server, a free-to-download version of its database, which includes the functionality that developers need to get started with MongoDB. It offers professional services comprising consulting and training. The company was formerly known as 10gen, Inc. and changed its name to MongoDB, Inc. in August 2013. MongoDB, Inc. was incorporated in 2007 and is headquartered in New York, New York.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>SMCI</h3>
+                    <div class="company-name">Super Micro Computer, Inc.</div>
+                    
+                    <span class="subsector-badge badge-infrastructure">AI Infrastructure</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$18.2B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">22.21</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">13.19%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">3.11%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">123.40%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value ">75.28</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value positive">1.16</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> Super Micro Computer, Inc., together with its subsidiaries, develops and sells server and storage solutions based on modular and open-standard architecture in the United States, Asia, Europe, and internationally. The company offers liquid and air-cooled AI servers for training and inferencing with integrated graphics processing units (GPUs) or PCIe based architectures; SuperBlade, MicroBlade, FlexTwin, GrandTwin, and BigTwin blade and multi-node systems; SuperStorage systems; Hyper, CloudDC, and WIO and rackmount systems; embedded (5G/IoT/Edge) systems; and MicroCloud server systems. It also provides workstations and networking devices; and modular server subsystems and accessories, including server boards, chassis, power supplies, and other accessories. In addition, the company offers remote system management solutions, such as Server Management suite comprising Supermicro Server Manager, Supermicro Power Management software, Supermicro Update Manager, SuperCloud Composer, and SuperDoctor 5. Further, the company identifies service requirements; creates and executes project plans; conducts verification testing; offers training; and provides technical documentation. Additionally, it offers rack level services from design to deployment for full rack and cluster level deployments of AI and HPC datacenters; help desk services and on-site product support; and warranties, maintenance, and technical support services. The company serves enterprise data centers, cloud computing, artificial intelligence, 5G, and edge computing markets through direct and indirect sales force, distributors, value-added resellers, system integrators, and original equipment manufacturers. Super Micro Computer, Inc. was incorporated in 1993 and is headquartered in San Jose, California.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>PATH</h3>
+                    <div class="company-name">UiPath, Inc.</div>
+                    
+                    <span class="subsector-badge badge-application">AI Application</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$6.0B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value positive">26.62</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">12.56%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value positive">14.79%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value positive">15.90%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">4.261</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> UiPath, Inc. provides an end-to-end automation platform that offers a range of robotic process automation (RPA) solutions primarily in the United States, Romania, the United Kingdom, the Netherlands, and internationally. The company delivers software robots that emulate human actions with precision and speed for organizations to automate repetitive tasks. Its platform's embedded AI, ML, and NLP capabilities improve decisioning and information processing; allows users to design and combine UI automations, API integrations, and AI-based document understanding in a single workflow; multi-tenant platform enterprise deployment with security and governance and Automation Cloud, which allows rapid automation without infrastructure overhead; and intuitive interface and low-code, drag-and-drop functionality. The company provides mining capabilities analyze the digital footprint of users' processes across all systems; tracks, measures, and forecasts automation performance, providing actionable metrics and predictive insights to continuously optimize business processes and maximize return on investment; and designed to enable people and automations to work together with each focusing on the processes to enhance productivity and improve business outcomes. It serves financial services, healthcare, manufacturing, retail, and public sector. The company was founded in 2005 and is headquartered in New York, New York.
+            </div>
+
+            
+        </div>
+        
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>AI</h3>
+                    <div class="company-name">C3.ai, Inc.</div>
+                    
+                    <span class="subsector-badge badge-application">AI Application</span>
+                    
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">$1.5B</div>
+                    <div class="dividend">Dividend: N/A</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value ">-46.77%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value ">-108.05%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value ">-20.30%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value positive">7.965</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value ">N/A</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> C3.ai, Inc. operates as an enterprise artificial intelligence application software company. The company offers C3 agentic AI platform, an application development and runtime environment that enables customers to design, develop, and deploy enterprise AI applications; C3 AI CRM Suite, a customer relationship management solution; C3 Generative AI that enables to locate, retrieve, present information, disparate data stores, applications, and enterprise information systems; C3 AI Health Suite to accelerate healthcare innovation; and C3 AI Financial Services Suite. Its C3 AI Applications include C3 AI Asset Performance suite, which consists of C3 AI Reliability, C3 AI Process Optimization, and C3 AI Energy Management applications. The company's C3 AI Supply Chain Suite comprises C3 AI Supply Network Risk, C3 AI Inventory Optimization, C3 AI Demand Forecasting, C3 AI Production Schedule Optimization, and C3 AI Sourcing Optimization solutions; C3 AI Sustainability Suite includes C3 AI ESG and C3 AI Energy Management applications to decrease greenhouse gas emissions; and C3 AI Defense & Intelligence Suite. It provides C3 AI State and Local Government Suite that includes various applications, such as C3 Law Enforcement for state, county, and municipal law enforcement agencies; C3 AI Residential Property Appraisal and C3 AI Commercial Property Appraisal for county property assessors and appraisers; and C3 Generative AI for Government Programs and C3 Generative AI for Constituent Services for federal, state, and local governments. It has strategic partnerships with Microsoft Azure, AWS, Google Cloud, McKinsey & Company, Baker Hughes, Booz Allen, and others. The company has a strategic alliance with SMX Group, LLC for the development of mission critical AI in the secure environments. The company was formerly known as C3 IoT, Inc. and changed its name to C3.ai, Inc. in June 2019. C3.ai, Inc. was incorporated in 2009 and is headquartered in Redwood City, California.
+            </div>
+
+            
+        </div>
+        
+    </div>
+</body>
+
+</html>
