@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .date { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
+
+        /* ── Navigation ─────────────────────────────────────────── */
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 600;
+            font-size: 0.95em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav a:hover { background: #e3f2fd; }
+        .nav a.active { background: #2c3e50; color: white; cursor: default; }
+        .nav-divider { width: 1px; background: #dee2e6; margin: 0 4px; }
+
+        /* ── Section headings ───────────────────────────────────── */
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #2c3e50;
+            border-bottom: 3px solid #e67e22;
+            padding-bottom: 6px;
+            margin: 30px 0 16px;
+        }
+
+        /* ── Commodity cards ────────────────────────────────────── */
+        .commodity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+        .commodity-card {
+            background: #fff8f2;
+            border: 1px solid #f0c080;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .commodity-card .c-name  { font-size: 0.8em; color: #7f8c8d; margin-bottom: 2px; }
+        .commodity-card .c-price { font-size: 1.5em; font-weight: 700; color: #2c3e50; }
+        .commodity-card .c-chg   { font-size: 0.85em; margin-top: 2px; }
+        .positive { color: #27ae60; }
+        .negative { color: #c0392b; }
+
+        .commodity-chart { margin-top: 8px; }
+        .commodity-chart img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* ── Tables ─────────────────────────────────────────────── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.88em;
+        }
+        th, td {
+            padding: 9px 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th { background-color: #f8f9fa; font-weight: 600; }
+        tr:hover { background: #f9f9f9; }
+        td.right, th.right { text-align: right; }
+
+        /* ── Sub-sector badges ───────────────────────────────────── */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: white;
+        }
+        .badge-major      { background: #2c3e50; }
+        .badge-services   { background: #8e44ad; }
+        .badge-refining   { background: #d35400; }
+        .badge-pipeline   { background: #16a085; }
+        .badge-ep         { background: #2980b9; }
+        .badge-coal       { background: #7f8c8d; }
+        .badge-other      { background: #95a5a6; }
+
+        /* ── Stock detail card ───────────────────────────────────── */
+        .stock-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .stock-card h3 { margin: 0 0 4px; font-size: 1.1em; }
+        .stock-card .stock-meta { font-size: 0.85em; color: #7f8c8d; margin-bottom: 8px; }
+        .desc { font-size: 0.85em; color: #555; margin: 8px 0; max-height: 80px; overflow: hidden; }
+        .desc.expanded { max-height: none; }
+        .toggle-desc { font-size: 0.8em; color: #007bff; cursor: pointer; }
+
+        .metrics-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0; }
+        .metric-box {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 6px 12px;
+            min-width: 90px;
+        }
+        .metric-box .m-label { font-size: 0.72em; color: #7f8c8d; }
+        .metric-box .m-value { font-size: 1em; font-weight: 600; }
+
+        /* ── Comparison table inside stock card ─────────────────── */
+        .comp-table { margin-top: 10px; }
+        .comp-table th { font-size: 0.8em; }
+        .comp-table td { font-size: 0.82em; }
+        .comp-table tr.current-row { background: #e8f8f5; font-weight: bold; }
+
+        /* ── ETF change colours ──────────────────────────────────── */
+        .up   { color: #27ae60; font-weight: 600; }
+        .down { color: #c0392b; font-weight: 600; }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <h1>{{ title }}</h1>
+        <div class="date">Report generated on: {{ date }}</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav">
+        <a href="index.html" class="{% if current_page == 'index.html' %}active{% endif %}">S&amp;P 500</a>
+        <a href="non_spy.html" class="{% if current_page == 'non_spy.html' %}active{% endif %}">Non-S&amp;P 500</a>
+        <a href="guru.html" class="{% if current_page == 'guru.html' %}active{% endif %}">Guru Tracker</a>
+        <div class="nav-divider"></div>
+        <a href="tech.html" class="{% if current_page == 'tech.html' %}active{% endif %}">Technology</a>
+        <a href="semiconductors.html" class="{% if current_page == 'semiconductors.html' %}active{% endif %}">Semiconductors</a>
+        <a href="ai.html" class="{% if current_page == 'ai.html' %}active{% endif %}">AI &amp; LLM</a>
+        <a href="consumer_staples.html" class="{% if current_page == 'consumer_staples.html' %}active{% endif %}">Consumer Staples</a>
+        <a href="energy.html" class="{% if current_page == 'energy.html' %}active{% endif %}">Oil &amp; Energy</a>
+        <div class="nav-divider"></div>
+        <a href="china.html" class="{% if current_page == 'china.html' %}active{% endif %}">A股精选</a>
+        <a href="china_full.html" class="{% if current_page == 'china_full.html' %}active{% endif %}">A股全市场</a>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 1 · COMMODITY PRICES
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="section-title">Commodity Prices</div>
+    <div class="commodity-grid">
+        {% for c in commodities %}
+        <div class="commodity-card">
+            <div class="c-name">{{ c.name }} ({{ c.ticker }})</div>
+            {% if c.price %}
+            <div class="c-price">${{ "%.3f"|format(c.price) }}</div>
+            <div class="c-chg {% if c.change_pct >= 0 %}positive{% else %}negative{% endif %}">
+                {{ "%+.3f"|format(c.change) }} ({{ "%+.2f"|format(c.change_pct) }}%)
+            </div>
+            {% else %}
+            <div class="c-price" style="color:#999;">N/A</div>
+            {% endif %}
+            {% if c.chart_filename %}
+            <div class="commodity-chart">
+                <img src="{{ c.chart_filename }}" alt="{{ c.name }} 1-year chart">
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 2 · ENERGY ETFs
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="section-title">Energy ETFs</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Name</th>
+                <th class="right">Price</th>
+                <th class="right">Day Chg</th>
+                <th class="right">YTD Ret</th>
+                <th class="right">1-Yr Ret</th>
+                <th class="right">AUM</th>
+                <th class="right">Expense</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for etf in etfs %}
+            <tr>
+                <td><strong>{{ etf.ticker }}</strong></td>
+                <td>{{ etf.name }}</td>
+                <td class="right">{% if etf.price %}${{ "%.2f"|format(etf.price) }}{% else %}N/A{% endif %}</td>
+                <td class="right {% if etf.change_pct and etf.change_pct >= 0 %}up{% elif etf.change_pct %}down{% endif %}">
+                    {% if etf.change_pct %}{{ "%+.2f"|format(etf.change_pct) }}%{% else %}N/A{% endif %}
+                </td>
+                <td class="right {% if etf.ytd_ret and etf.ytd_ret >= 0 %}up{% elif etf.ytd_ret %}down{% endif %}">
+                    {% if etf.ytd_ret %}{{ "%+.2f"|format(etf.ytd_ret) }}%{% else %}N/A{% endif %}
+                </td>
+                <td class="right {% if etf.one_yr_ret and etf.one_yr_ret >= 0 %}up{% elif etf.one_yr_ret %}down{% endif %}">
+                    {% if etf.one_yr_ret %}{{ "%+.2f"|format(etf.one_yr_ret) }}%{% else %}N/A{% endif %}
+                </td>
+                <td class="right">{{ etf.aum_fmt }}</td>
+                <td class="right">{{ etf.expense_fmt }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 3 · ENERGY STOCKS (summary table)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="section-title">Energy Stocks — Overview</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Name</th>
+                <th>Sub-sector</th>
+                <th class="right">Price</th>
+                <th class="right">Day Chg</th>
+                <th class="right">Mkt Cap</th>
+                <th class="right">P/E</th>
+                <th class="right">Div Yield</th>
+                <th class="right">ROE</th>
+                <th class="right">Margin</th>
+                <th class="right">Beta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stocks %}
+            <tr>
+                <td><strong><a href="#stock-{{ s.ticker }}">{{ s.ticker }}</a></strong></td>
+                <td>{{ s.name }}</td>
+                <td>
+                    <span class="badge badge-{{ s.subsector_class }}">{{ s.sub_sector }}</span>
+                </td>
+                <td class="right">{{ s.price }}</td>
+                <td class="right {% if s.change_positive %}up{% else %}down{% endif %}">{{ s.change_pct }}</td>
+                <td class="right">{{ s.market_cap }}</td>
+                <td class="right">{{ s.pe }}</td>
+                <td class="right">{{ s.dividend_yield }}</td>
+                <td class="right">{{ s.roe }}</td>
+                <td class="right">{{ s.margin }}</td>
+                <td class="right">{{ s.beta }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 4 · STOCK DETAIL CARDS
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="section-title">Energy Stocks — Detail</div>
+    {% for s in stocks %}
+    <div class="stock-card" id="stock-{{ s.ticker }}">
+        <h3>
+            {{ s.ticker }} &mdash; {{ s.name }}
+            <span class="badge badge-{{ s.subsector_class }}" style="margin-left:6px;">{{ s.sub_sector }}</span>
+        </h3>
+        <div class="stock-meta">
+            Price: {{ s.price }}
+            <span class="{% if s.change_positive %}positive{% else %}negative{% endif %}">{{ s.change_pct }}</span>
+            &nbsp;|&nbsp; Mkt Cap: {{ s.market_cap }}
+            &nbsp;|&nbsp; Beta: {{ s.beta }}
+        </div>
+
+        <div class="metrics-row">
+            <div class="metric-box"><div class="m-label">P/E</div><div class="m-value">{{ s.pe }}</div></div>
+            <div class="metric-box"><div class="m-label">PEG</div><div class="m-value">{{ s.peg }}</div></div>
+            <div class="metric-box"><div class="m-label">ROE</div><div class="m-value">{{ s.roe }}</div></div>
+            <div class="metric-box"><div class="m-label">Net Margin</div><div class="m-value">{{ s.margin }}</div></div>
+            <div class="metric-box"><div class="m-label">Rev Growth</div><div class="m-value">{{ s.growth }}</div></div>
+            <div class="metric-box"><div class="m-label">D/E</div><div class="m-value">{{ s.de }}</div></div>
+            <div class="metric-box"><div class="m-label">Div Yield</div><div class="m-value">{{ s.dividend_yield }}</div></div>
+        </div>
+
+        {% if s.description %}
+        <div class="desc" id="desc-{{ s.ticker }}">{{ s.description }}</div>
+        <span class="toggle-desc" onclick="toggleDesc('{{ s.ticker }}')">Show more</span>
+        {% endif %}
+
+        {% if s.comparison_table %}
+        <table class="comp-table" style="margin-top:12px;">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Name</th>
+                    <th class="right">Mkt Cap</th>
+                    <th class="right">P/E</th>
+                    <th class="right">ROE</th>
+                    <th class="right">Margin</th>
+                    <th class="right">Rev Gr</th>
+                    <th class="right">Div Yield</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in s.comparison_table %}
+                <tr {% if c.is_current %}class="current-row"{% endif %}>
+                    <td><strong>{{ c.ticker }}</strong>{% if c.is_current %} ★{% endif %}</td>
+                    <td>{{ c.name }}</td>
+                    <td class="right">{{ c.market_cap }}</td>
+                    <td class="right">{{ c.pe }}</td>
+                    <td class="right">{{ c.roe }}</td>
+                    <td class="right">{{ c.margin }}</td>
+                    <td class="right">{{ c.growth }}</td>
+                    <td class="right">{{ c.div_yield }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+</div><!-- /container -->
+
+<script>
+function toggleDesc(ticker) {
+    var el   = document.getElementById('desc-' + ticker);
+    var span = el.nextElementSibling;
+    if (el.classList.contains('expanded')) {
+        el.classList.remove('expanded');
+        span.textContent = 'Show more';
+    } else {
+        el.classList.add('expanded');
+        span.textContent = 'Show less';
+    }
+}
+</script>
+</body>
+</html>

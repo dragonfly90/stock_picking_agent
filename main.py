@@ -1008,6 +1008,193 @@ def run_ai_analysis(html_filename, title):
     print(f"\nGenerated {output_path}")
 
 
+import fetch_energy_data
+
+
+# ── Sub-sector colour mapping for the energy template ────────────────────────
+ENERGY_SUBSECTOR_CLASS = {
+    'ExxonMobil':                    'major',
+    'Chevron':                       'major',
+    'ConocoPhillips':                'major',
+    'BP plc':                        'major',
+    'Shell plc':                     'major',
+    'TotalEnergies':                 'major',
+    'Eni SpA':                       'major',
+    'SLB (Schlumberger)':            'services',
+    'Halliburton':                   'services',
+    'Baker Hughes':                  'services',
+    'Marathon Petroleum':            'refining',
+    'Valero Energy':                 'refining',
+    'Phillips 66':                   'refining',
+    'PBF Energy':                    'refining',
+    'Kinder Morgan':                 'pipeline',
+    'Williams Companies':            'pipeline',
+    'Energy Transfer LP':            'pipeline',
+    'Enterprise Products Partners':  'pipeline',
+    'Magellan Midstream Partners':   'pipeline',
+    'EOG Resources':                 'ep',
+    'Devon Energy':                  'ep',
+    'Diamondback Energy':            'ep',
+    'APA Corporation':               'ep',
+    'Occidental Petroleum':          'ep',
+    'Marathon Oil':                  'ep',
+    'Antero Resources':              'ep',
+    'Range Resources':               'ep',
+    'Peabody Energy':                'coal',
+    'Arch Resources':                'coal',
+}
+
+ENERGY_COMPARISON_GROUPS = {
+    'XOM':  ['CVX', 'COP', 'BP',  'SHEL'],
+    'CVX':  ['XOM', 'COP', 'TTE', 'BP'],
+    'SLB':  ['HAL', 'BKR', 'XOM', 'CVX'],
+    'MPC':  ['VLO', 'PSX', 'PBF', 'XOM'],
+    'VLO':  ['MPC', 'PSX', 'PBF', 'COP'],
+    'KMI':  ['WMB', 'ET',  'EPD', 'MMP'],
+    'EOG':  ['DVN', 'FANG', 'APA', 'MRO'],
+    'OXY':  ['EOG', 'DVN', 'FANG', 'XOM'],
+}
+
+
+def run_energy_analysis(html_filename, title):
+    print("Starting Oil & Energy Market Analysis...")
+
+    # ── 1. Commodity prices ──────────────────────────────────────────────────
+    print("Fetching commodity prices...")
+    commodities = fetch_energy_data.get_commodity_prices()
+
+    # Commodity sparkline charts (1-year history)
+    commodity_charts = {}
+    for c in commodities:
+        if c['price'] is None:
+            continue
+        hist = fetch_energy_data.get_commodity_history(c['ticker'], period='1y')
+        if hist.empty:
+            continue
+        chart_fn = f"chart_energy_commodity_{c['ticker'].replace('=', '')}.png"
+        chart_path = os.path.join(BASE_DIR, chart_fn)
+        plt.figure(figsize=(8, 3))
+        plt.plot(hist.index, hist['Close'], color='#e67e22', linewidth=1.5)
+        plt.title(f"{c['name']} – 1 Year")
+        plt.xlabel('Date')
+        plt.ylabel('Price')
+        plt.grid(True, linestyle='--', alpha=0.5)
+        plt.tight_layout()
+        plt.savefig(chart_path)
+        plt.close()
+        commodity_charts[c['ticker']] = chart_fn
+        c['chart_filename'] = chart_fn
+
+    # ── 2. Energy ETFs ───────────────────────────────────────────────────────
+    print("Fetching energy ETF data...")
+    etfs = fetch_energy_data.get_etf_data()
+
+    # Format ETF AUM
+    for etf in etfs:
+        aum = etf.get('aum')
+        etf['aum_fmt'] = f"${aum/1e9:.1f}B" if aum else "N/A"
+        expense = etf.get('expense')
+        etf['expense_fmt'] = f"{expense:.2%}" if expense else "N/A"
+
+    # ── 3. Energy stocks ─────────────────────────────────────────────────────
+    print("Fetching energy stock data...")
+    stocks_raw = fetch_energy_data.get_all_energy_stocks()
+    print(f"\nFetched {len(stocks_raw)} energy stocks.")
+
+    # Build comparison tables for key tickers
+    comp_cache = {}  # avoid re-fetching the same ticker twice
+
+    energy_data = []
+    for s in stocks_raw:
+        ticker = s['ticker']
+
+        # Format display values
+        mc = s.get('market_cap')
+        roe = s.get('roe')
+        margin = s.get('margin')
+        rev_growth = s.get('rev_growth')
+        de = s.get('de')
+        peg = s.get('peg')
+        pe = s.get('pe')
+        dy = s.get('dividend_yield')
+        beta = s.get('beta')
+
+        # Comparison table
+        comparison_table = []
+        if ticker in ENERGY_COMPARISON_GROUPS:
+            comp_tickers = [ticker] + ENERGY_COMPARISON_GROUPS[ticker]
+            for ct in comp_tickers:
+                try:
+                    if ct not in comp_cache:
+                        comp_cache[ct] = fetch_energy_data.get_energy_stock_data(ct)
+                    c_info = comp_cache[ct]
+                    if c_info:
+                        c_mc   = c_info.get('market_cap')
+                        c_pe   = c_info.get('pe')
+                        c_roe  = c_info.get('roe')
+                        c_mg   = c_info.get('margin')
+                        c_gr   = c_info.get('rev_growth')
+                        c_dy   = c_info.get('dividend_yield')
+                        comparison_table.append({
+                            'ticker':     ct,
+                            'name':       c_info.get('name', ct),
+                            'market_cap': f"${c_mc/1e9:.1f}B" if c_mc else "N/A",
+                            'pe':         f"{c_pe:.2f}" if c_pe else "N/A",
+                            'roe':        f"{c_roe:.2%}" if c_roe else "N/A",
+                            'margin':     f"{c_mg:.2%}" if c_mg else "N/A",
+                            'growth':     f"{c_gr:.2%}" if c_gr else "N/A",
+                            'div_yield':  f"{c_dy:.2%}" if c_dy else "N/A",
+                            'is_current': ct == ticker,
+                        })
+                except Exception as exc:
+                    print(f"  Comparison error {ct}: {exc}")
+
+        sub = ENERGY_SUBSECTOR_CLASS.get(s.get('sub_sector', ''), 'other')
+
+        energy_data.append({
+            'ticker':           ticker,
+            'name':             s.get('name', ticker),
+            'sub_sector':       s.get('sub_sector', ''),
+            'subsector_class':  sub,
+            'price':            f"${s['price']:.2f}" if s.get('price') else "N/A",
+            'change':           f"{s['change']:+.2f}" if s.get('change') else "N/A",
+            'change_pct':       f"{s['change_pct']:+.2f}%" if s.get('change_pct') else "N/A",
+            'change_positive':  (s.get('change_pct') or 0) >= 0,
+            'market_cap':       f"${mc/1e9:.1f}B" if mc else "N/A",
+            'market_cap_val':   mc or 0,
+            'pe':               f"{pe:.2f}" if pe else "N/A",
+            'peg':              f"{peg:.2f}" if peg else "N/A",
+            'roe':              f"{roe:.2%}" if roe else "N/A",
+            'margin':           f"{margin:.2%}" if margin else "N/A",
+            'growth':           f"{rev_growth:.2%}" if rev_growth else "N/A",
+            'de':               f"{de:.1f}" if de is not None else "N/A",
+            'dividend_yield':   f"{dy:.2%}" if dy else "N/A",
+            'beta':             f"{beta:.2f}" if beta else "N/A",
+            'description':      s.get('description', ''),
+            'comparison_table': comparison_table,
+        })
+
+    # ── 4. Generate HTML ─────────────────────────────────────────────────────
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('energy.html')
+
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+
+    html_content = template.render(
+        date=date_str,
+        title=title,
+        current_page=html_filename,
+        commodities=commodities,
+        etfs=etfs,
+        stocks=energy_data,
+    )
+
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
@@ -1037,5 +1224,8 @@ if __name__ == "__main__":
 
     # 8. China Analysis
     run_china_analysis("china.html", "A股精选 (China Picks)")
+
+    # 9. Oil & Energy Analysis
+    run_energy_analysis("energy.html", "Oil & Energy Market Dashboard")
 
     conn.close()
