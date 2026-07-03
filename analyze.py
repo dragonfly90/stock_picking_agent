@@ -47,20 +47,45 @@ def score_stock(info):
 
     # 5. PEG Ratio < 2.0
     peg = info.get('pegRatio')
-    
+
     # Fallback: Calculate PEG if missing
     if peg is None:
         pe = info.get('trailingPE')
         growth = info.get('earningsGrowth') # This is usually a decimal, e.g. 0.35 for 35%
         if pe and growth and growth > 0:
             peg = pe / (growth * 100)
-    
+
     if peg is not None and peg < 2.0 and peg > 0:
         score += 1
         details.append(f"PEG: {peg:.2f} (<2.0)")
     else:
         val = f"{peg:.2f}" if peg is not None else "N/A"
         details.append(f"PEG: {val} (>=2.0 or invalid)")
+
+    # 6. Free Cash Flow Yield > 3%
+    fcf = info.get('freeCashflow')
+    market_cap = info.get('marketCap')
+    if fcf and market_cap and market_cap > 0 and (fcf / market_cap) > 0.03:
+        score += 1
+        details.append(f"FCF Yield: {fcf/market_cap:.2%} (>3%)")
+    else:
+        fcf_yield = (fcf / market_cap) if (fcf and market_cap and market_cap > 0) else None
+        val = f"{fcf_yield:.2%}" if fcf_yield is not None else "N/A"
+        details.append(f"FCF Yield: {val} (<=3% or N/A)")
+
+    # 7. 52-week position < 70%
+    last_price = info.get('currentPrice')
+    high52 = info.get('fiftyTwoWeekHigh')
+    low52 = info.get('fiftyTwoWeekLow')
+    w52_position = None
+    if last_price and high52 and low52 and (high52 - low52) > 0:
+        w52_position = (last_price - low52) / (high52 - low52)
+    if w52_position is not None and w52_position < 0.70:
+        score += 1
+        details.append(f"52W Position: {w52_position:.2%} (<70%)")
+    else:
+        val = f"{w52_position:.2%}" if w52_position is not None else "N/A"
+        details.append(f"52W Position: {val} (>=70% or N/A)")
 
     return {
         'score': score,
@@ -74,13 +99,14 @@ def score_stock(info):
             'pe': info.get('trailingPE'),
             'dividend_yield': info.get('dividendYield'),
             'industry': info.get('industry'),
-            'sector': info.get('sector')
+            'sector': info.get('sector'),
+            'w52_position': w52_position
         }
     }
 
 def rank_stocks(stocks_data):
     """
-    Ranks stocks by score, then by PEG ratio (ascending).
+    Ranks stocks by score (0-7), then by PEG ratio (ascending).
     stocks_data: list of (ticker, info) tuples
     """
     scored_stocks = []

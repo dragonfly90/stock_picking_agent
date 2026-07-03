@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; color: #333; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .date { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
+        .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .nav a { text-decoration: none; color: #007bff; font-weight: 600; font-size: 0.95em; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; }
+        .nav a:hover { background: #e3f2fd; }
+        .nav a.active { background: #2c3e50; color: white; cursor: default; }
+        .nav-divider { width: 1px; background: #dee2e6; margin: 0 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; position: sticky; top: 0; }
+        tr:hover { background-color: #f1f1f1; }
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        .stock-card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #e8f5e9; }
+        .stock-title { flex: 1; }
+        .stock-title h3 { margin: 0; color: #2c3e50; }
+        .stock-title .company-name { color: #7f8c8d; font-size: 0.9em; margin-top: 5px; }
+        .stock-meta { text-align: right; }
+        .market-cap { font-size: 1.2em; font-weight: bold; color: #2c3e50; }
+        .dividend { color: #27ae60; font-size: 0.9em; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .metric-item { text-align: center; padding: 10px; background-color: #f8f9fa; border-radius: 5px; }
+        .metric-label { font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px; }
+        .metric-value { font-size: 1.1em; font-weight: bold; color: #2c3e50; }
+        .description { margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; line-height: 1.6; color: #555; }
+        .sector-intro { margin-bottom: 30px; padding: 20px; background-color: #e8f5e9; border-radius: 5px; border-left: 5px solid #2e7d32; }
+        .sector-intro h3 { margin-top: 0; color: #1b5e20; }
+        .subsector-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin-top: 4px; }
+        .badge-pharma { background: #e8f5e9; color: #1b5e20; }
+        .badge-biotech { background: #e3f2fd; color: #0d47a1; }
+        .badge-devices { background: #f3e5f5; color: #6a1b9a; }
+        .badge-managed_care { background: #fff3e0; color: #bf360c; }
+        .badge-pharmacy { background: #fce4ec; color: #880e4f; }
+        .badge-tools { background: #e0f7fa; color: #006064; }
+        .badge-diversified { background: #f5f5f5; color: #424242; }
+        .sell-signal-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; margin-left: 8px; }
+        .competitors-section { margin-top: 15px; padding: 10px 15px; background-color: #f5f5f5; border-radius: 5px; border: 1px solid #eee; }
+        .competitors-section h4 { margin: 0 0 10px 0; color: #2c3e50; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ title }}</h1>
+            <div class="date">Report generated on: {{ date }}</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html">Guru Tracker</a>
+            <div class="nav-divider"></div>
+            <a href="tech.html">Technology</a>
+            <a href="semiconductors.html">Semiconductors</a>
+            <a href="ai.html">AI &amp; LLM</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
+            <a href="healthcare.html" class="active">Healthcare</a>
+            <a href="banking.html">Banking</a>
+            <a href="energy.html">Oil &amp; Energy</a>
+            <div class="nav-divider"></div>
+            <a href="china.html">A股精选</a>
+            <a href="china_full.html">A股全市场</a>
+        </div>
+
+        <div class="sector-intro">
+            <h3>Healthcare &amp; Pharma Sector</h3>
+            <p>The healthcare sector spans the full continuum of medicine: <strong>Large-cap pharma</strong> (blockbuster drugs, pipelines), <strong>Biotech</strong> (high-risk/high-reward innovation), <strong>Medical devices</strong> (surgical tools, diagnostics hardware), <strong>Managed care</strong> (health insurance, PBMs), and <strong>Life sciences tools</strong> (instruments, CROs, CDMOs). Healthcare is defensive — demand is largely non-discretionary — but faces drug pricing pressure, patent cliffs, and regulatory risk. Sell-strength thresholds are shown where 5-year backtests show ≥84% win rate on a 10-day reversal after a big up day.</p>
+        </div>
+
+        {% for stock in stocks %}
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>
+                        {{ stock.ticker }}
+                        {% if stock.sell_threshold %}
+                        <span class="sell-signal-badge">⚡ Sell signal ≥ +{{ "%.2f"|format(stock.sell_threshold) }}%</span>
+                        {% endif %}
+                    </h3>
+                    <div class="company-name">{{ stock.name }}</div>
+                    {% if stock.subsector %}
+                    <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                    {% endif %}
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">{{ stock.market_cap }}</div>
+                    <div class="dividend">Dividend: {{ stock.dividend_yield }}</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 35 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value {{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> {{ stock.description }}
+            </div>
+
+            {% if stock.comparison_table %}
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th><th>Market Cap</th><th>P/E</th><th>ROE</th><th>Margin</th><th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comp in stock.comparison_table %}
+                        <tr style="{{ 'background-color: #e8f5e9; font-weight: bold;' if comp.is_current else '' }}">
+                            <td>{{ comp.ticker }}</td><td>{{ comp.market_cap }}</td><td>{{ comp.pe }}</td>
+                            <td>{{ comp.roe }}</td><td>{{ comp.margin }}</td><td>{{ comp.growth }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

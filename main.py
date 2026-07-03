@@ -240,9 +240,6 @@ def generate_html(top_stocks, history, filename, title):
 def run_analysis(conn, universe_name, tickers, html_filename, title):
     print(f"Starting Analysis for {universe_name}...")
     
-    # Limit for demo/speed if needed
-    tickers = tickers[:50] 
-    
     stocks_data = []
     
     for ticker in tickers:
@@ -1195,6 +1192,297 @@ def run_energy_analysis(html_filename, title):
     print(f"\nGenerated {output_path}")
 
 
+HEALTHCARE_TICKERS = {
+    # Large-cap pharma
+    'JNJ':  {'subsector': 'Diversified Healthcare', 'subsector_class': 'diversified'},
+    'PFE':  {'subsector': 'Large-cap Pharma', 'subsector_class': 'pharma'},
+    'MRK':  {'subsector': 'Large-cap Pharma', 'subsector_class': 'pharma'},
+    'ABBV': {'subsector': 'Large-cap Pharma', 'subsector_class': 'pharma'},
+    'BMY':  {'subsector': 'Large-cap Pharma', 'subsector_class': 'pharma'},
+    'LLY':  {'subsector': 'Large-cap Pharma', 'subsector_class': 'pharma'},
+    'AMGN': {'subsector': 'Biotech', 'subsector_class': 'biotech'},
+    'GILD': {'subsector': 'Biotech', 'subsector_class': 'biotech'},
+    'BIIB': {'subsector': 'Biotech', 'subsector_class': 'biotech'},
+    'REGN': {'subsector': 'Biotech', 'subsector_class': 'biotech'},
+    'VRTX': {'subsector': 'Biotech', 'subsector_class': 'biotech'},
+    'MRNA': {'subsector': 'Biotech', 'subsector_class': 'biotech'},
+    # Medical devices
+    'MDT':  {'subsector': 'Medical Devices', 'subsector_class': 'devices'},
+    'ABT':  {'subsector': 'Medical Devices', 'subsector_class': 'devices'},
+    'ISRG': {'subsector': 'Medical Devices', 'subsector_class': 'devices'},
+    'SYK':  {'subsector': 'Medical Devices', 'subsector_class': 'devices'},
+    'BSX':  {'subsector': 'Medical Devices', 'subsector_class': 'devices'},
+    'EW':   {'subsector': 'Medical Devices', 'subsector_class': 'devices'},
+    # Managed care / health insurance
+    'UNH':  {'subsector': 'Managed Care', 'subsector_class': 'managed_care'},
+    'CVS':  {'subsector': 'Pharmacy / PBM', 'subsector_class': 'pharmacy'},
+    'CI':   {'subsector': 'Managed Care', 'subsector_class': 'managed_care'},
+    'HUM':  {'subsector': 'Managed Care', 'subsector_class': 'managed_care'},
+    'ELV':  {'subsector': 'Managed Care', 'subsector_class': 'managed_care'},
+    # Diagnostics / tools
+    'TMO':  {'subsector': 'Life Sciences Tools', 'subsector_class': 'tools'},
+    'DHR':  {'subsector': 'Life Sciences Tools', 'subsector_class': 'tools'},
+    'A':    {'subsector': 'Life Sciences Tools', 'subsector_class': 'tools'},
+    'IQV':  {'subsector': 'CRO / CDMO', 'subsector_class': 'tools'},
+}
+
+HEALTHCARE_COMPARISON_GROUPS = {
+    'JNJ':  ['PFE', 'MRK', 'ABBV', 'BMY'],
+    'LLY':  ['MRK', 'ABBV', 'PFE', 'AMGN'],
+    'ABBV': ['JNJ', 'PFE', 'MRK', 'BMY'],
+    'UNH':  ['CI', 'HUM', 'ELV', 'CVS'],
+    'TMO':  ['DHR', 'A', 'IQV', 'BSX'],
+    'MDT':  ['ABT', 'SYK', 'BSX', 'EW'],
+    'ISRG': ['MDT', 'SYK', 'BSX', 'EW'],
+}
+
+HEALTHCARE_SELL_THRESHOLDS = {
+    'JNJ': 1.27, 'PFE': 1.80, 'MRK': 1.66, 'ABBV': 1.68, 'BMY': 1.75, 'LLY': 2.29,
+}
+
+
+def run_healthcare_analysis(html_filename, title):
+    print("Starting Healthcare & Pharma Sector Analysis...")
+
+    healthcare_data = []
+
+    for ticker, meta in HEALTHCARE_TICKERS.items():
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                pe = info.get('trailingPE')
+
+                if peg is None:
+                    growth = info.get('earningsGrowth')
+                    if pe and growth and growth > 0:
+                        peg = pe / (growth * 100)
+
+                market_cap = info.get('marketCap')
+                dividend_yield = info.get('dividendYield')
+                description = info.get('longBusinessSummary', 'No description available.')
+
+                # Build comparison table for key tickers
+                comparison_table = []
+                if ticker in HEALTHCARE_COMPARISON_GROUPS:
+                    comp_tickers = [ticker] + HEALTHCARE_COMPARISON_GROUPS[ticker]
+                    for comp_ticker in comp_tickers:
+                        try:
+                            c_info = info if comp_ticker == ticker else fetch_data.get_stock_data(comp_ticker)
+                            if c_info:
+                                c_mc = c_info.get('marketCap')
+                                c_pe = c_info.get('trailingPE')
+                                c_roe = c_info.get('returnOnEquity')
+                                c_margin = c_info.get('profitMargins')
+                                c_growth = c_info.get('revenueGrowth')
+                                comparison_table.append({
+                                    'ticker': comp_ticker,
+                                    'market_cap': f"${c_mc/1e9:.1f}B" if c_mc else "N/A",
+                                    'pe': f"{c_pe:.2f}" if c_pe else "N/A",
+                                    'roe': f"{c_roe:.2%}" if c_roe else "N/A",
+                                    'margin': f"{c_margin:.2%}" if c_margin else "N/A",
+                                    'growth': f"{c_growth:.2%}" if c_growth else "N/A",
+                                    'is_current': comp_ticker == ticker
+                                })
+                        except Exception as e:
+                            print(f"Error fetching comparison for {comp_ticker}: {e}")
+
+                healthcare_data.append({
+                    'ticker': ticker,
+                    'name': info.get('longName', ticker),
+                    'subsector': meta['subsector'],
+                    'subsector_class': meta['subsector_class'],
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'margin_val': margin if margin else -999,
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'growth_val': rev_growth if rev_growth else -999,
+                    'de': de if de is not None else "N/A",
+                    'de_val': de if de is not None else 9999,
+                    'peg': f"{peg:.2f}" if peg else "N/A",
+                    'peg_val': peg if peg else 9999,
+                    'pe': f"{pe:.2f}" if pe else "N/A",
+                    'pe_val': pe if pe else 9999,
+                    'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'market_cap_val': market_cap if market_cap else 0,
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                    'description': description,
+                    'comparison_table': comparison_table,
+                    'sell_threshold': HEALTHCARE_SELL_THRESHOLDS.get(ticker),
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+
+    healthcare_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
+
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('healthcare.html')
+
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+
+    html_content = template.render(
+        date=date_str,
+        stocks=healthcare_data,
+        title=title,
+        current_page=html_filename
+    )
+
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
+BANKING_TICKERS = {
+    # Money-center banks
+    'JPM':   {'subsector': 'Money Center', 'subsector_class': 'money_center'},
+    'BAC':   {'subsector': 'Money Center', 'subsector_class': 'money_center'},
+    'WFC':   {'subsector': 'Money Center', 'subsector_class': 'money_center'},
+    'C':     {'subsector': 'Money Center', 'subsector_class': 'money_center'},
+    'USB':   {'subsector': 'Regional Bank', 'subsector_class': 'regional'},
+    'PNC':   {'subsector': 'Regional Bank', 'subsector_class': 'regional'},
+    'TFC':   {'subsector': 'Regional Bank', 'subsector_class': 'regional'},
+    'RF':    {'subsector': 'Regional Bank', 'subsector_class': 'regional'},
+    'CFG':   {'subsector': 'Regional Bank', 'subsector_class': 'regional'},
+    'HBAN':  {'subsector': 'Regional Bank', 'subsector_class': 'regional'},
+    # Investment banks / brokerages
+    'GS':    {'subsector': 'Investment Bank', 'subsector_class': 'investment_bank'},
+    'MS':    {'subsector': 'Investment Bank', 'subsector_class': 'investment_bank'},
+    'SCHW':  {'subsector': 'Brokerage', 'subsector_class': 'brokerage'},
+    # Insurance
+    'BRK-B': {'subsector': 'Diversified Financial', 'subsector_class': 'diversified'},
+    'MET':   {'subsector': 'Insurance', 'subsector_class': 'insurance'},
+    'PRU':   {'subsector': 'Insurance', 'subsector_class': 'insurance'},
+    'AFL':   {'subsector': 'Insurance', 'subsector_class': 'insurance'},
+    'ALL':   {'subsector': 'Insurance', 'subsector_class': 'insurance'},
+    # Asset managers / fintech
+    'BLK':   {'subsector': 'Asset Manager', 'subsector_class': 'asset_manager'},
+    'V':     {'subsector': 'Payments', 'subsector_class': 'payments'},
+    'MA':    {'subsector': 'Payments', 'subsector_class': 'payments'},
+    'AXP':   {'subsector': 'Payments', 'subsector_class': 'payments'},
+    'COF':   {'subsector': 'Consumer Credit', 'subsector_class': 'credit'},
+    'DFS':   {'subsector': 'Consumer Credit', 'subsector_class': 'credit'},
+}
+
+BANKING_COMPARISON_GROUPS = {
+    'JPM':  ['BAC', 'WFC', 'C', 'USB'],
+    'BAC':  ['JPM', 'WFC', 'C', 'GS'],
+    'GS':   ['MS', 'JPM', 'BAC', 'C'],
+    'MS':   ['GS', 'JPM', 'SCHW', 'BLK'],
+    'V':    ['MA', 'AXP', 'COF', 'DFS'],
+    'BLK':  ['MS', 'GS', 'SCHW', 'BRK-B'],
+    'MET':  ['PRU', 'AFL', 'ALL', 'BRK-B'],
+}
+
+BANKING_SELL_THRESHOLDS = {
+    'BAC': 1.92, 'JPM': 1.77, 'WFC': 2.13, 'C': 2.09, 'GS': 2.11, 'MS': 2.07,
+}
+
+
+def run_banking_analysis(html_filename, title):
+    print("Starting Banking & Financials Sector Analysis...")
+
+    banking_data = []
+
+    for ticker, meta in BANKING_TICKERS.items():
+        print(f"Fetching data for {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if info:
+                roe = info.get('returnOnEquity')
+                margin = info.get('profitMargins')
+                rev_growth = info.get('revenueGrowth')
+                de = info.get('debtToEquity')
+                peg = info.get('pegRatio')
+                pe = info.get('trailingPE')
+
+                if peg is None:
+                    growth = info.get('earningsGrowth')
+                    if pe and growth and growth > 0:
+                        peg = pe / (growth * 100)
+
+                market_cap = info.get('marketCap')
+                dividend_yield = info.get('dividendYield')
+                description = info.get('longBusinessSummary', 'No description available.')
+
+                # Build comparison table for key tickers
+                comparison_table = []
+                if ticker in BANKING_COMPARISON_GROUPS:
+                    comp_tickers = [ticker] + BANKING_COMPARISON_GROUPS[ticker]
+                    for comp_ticker in comp_tickers:
+                        try:
+                            c_info = info if comp_ticker == ticker else fetch_data.get_stock_data(comp_ticker)
+                            if c_info:
+                                c_mc = c_info.get('marketCap')
+                                c_pe = c_info.get('trailingPE')
+                                c_roe = c_info.get('returnOnEquity')
+                                c_margin = c_info.get('profitMargins')
+                                c_growth = c_info.get('revenueGrowth')
+                                comparison_table.append({
+                                    'ticker': comp_ticker,
+                                    'market_cap': f"${c_mc/1e9:.1f}B" if c_mc else "N/A",
+                                    'pe': f"{c_pe:.2f}" if c_pe else "N/A",
+                                    'roe': f"{c_roe:.2%}" if c_roe else "N/A",
+                                    'margin': f"{c_margin:.2%}" if c_margin else "N/A",
+                                    'growth': f"{c_growth:.2%}" if c_growth else "N/A",
+                                    'is_current': comp_ticker == ticker
+                                })
+                        except Exception as e:
+                            print(f"Error fetching comparison for {comp_ticker}: {e}")
+
+                banking_data.append({
+                    'ticker': ticker,
+                    'name': info.get('longName', ticker),
+                    'subsector': meta['subsector'],
+                    'subsector_class': meta['subsector_class'],
+                    'roe': f"{roe:.2%}" if roe else "N/A",
+                    'roe_val': roe if roe else -999,
+                    'margin': f"{margin:.2%}" if margin else "N/A",
+                    'margin_val': margin if margin else -999,
+                    'growth': f"{rev_growth:.2%}" if rev_growth else "N/A",
+                    'growth_val': rev_growth if rev_growth else -999,
+                    'de': de if de is not None else "N/A",
+                    'de_val': de if de is not None else 9999,
+                    'peg': f"{peg:.2f}" if peg else "N/A",
+                    'peg_val': peg if peg else 9999,
+                    'pe': f"{pe:.2f}" if pe else "N/A",
+                    'pe_val': pe if pe else 9999,
+                    'market_cap': f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                    'market_cap_val': market_cap if market_cap else 0,
+                    'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A",
+                    'description': description,
+                    'comparison_table': comparison_table,
+                    'sell_threshold': BANKING_SELL_THRESHOLDS.get(ticker),
+                })
+        except Exception as e:
+            print(f"Error processing {ticker}: {e}")
+
+    banking_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
+
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('banking.html')
+
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+
+    html_content = template.render(
+        date=date_str,
+        stocks=banking_data,
+        title=title,
+        current_page=html_filename
+    )
+
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
@@ -1227,5 +1515,11 @@ if __name__ == "__main__":
 
     # 9. Oil & Energy Analysis
     run_energy_analysis("energy.html", "Oil & Energy Market Dashboard")
+
+    # 10. Healthcare / Pharma Analysis
+    run_healthcare_analysis("healthcare.html", "Healthcare & Pharma Sector Report")
+
+    # 11. Banking & Financials Analysis
+    run_banking_analysis("banking.html", "Banking & Financials Sector Report")
 
     conn.close()

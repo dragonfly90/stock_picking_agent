@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; color: #333; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .date { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
+        .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .nav a { text-decoration: none; color: #007bff; font-weight: 600; font-size: 0.95em; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; }
+        .nav a:hover { background: #e3f2fd; }
+        .nav a.active { background: #2c3e50; color: white; cursor: default; }
+        .nav-divider { width: 1px; background: #dee2e6; margin: 0 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; position: sticky; top: 0; }
+        tr:hover { background-color: #f1f1f1; }
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        .stock-card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #e3f2fd; }
+        .stock-title { flex: 1; }
+        .stock-title h3 { margin: 0; color: #2c3e50; }
+        .stock-title .company-name { color: #7f8c8d; font-size: 0.9em; margin-top: 5px; }
+        .stock-meta { text-align: right; }
+        .market-cap { font-size: 1.2em; font-weight: bold; color: #2c3e50; }
+        .dividend { color: #27ae60; font-size: 0.9em; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .metric-item { text-align: center; padding: 10px; background-color: #f8f9fa; border-radius: 5px; }
+        .metric-label { font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px; }
+        .metric-value { font-size: 1.1em; font-weight: bold; color: #2c3e50; }
+        .description { margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; line-height: 1.6; color: #555; }
+        .sector-intro { margin-bottom: 30px; padding: 20px; background-color: #e3f2fd; border-radius: 5px; border-left: 5px solid #1565c0; }
+        .sector-intro h3 { margin-top: 0; color: #0d47a1; }
+        .subsector-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin-top: 4px; }
+        .badge-money_center { background: #e3f2fd; color: #0d47a1; }
+        .badge-regional { background: #e8eaf6; color: #283593; }
+        .badge-investment_bank { background: #f3e5f5; color: #6a1b9a; }
+        .badge-brokerage { background: #fce4ec; color: #880e4f; }
+        .badge-insurance { background: #fff3e0; color: #bf360c; }
+        .badge-asset_manager { background: #e0f7fa; color: #006064; }
+        .badge-payments { background: #e8f5e9; color: #1b5e20; }
+        .badge-credit { background: #fff8e1; color: #f57f17; }
+        .badge-diversified { background: #f5f5f5; color: #424242; }
+        .sell-signal-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; margin-left: 8px; }
+        .competitors-section { margin-top: 15px; padding: 10px 15px; background-color: #f5f5f5; border-radius: 5px; border: 1px solid #eee; }
+        .competitors-section h4 { margin: 0 0 10px 0; color: #2c3e50; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ title }}</h1>
+            <div class="date">Report generated on: {{ date }}</div>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">S&P 500</a>
+            <a href="non_spy.html">Non-S&P 500</a>
+            <a href="guru.html">Guru Tracker</a>
+            <div class="nav-divider"></div>
+            <a href="tech.html">Technology</a>
+            <a href="semiconductors.html">Semiconductors</a>
+            <a href="ai.html">AI &amp; LLM</a>
+            <a href="consumer_staples.html">Consumer Staples</a>
+            <a href="healthcare.html">Healthcare</a>
+            <a href="banking.html" class="active">Banking</a>
+            <a href="energy.html">Oil &amp; Energy</a>
+            <div class="nav-divider"></div>
+            <a href="china.html">A股精选</a>
+            <a href="china_full.html">A股全市场</a>
+        </div>
+
+        <div class="sector-intro">
+            <h3>Banking &amp; Financials Sector</h3>
+            <p>The financials sector includes <strong>money-center banks</strong> (JPM, BAC, WFC, C — deposit-taking, lending, trading), <strong>investment banks</strong> (GS, MS — advisory, underwriting, asset management), <strong>regional banks</strong> (USB, PNC — community/commercial lending), <strong>insurance</strong> (MET, PRU, AFL — underwriting float), <strong>asset managers</strong> (BLK), and <strong>payments networks</strong> (V, MA — toll-road business models with wide moats). Banking stocks are sensitive to interest rates and credit cycles. Sell-strength thresholds from 5-year backtests show 87–93% win rate when these stocks spike ≥+1.8–2.1% in a day.</p>
+        </div>
+
+        {% for stock in stocks %}
+        <div class="stock-card">
+            <div class="stock-header">
+                <div class="stock-title">
+                    <h3>
+                        {{ stock.ticker }}
+                        {% if stock.sell_threshold %}
+                        <span class="sell-signal-badge">⚡ Sell signal ≥ +{{ "%.2f"|format(stock.sell_threshold) }}%</span>
+                        {% endif %}
+                    </h3>
+                    <div class="company-name">{{ stock.name }}</div>
+                    {% if stock.subsector %}
+                    <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                    {% endif %}
+                </div>
+                <div class="stock-meta">
+                    <div class="market-cap">{{ stock.market_cap }}</div>
+                    <div class="dividend">Dividend: {{ stock.dividend_yield }}</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 20 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value {{ 'positive' if stock.roe_val > 0.10 else '' }}">{{ stock.roe }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Profit Margin</div>
+                    <div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Rev Growth</div>
+                    <div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else '' }}">{{ stock.growth }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Debt/Equity</div>
+                    <div class="metric-value">{{ stock.de }}</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">PEG Ratio</div>
+                    <div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2.0 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <strong>About:</strong> {{ stock.description }}
+            </div>
+
+            {% if stock.comparison_table %}
+            <div class="competitors-section">
+                <h4>Peer Comparison</h4>
+                <table style="font-size: 0.9em; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th>Ticker</th><th>Market Cap</th><th>P/E</th><th>ROE</th><th>Margin</th><th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comp in stock.comparison_table %}
+                        <tr style="{{ 'background-color: #e3f2fd; font-weight: bold;' if comp.is_current else '' }}">
+                            <td>{{ comp.ticker }}</td><td>{{ comp.market_cap }}</td><td>{{ comp.pe }}</td>
+                            <td>{{ comp.roe }}</td><td>{{ comp.margin }}</td><td>{{ comp.growth }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
