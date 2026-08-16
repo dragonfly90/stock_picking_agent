@@ -1483,6 +1483,194 @@ def run_banking_analysis(html_filename, title):
     print(f"\nGenerated {output_path}")
 
 
+import fetch_memory_data as _fmd
+
+# ── Chip & Memory tickers ────────────────────────────────────────────────────
+CHIPS_MEMORY_TICKERS = {
+    # ── AI / HPC GPUs ──────────────────────────────────────────────────────
+    'NVDA':  {'subsector': 'AI GPU',             'subsector_class': 'ai_gpu',
+              'note': 'Dominant AI training + HBM3E consumer (H100/H200/B200)'},
+    'AMD':   {'subsector': 'AI GPU',             'subsector_class': 'ai_gpu',
+              'note': 'MI300X AI GPU; Instinct series'},
+    # ── Custom ASIC / Networking Silicon ────────────────────────────────────
+    'AVGO':  {'subsector': 'Custom ASIC',        'subsector_class': 'asic',
+              'note': 'Google TPU, Meta MTIA; also networking ASICs'},
+    'MRVL':  {'subsector': 'Custom ASIC',        'subsector_class': 'asic',
+              'note': 'Amazon Trainium/Inferentia custom ASIC; DPU/networking'},
+    # ── Memory — DRAM & HBM ─────────────────────────────────────────────────
+    'MU':    {'subsector': 'DRAM / HBM',         'subsector_class': 'memory_dram',
+              'note': 'Only US-listed pure-play DRAM+HBM; HBM3E in H200'},
+    'DRAM':  {'subsector': 'Memory ETF',         'subsector_class': 'memory_etf',
+              'note': 'Roundhill Memory ETF — tracks MU, SK Hynix ADRs, Samsung'},
+    # ── NAND & Storage ──────────────────────────────────────────────────────
+    'WDC':   {'subsector': 'NAND / HDD',         'subsector_class': 'memory_nand',
+              'note': 'Western Digital — NAND flash + HDD'},
+    'STX':   {'subsector': 'HDD',                'subsector_class': 'memory_hdd',
+              'note': 'Seagate — HDD leader; benefits from AI data storage boom'},
+    'NTAP':  {'subsector': 'Enterprise Storage', 'subsector_class': 'storage',
+              'note': 'NetApp — enterprise all-flash & hybrid storage systems'},
+    # ── Equipment — Lithography & Deposition ────────────────────────────────
+    'ASML':  {'subsector': 'Litho Equipment',    'subsector_class': 'equipment',
+              'note': 'Only EUV lithography supplier; monopoly for sub-7nm'},
+    'AMAT':  {'subsector': 'Chip Equipment',     'subsector_class': 'equipment',
+              'note': 'Largest chip equipment maker; deposition, CMP, etch'},
+    'LRCX':  {'subsector': 'Chip Equipment',     'subsector_class': 'equipment',
+              'note': 'Etch market leader; critical for DRAM/NAND stack'},
+    'KLAC':  {'subsector': 'Process Control',    'subsector_class': 'equipment',
+              'note': 'Wafer inspection & metrology; highest-margin equipment'},
+    'ONTO':  {'subsector': 'Process Control',    'subsector_class': 'equipment',
+              'note': 'Advanced packaging inspection; CoWoS/HBM enabler'},
+    # ── Foundry ─────────────────────────────────────────────────────────────
+    'TSM':   {'subsector': 'Foundry',            'subsector_class': 'foundry',
+              'note': 'TSMC — largest pure-play foundry; produces NVDA/AAPL chips'},
+    'INTC':  {'subsector': 'IDM / Foundry',      'subsector_class': 'foundry',
+              'note': 'Intel — IDM + IFS foundry; turnaround story'},
+    'GFS':   {'subsector': 'Foundry',            'subsector_class': 'foundry',
+              'note': 'GlobalFoundries — mature-node foundry; auto/IoT focus'},
+    # ── Power & Mixed-Signal ─────────────────────────────────────────────────
+    'MPWR':  {'subsector': 'Power Management',   'subsector_class': 'analog',
+              'note': 'Monolithic Power — power ICs for AI servers & EVs'},
+    'TXN':   {'subsector': 'Analog',             'subsector_class': 'analog',
+              'note': 'Texas Instruments — broadest analog portfolio; industrial/auto'},
+    'ADI':   {'subsector': 'Analog',             'subsector_class': 'analog',
+              'note': 'Analog Devices — precision signal chain; industrial'},
+    # ── Specialized / HBM Ecosystem ──────────────────────────────────────────
+    'CAMT':  {'subsector': 'Inspection',         'subsector_class': 'equipment',
+              'note': 'Camtek — bump inspection for advanced packaging & HBM'},
+    'ACMR':  {'subsector': 'China Equipment',    'subsector_class': 'china_equip',
+              'note': 'ACM Research — semiconductor wet-cleaning; China market'},
+    'SITM':  {'subsector': 'Timing / Oscillator','subsector_class': 'specialty',
+              'note': 'SiTime — MEMS timing semiconductors; replacing quartz'},
+    'MTSI':  {'subsector': 'RF / Compound Semi', 'subsector_class': 'specialty',
+              'note': 'MACOM — GaAs/GaN RF chips; data center optics'},
+    'COHU':  {'subsector': 'Test Equipment',     'subsector_class': 'equipment',
+              'note': 'Cohu — semiconductor test handlers; back-end'},
+}
+
+CHIPS_PEER_GROUPS = {
+    'NVDA':  ['AMD', 'AVGO', 'MRVL', 'TSM'],
+    'AMD':   ['NVDA', 'INTC', 'AVGO', 'MRVL'],
+    'MU':    ['WDC', 'STX', 'DRAM', 'TSM'],
+    'WDC':   ['MU', 'STX', 'NTAP', 'LRCX'],
+    'ASML':  ['AMAT', 'LRCX', 'KLAC', 'ONTO'],
+    'AMAT':  ['LRCX', 'KLAC', 'ASML', 'ONTO'],
+    'TSM':   ['INTC', 'GFS', 'NVDA', 'ASML'],
+    'MPWR':  ['TXN', 'ADI', 'ON', 'INTC'],
+    'ACMR':  ['AMAT', 'LRCX', 'CAMT', 'KLAC'],
+}
+
+
+def run_chips_memory_analysis(html_filename, title):
+    print("Starting Chips & Memory Sector Analysis...")
+
+    # 1. Korean memory signal (SK Hynix + Samsung)
+    print("  Fetching Korean memory signal (SK Hynix / Samsung)...")
+    kr_data = {}
+    try:
+        kr_data = _fmd.get_kr_memory_data()
+    except Exception as e:
+        print(f"  KR data fetch failed: {e}")
+
+    # 2. Fetch US chip/memory stocks
+    stocks_data = []
+    for ticker, meta in CHIPS_MEMORY_TICKERS.items():
+        print(f"  Fetching {ticker}...", end='\r')
+        try:
+            info = fetch_data.get_stock_data(ticker)
+            if not info:
+                continue
+            roe = info.get('returnOnEquity')
+            margin = info.get('profitMargins')
+            rev_growth = info.get('revenueGrowth')
+            gross_margin = info.get('grossMargins')
+            de = info.get('debtToEquity')
+            peg = info.get('pegRatio')
+            pe = info.get('trailingPE')
+            if peg is None:
+                growth = info.get('earningsGrowth')
+                if pe and growth and growth > 0:
+                    peg = pe / (growth * 100)
+
+            market_cap = info.get('marketCap')
+            dividend_yield = info.get('dividendYield')
+            description = info.get('longBusinessSummary', 'No description available.')
+            last_price = info.get('currentPrice') or info.get('regularMarketPrice')
+            high52 = info.get('fiftyTwoWeekHigh')
+            low52 = info.get('fiftyTwoWeekLow')
+            w52_pos = None
+            if last_price and high52 and low52 and (high52 - low52) > 0:
+                w52_pos = (last_price - low52) / (high52 - low52) * 100
+
+            # Peer comparison
+            comparison_table = []
+            if ticker in CHIPS_PEER_GROUPS:
+                for ct in [ticker] + CHIPS_PEER_GROUPS[ticker]:
+                    try:
+                        ci = info if ct == ticker else fetch_data.get_stock_data(ct)
+                        if ci:
+                            comparison_table.append({
+                                'ticker':     ct,
+                                'market_cap': f"${ci.get('marketCap')/1e9:.1f}B" if ci.get('marketCap') else "N/A",
+                                'pe':         f"{ci.get('trailingPE'):.1f}" if ci.get('trailingPE') else "N/A",
+                                'roe':        f"{ci.get('returnOnEquity'):.1%}" if ci.get('returnOnEquity') else "N/A",
+                                'margin':     f"{ci.get('profitMargins'):.1%}" if ci.get('profitMargins') else "N/A",
+                                'growth':     f"{ci.get('revenueGrowth'):.1%}" if ci.get('revenueGrowth') else "N/A",
+                                'is_current': ct == ticker,
+                            })
+                    except Exception:
+                        pass
+
+            stocks_data.append({
+                'ticker':          ticker,
+                'name':            info.get('longName', ticker),
+                'subsector':       meta['subsector'],
+                'subsector_class': meta['subsector_class'],
+                'note':            meta.get('note', ''),
+                'price':           f"${last_price:.2f}" if last_price else "N/A",
+                'market_cap':      f"${market_cap/1e9:.1f}B" if market_cap else "N/A",
+                'market_cap_val':  market_cap or 0,
+                'pe':              f"{pe:.1f}" if pe else "N/A",
+                'pe_val':          pe or 9999,
+                'peg':             f"{peg:.2f}" if peg else "N/A",
+                'peg_val':         peg or 9999,
+                'roe':             f"{roe:.1%}" if roe else "N/A",
+                'roe_val':         roe or -999,
+                'margin':          f"{margin:.1%}" if margin else "N/A",
+                'margin_val':      margin or -999,
+                'gross_margin':    f"{gross_margin:.1%}" if gross_margin else "N/A",
+                'gross_margin_val':gross_margin or -999,
+                'growth':          f"{rev_growth:.1%}" if rev_growth else "N/A",
+                'growth_val':      rev_growth or -999,
+                'de':              f"{de:.0f}" if de is not None else "N/A",
+                'de_val':          de if de is not None else 9999,
+                'dividend_yield':  f"{dividend_yield:.2%}" if dividend_yield else "N/A",
+                'w52_position':    f"{w52_pos:.0f}%" if w52_pos is not None else "N/A",
+                'w52_position_val':w52_pos or 0,
+                'description':     description,
+                'comparison_table':comparison_table,
+            })
+        except Exception as e:
+            print(f"\n  Error processing {ticker}: {e}")
+
+    stocks_data.sort(key=lambda x: x['market_cap_val'], reverse=True)
+
+    # 3. Render HTML
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template('chips_memory.html')
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(BASE_DIR, html_filename)
+    html_content = template.render(
+        date=date_str,
+        title=title,
+        current_page=html_filename,
+        stocks=stocks_data,
+        kr_data=kr_data,
+    )
+    with open(output_path, 'w') as f:
+        f.write(html_content)
+    print(f"\nGenerated {output_path}")
+
+
 if __name__ == "__main__":
     # Initialize DB
     conn = init_db()
@@ -1521,5 +1709,8 @@ if __name__ == "__main__":
 
     # 11. Banking & Financials Analysis
     run_banking_analysis("banking.html", "Banking & Financials Sector Report")
+
+    # 12. Chips & Memory Analysis (芯片股 + 存储股)
+    run_chips_memory_analysis("chips_memory.html", "芯片股 & 存储股 — Chips & Memory Dashboard")
 
     conn.close()

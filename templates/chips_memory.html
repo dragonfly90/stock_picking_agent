@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 1100px; margin: 0 auto; padding: 20px; color: #333; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 5px; text-align: center; }
+        .date { color: #7f8c8d; font-size: 0.9em; text-align: center; margin-bottom: 20px; }
+        .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .nav a { text-decoration: none; color: #007bff; font-weight: 600; font-size: 0.95em; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; }
+        .nav a:hover { background: #e3f2fd; }
+        .nav a.active { background: #2c3e50; color: white; cursor: default; }
+        .nav-divider { width: 1px; background: #dee2e6; margin: 0 4px; }
+        /* Korean signal */
+        .kr-banner { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+        .kr-card { flex: 1; min-width: 220px; padding: 18px 20px; border-radius: 10px; border-left: 5px solid; }
+        .kr-card.up   { background: #f0fff4; border-color: #27ae60; }
+        .kr-card.down { background: #fff5f5; border-color: #e74c3c; }
+        .kr-card.flat { background: #f8f9fa; border-color: #95a5a6; }
+        .kr-name { font-weight: 700; font-size: 1.05em; color: #2c3e50; }
+        .kr-role { font-size: 0.78em; color: #7f8c8d; margin: 2px 0 8px; }
+        .kr-price { font-size: 1.25em; font-weight: 700; }
+        .kr-chg { font-size: 0.95em; font-weight: 600; margin-top: 4px; }
+        .kr-date { font-size: 0.72em; color: #95a5a6; margin-top: 6px; }
+        .up-text   { color: #27ae60; }
+        .down-text { color: #e74c3c; }
+        .signal-note { background: #fffde7; border-left: 4px solid #f9a825; padding: 12px 16px; border-radius: 4px; margin-bottom: 28px; font-size: 0.87em; color: #555; line-height: 1.6; }
+        /* Section label */
+        .section-label { font-size: 0.72em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #95a5a6; margin: 32px 0 14px; padding-bottom: 6px; border-bottom: 1px solid #eee; }
+        /* Stock cards */
+        .stock-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; margin-bottom: 18px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .stock-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 2px solid #f0f4ff; }
+        .stock-title { flex: 1; }
+        .stock-title h3 { margin: 0 0 2px; color: #2c3e50; font-size: 1.12em; }
+        .company-name { color: #7f8c8d; font-size: 0.87em; }
+        .stock-note { font-size: 0.82em; color: #5d6d7e; margin-top: 5px; font-style: italic; }
+        .stock-meta { text-align: right; min-width: 110px; }
+        .market-cap { font-size: 1.05em; font-weight: 700; color: #2c3e50; }
+        .price-disp { font-size: 0.95em; color: #555; }
+        .dividend { color: #27ae60; font-size: 0.85em; }
+        /* Badges */
+        .subsector-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.72em; font-weight: 700; margin-top: 4px; }
+        .badge-ai_gpu      { background: #ede7f6; color: #4527a0; }
+        .badge-asic        { background: #e8eaf6; color: #283593; }
+        .badge-memory_dram { background: #e3f2fd; color: #0d47a1; }
+        .badge-memory_nand { background: #e1f5fe; color: #01579b; }
+        .badge-memory_hdd  { background: #e0f7fa; color: #006064; }
+        .badge-memory_etf  { background: #f3e5f5; color: #6a1b9a; }
+        .badge-storage     { background: #e8f5e9; color: #1b5e20; }
+        .badge-equipment   { background: #fff3e0; color: #bf360c; }
+        .badge-foundry     { background: #fce4ec; color: #880e4f; }
+        .badge-analog      { background: #f3e5f5; color: #7b1fa2; }
+        .badge-specialty   { background: #fff8e1; color: #f57f17; }
+        .badge-china_equip { background: #ffebee; color: #b71c1c; }
+        /* Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 10px; margin-bottom: 14px; }
+        .metric-item { text-align: center; padding: 9px 6px; background: #f8f9fa; border-radius: 6px; }
+        .metric-label { font-size: 0.70em; color: #7f8c8d; margin-bottom: 3px; }
+        .metric-value { font-size: 1.02em; font-weight: 700; color: #2c3e50; }
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        .w52-bar-wrap { margin-top: 4px; background: #e0e0e0; border-radius: 3px; height: 4px; overflow: hidden; }
+        .w52-bar      { height: 4px; background: #5c6bc0; border-radius: 3px; }
+        /* Description & peers */
+        .description { margin-top: 12px; padding: 12px 14px; background: #f8f9fa; border-radius: 6px; font-size: 0.87em; line-height: 1.6; color: #555; }
+        .competitors-section { margin-top: 12px; padding: 10px 14px; background: #f5f5f5; border-radius: 6px; border: 1px solid #eee; }
+        .competitors-section h4 { margin: 0 0 8px; color: #2c3e50; font-size: 0.87em; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.86em; }
+        th, td { padding: 7px 9px; text-align: left; border-bottom: 1px solid #e8e8e8; }
+        th { background: #f8f9fa; font-weight: 600; font-size: 0.83em; color: #555; }
+        .row-current { background: #e8eaf6 !important; font-weight: 700; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>{{ title }}</h1>
+    <div class="date">Report generated on: {{ date }}</div>
+
+    <div class="nav">
+        <a href="index.html" {% if current_page == 'index.html' %}class="active"{% endif %}>S&amp;P 500</a>
+        <a href="non_spy.html" {% if current_page == 'non_spy.html' %}class="active"{% endif %}>Non-S&amp;P 500</a>
+        <a href="guru.html" {% if current_page == 'guru.html' %}class="active"{% endif %}>Guru Tracker</a>
+        <div class="nav-divider"></div>
+        <a href="tech.html" {% if current_page == 'tech.html' %}class="active"{% endif %}>Technology</a>
+        <a href="semiconductors.html" {% if current_page == 'semiconductors.html' %}class="active"{% endif %}>Semiconductors</a>
+        <a href="chips_memory.html" {% if current_page == 'chips_memory.html' %}class="active"{% endif %}>芯片 &amp; 存储</a>
+        <a href="ai.html" {% if current_page == 'ai.html' %}class="active"{% endif %}>AI &amp; LLM</a>
+        <a href="consumer_staples.html" {% if current_page == 'consumer_staples.html' %}class="active"{% endif %}>Consumer Staples</a>
+        <a href="healthcare.html" {% if current_page == 'healthcare.html' %}class="active"{% endif %}>Healthcare</a>
+        <a href="banking.html" {% if current_page == 'banking.html' %}class="active"{% endif %}>Banking</a>
+        <a href="energy.html" {% if current_page == 'energy.html' %}class="active"{% endif %}>Oil &amp; Energy</a>
+        <div class="nav-divider"></div>
+        <a href="china.html" {% if current_page == 'china.html' %}class="active"{% endif %}>A股精选</a>
+        <a href="china_full.html" {% if current_page == 'china_full.html' %}class="active"{% endif %}>A股全市场</a>
+    </div>
+
+    <!-- Korean Memory Signal -->
+    {% if kr_data %}
+    <div class="section-label">🇰🇷 Korean Memory Leaders — Leading Indicator for US Chip / Memory Stocks</div>
+    <div class="kr-banner">
+        {% for ticker, s in kr_data.items() %}
+            {% if 'error' not in s %}
+                {% if s.change_pct > 0.5 %}{% set card_class = 'up' %}
+                {% elif s.change_pct < -0.5 %}{% set card_class = 'down' %}
+                {% else %}{% set card_class = 'flat' %}{% endif %}
+                {% set chg_color = 'up-text' if s.change_pct > 0 else 'down-text' %}
+                <div class="kr-card {{ card_class }}">
+                    <div class="kr-name">{{ s.name }}</div>
+                    <div class="kr-role">{{ s.role }}</div>
+                    <div class="kr-price">{{ s.price_fmt }}</div>
+                    <div class="kr-chg {{ chg_color }}">{{ '+' if s.change_pct > 0 else '' }}{{ "%.2f"|format(s.change_pct) }}% today</div>
+                    <div class="kr-date">Session: {{ s.session_date }} · {{ ticker }}</div>
+                </div>
+            {% else %}
+                <div class="kr-card flat">
+                    <div class="kr-name">{{ s.name }}</div>
+                    <div class="kr-role">{{ s.role }}</div>
+                    <div style="color:#e74c3c;font-size:0.85em;margin-top:8px">Data unavailable</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="signal-note">
+        ⚡ <strong>How to use this signal:</strong> SK Hynix (000660.KS) is NVIDIA's sole HBM3E supplier and the global HBM leader. A strong Korean session move tends to drive <strong>MU and DRAM ETF at the US market open</strong> — but only the opening gap, not the intraday direction. Samsung (005930.KS) moves reflect broader DRAM supply/demand sentiment. Use these as a <em>morning pre-market sizing signal</em>, not a day-trade trigger. Research shows same-day correlation is priced in at the open (corr ≈ +0.66 for gap, ≈ 0 for intraday).
+    </div>
+    {% endif %}
+
+    <!-- AI GPU & Custom ASIC -->
+    <div class="section-label">AI GPU &amp; Custom ASIC — The AI Compute Stack</div>
+    {% for stock in stocks %}{% if stock.subsector_class in ['ai_gpu', 'asic'] %}
+    <div class="stock-card">
+        <div class="stock-header">
+            <div class="stock-title">
+                <h3>{{ stock.ticker }}</h3>
+                <div class="company-name">{{ stock.name }}</div>
+                <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                {% if stock.note %}<div class="stock-note">{{ stock.note }}</div>{% endif %}
+            </div>
+            <div class="stock-meta">
+                <div class="market-cap">{{ stock.market_cap }}</div>
+                <div class="price-disp">{{ stock.price }}</div>
+                <div class="dividend">Div: {{ stock.dividend_yield }}</div>
+            </div>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-label">P/E</div><div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 50 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div></div>
+            <div class="metric-item"><div class="metric-label">PEG</div><div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div></div>
+            <div class="metric-item"><div class="metric-label">ROE</div><div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div></div>
+            <div class="metric-item"><div class="metric-label">Net Margin</div><div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Gross Margin</div><div class="metric-value {{ 'positive' if stock.gross_margin_val > 0.40 else '' }}">{{ stock.gross_margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Rev Growth</div><div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else 'negative' if stock.growth_val < 0 else '' }}">{{ stock.growth }}</div></div>
+            <div class="metric-item"><div class="metric-label">D/E</div><div class="metric-value {{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</div></div>
+            <div class="metric-item"><div class="metric-label">52W Position</div><div class="metric-value">{{ stock.w52_position }}</div>{% if stock.w52_position_val > 0 %}<div class="w52-bar-wrap"><div class="w52-bar" style="width:{{ stock.w52_position_val|int }}%"></div></div>{% endif %}</div>
+        </div>
+        <div class="description"><strong>About:</strong> {{ stock.description }}</div>
+        {% if stock.comparison_table %}
+        <div class="competitors-section">
+            <h4>Peer Comparison</h4>
+            <table><thead><tr><th>Ticker</th><th>Mkt Cap</th><th>P/E</th><th>ROE</th><th>Net Margin</th><th>Rev Growth</th></tr></thead>
+            <tbody>{% for c in stock.comparison_table %}<tr {% if c.is_current %}class="row-current"{% endif %}><td>{{ c.ticker }}</td><td>{{ c.market_cap }}</td><td>{{ c.pe }}</td><td>{{ c.roe }}</td><td>{{ c.margin }}</td><td>{{ c.growth }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}{% endfor %}
+
+    <!-- Memory -->
+    <div class="section-label">存储股 — Memory: DRAM / HBM / NAND / Storage</div>
+    {% for stock in stocks %}{% if stock.subsector_class in ['memory_dram', 'memory_nand', 'memory_hdd', 'memory_etf', 'storage'] %}
+    <div class="stock-card">
+        <div class="stock-header">
+            <div class="stock-title">
+                <h3>{{ stock.ticker }}</h3>
+                <div class="company-name">{{ stock.name }}</div>
+                <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                {% if stock.note %}<div class="stock-note">{{ stock.note }}</div>{% endif %}
+            </div>
+            <div class="stock-meta">
+                <div class="market-cap">{{ stock.market_cap }}</div>
+                <div class="price-disp">{{ stock.price }}</div>
+                <div class="dividend">Div: {{ stock.dividend_yield }}</div>
+            </div>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-label">P/E</div><div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 40 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div></div>
+            <div class="metric-item"><div class="metric-label">PEG</div><div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div></div>
+            <div class="metric-item"><div class="metric-label">ROE</div><div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div></div>
+            <div class="metric-item"><div class="metric-label">Net Margin</div><div class="metric-value {{ 'positive' if stock.margin_val > 0.10 else '' }}">{{ stock.margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Gross Margin</div><div class="metric-value {{ 'positive' if stock.gross_margin_val > 0.40 else '' }}">{{ stock.gross_margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Rev Growth</div><div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else 'negative' if stock.growth_val < 0 else '' }}">{{ stock.growth }}</div></div>
+            <div class="metric-item"><div class="metric-label">D/E</div><div class="metric-value">{{ stock.de }}</div></div>
+            <div class="metric-item"><div class="metric-label">52W Position</div><div class="metric-value">{{ stock.w52_position }}</div>{% if stock.w52_position_val > 0 %}<div class="w52-bar-wrap"><div class="w52-bar" style="width:{{ stock.w52_position_val|int }}%"></div></div>{% endif %}</div>
+        </div>
+        <div class="description"><strong>About:</strong> {{ stock.description }}</div>
+        {% if stock.comparison_table %}
+        <div class="competitors-section">
+            <h4>Peer Comparison</h4>
+            <table><thead><tr><th>Ticker</th><th>Mkt Cap</th><th>P/E</th><th>ROE</th><th>Net Margin</th><th>Rev Growth</th></tr></thead>
+            <tbody>{% for c in stock.comparison_table %}<tr {% if c.is_current %}class="row-current"{% endif %}><td>{{ c.ticker }}</td><td>{{ c.market_cap }}</td><td>{{ c.pe }}</td><td>{{ c.roe }}</td><td>{{ c.margin }}</td><td>{{ c.growth }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}{% endfor %}
+
+    <!-- Foundry -->
+    <div class="section-label">Foundry — Contract Chip Manufacturing</div>
+    {% for stock in stocks %}{% if stock.subsector_class == 'foundry' %}
+    <div class="stock-card">
+        <div class="stock-header">
+            <div class="stock-title">
+                <h3>{{ stock.ticker }}</h3>
+                <div class="company-name">{{ stock.name }}</div>
+                <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                {% if stock.note %}<div class="stock-note">{{ stock.note }}</div>{% endif %}
+            </div>
+            <div class="stock-meta">
+                <div class="market-cap">{{ stock.market_cap }}</div>
+                <div class="price-disp">{{ stock.price }}</div>
+                <div class="dividend">Div: {{ stock.dividend_yield }}</div>
+            </div>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-label">P/E</div><div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 30 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div></div>
+            <div class="metric-item"><div class="metric-label">PEG</div><div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div></div>
+            <div class="metric-item"><div class="metric-label">ROE</div><div class="metric-value {{ 'positive' if stock.roe_val > 0.12 else '' }}">{{ stock.roe }}</div></div>
+            <div class="metric-item"><div class="metric-label">Net Margin</div><div class="metric-value {{ 'positive' if stock.margin_val > 0.15 else '' }}">{{ stock.margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Gross Margin</div><div class="metric-value {{ 'positive' if stock.gross_margin_val > 0.45 else '' }}">{{ stock.gross_margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Rev Growth</div><div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else 'negative' if stock.growth_val < 0 else '' }}">{{ stock.growth }}</div></div>
+            <div class="metric-item"><div class="metric-label">D/E</div><div class="metric-value {{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</div></div>
+            <div class="metric-item"><div class="metric-label">52W Position</div><div class="metric-value">{{ stock.w52_position }}</div>{% if stock.w52_position_val > 0 %}<div class="w52-bar-wrap"><div class="w52-bar" style="width:{{ stock.w52_position_val|int }}%"></div></div>{% endif %}</div>
+        </div>
+        <div class="description"><strong>About:</strong> {{ stock.description }}</div>
+        {% if stock.comparison_table %}
+        <div class="competitors-section">
+            <h4>Peer Comparison</h4>
+            <table><thead><tr><th>Ticker</th><th>Mkt Cap</th><th>P/E</th><th>ROE</th><th>Net Margin</th><th>Rev Growth</th></tr></thead>
+            <tbody>{% for c in stock.comparison_table %}<tr {% if c.is_current %}class="row-current"{% endif %}><td>{{ c.ticker }}</td><td>{{ c.market_cap }}</td><td>{{ c.pe }}</td><td>{{ c.roe }}</td><td>{{ c.margin }}</td><td>{{ c.growth }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}{% endfor %}
+
+    <!-- Equipment -->
+    <div class="section-label">Chip Equipment &amp; Process Control</div>
+    {% for stock in stocks %}{% if stock.subsector_class in ['equipment', 'china_equip'] %}
+    <div class="stock-card">
+        <div class="stock-header">
+            <div class="stock-title">
+                <h3>{{ stock.ticker }}</h3>
+                <div class="company-name">{{ stock.name }}</div>
+                <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                {% if stock.note %}<div class="stock-note">{{ stock.note }}</div>{% endif %}
+            </div>
+            <div class="stock-meta">
+                <div class="market-cap">{{ stock.market_cap }}</div>
+                <div class="price-disp">{{ stock.price }}</div>
+                <div class="dividend">Div: {{ stock.dividend_yield }}</div>
+            </div>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-label">P/E</div><div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 35 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div></div>
+            <div class="metric-item"><div class="metric-label">PEG</div><div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div></div>
+            <div class="metric-item"><div class="metric-label">ROE</div><div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div></div>
+            <div class="metric-item"><div class="metric-label">Net Margin</div><div class="metric-value {{ 'positive' if stock.margin_val > 0.15 else '' }}">{{ stock.margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Gross Margin</div><div class="metric-value {{ 'positive' if stock.gross_margin_val > 0.40 else '' }}">{{ stock.gross_margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Rev Growth</div><div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else 'negative' if stock.growth_val < 0 else '' }}">{{ stock.growth }}</div></div>
+            <div class="metric-item"><div class="metric-label">D/E</div><div class="metric-value {{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</div></div>
+            <div class="metric-item"><div class="metric-label">52W Position</div><div class="metric-value">{{ stock.w52_position }}</div>{% if stock.w52_position_val > 0 %}<div class="w52-bar-wrap"><div class="w52-bar" style="width:{{ stock.w52_position_val|int }}%"></div></div>{% endif %}</div>
+        </div>
+        <div class="description"><strong>About:</strong> {{ stock.description }}</div>
+        {% if stock.comparison_table %}
+        <div class="competitors-section">
+            <h4>Peer Comparison</h4>
+            <table><thead><tr><th>Ticker</th><th>Mkt Cap</th><th>P/E</th><th>ROE</th><th>Net Margin</th><th>Rev Growth</th></tr></thead>
+            <tbody>{% for c in stock.comparison_table %}<tr {% if c.is_current %}class="row-current"{% endif %}><td>{{ c.ticker }}</td><td>{{ c.market_cap }}</td><td>{{ c.pe }}</td><td>{{ c.roe }}</td><td>{{ c.margin }}</td><td>{{ c.growth }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}{% endfor %}
+
+    <!-- Analog & Specialty -->
+    <div class="section-label">Power &amp; Specialty Silicon</div>
+    {% for stock in stocks %}{% if stock.subsector_class in ['analog', 'specialty'] %}
+    <div class="stock-card">
+        <div class="stock-header">
+            <div class="stock-title">
+                <h3>{{ stock.ticker }}</h3>
+                <div class="company-name">{{ stock.name }}</div>
+                <span class="subsector-badge badge-{{ stock.subsector_class }}">{{ stock.subsector }}</span>
+                {% if stock.note %}<div class="stock-note">{{ stock.note }}</div>{% endif %}
+            </div>
+            <div class="stock-meta">
+                <div class="market-cap">{{ stock.market_cap }}</div>
+                <div class="price-disp">{{ stock.price }}</div>
+                <div class="dividend">Div: {{ stock.dividend_yield }}</div>
+            </div>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-label">P/E</div><div class="metric-value {{ 'positive' if stock.pe_val and stock.pe_val < 35 and stock.pe_val > 0 else '' }}">{{ stock.pe }}</div></div>
+            <div class="metric-item"><div class="metric-label">PEG</div><div class="metric-value {{ 'positive' if stock.peg_val and stock.peg_val < 2 and stock.peg_val > 0 else '' }}">{{ stock.peg }}</div></div>
+            <div class="metric-item"><div class="metric-label">ROE</div><div class="metric-value {{ 'positive' if stock.roe_val > 0.15 else '' }}">{{ stock.roe }}</div></div>
+            <div class="metric-item"><div class="metric-label">Net Margin</div><div class="metric-value {{ 'positive' if stock.margin_val > 0.15 else '' }}">{{ stock.margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Gross Margin</div><div class="metric-value {{ 'positive' if stock.gross_margin_val > 0.50 else '' }}">{{ stock.gross_margin }}</div></div>
+            <div class="metric-item"><div class="metric-label">Rev Growth</div><div class="metric-value {{ 'positive' if stock.growth_val > 0.05 else 'negative' if stock.growth_val < 0 else '' }}">{{ stock.growth }}</div></div>
+            <div class="metric-item"><div class="metric-label">D/E</div><div class="metric-value {{ 'positive' if stock.de_val < 50 else '' }}">{{ stock.de }}</div></div>
+            <div class="metric-item"><div class="metric-label">52W Position</div><div class="metric-value">{{ stock.w52_position }}</div>{% if stock.w52_position_val > 0 %}<div class="w52-bar-wrap"><div class="w52-bar" style="width:{{ stock.w52_position_val|int }}%"></div></div>{% endif %}</div>
+        </div>
+        <div class="description"><strong>About:</strong> {{ stock.description }}</div>
+        {% if stock.comparison_table %}
+        <div class="competitors-section">
+            <h4>Peer Comparison</h4>
+            <table><thead><tr><th>Ticker</th><th>Mkt Cap</th><th>P/E</th><th>ROE</th><th>Net Margin</th><th>Rev Growth</th></tr></thead>
+            <tbody>{% for c in stock.comparison_table %}<tr {% if c.is_current %}class="row-current"{% endif %}><td>{{ c.ticker }}</td><td>{{ c.market_cap }}</td><td>{{ c.pe }}</td><td>{{ c.roe }}</td><td>{{ c.margin }}</td><td>{{ c.growth }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}{% endfor %}
+
+</div>
+</body>
+</html>
